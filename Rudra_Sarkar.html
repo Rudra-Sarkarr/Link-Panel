@@ -47,64 +47,67 @@
       var(--page);
   }
   .card {
-    background: color-mix(in srgb, var(--card) 76%, transparent);
-    border: 1px solid rgba(255,255,255,.58);
+    background: color-mix(in srgb, var(--card) 94%, transparent);
+    border: 1px solid rgba(255,255,255,.68);
     box-shadow:
-      0 24px 70px rgba(39, 38, 105, .16),
-      0 3px 12px rgba(39, 38, 105, .07),
-      inset 0 1px 0 rgba(255,255,255,.72);
-    -webkit-backdrop-filter: blur(24px) saturate(1.55);
-    backdrop-filter: blur(24px) saturate(1.55);
+      0 20px 56px rgba(39, 38, 105, .14),
+      0 3px 12px rgba(39, 38, 105, .06),
+      inset 0 1px 0 rgba(255,255,255,.78);
+    contain: layout paint;
+  }
+  @media (min-width: 641px) {
+    .card {
+      background: color-mix(in srgb, var(--card) 84%, transparent);
+      -webkit-backdrop-filter: blur(14px) saturate(1.35);
+      backdrop-filter: blur(14px) saturate(1.35);
+    }
   }
   .banner {
     background: linear-gradient(135deg, rgba(121,111,255,.92), rgba(91,99,230,.78));
   }
   .banner::after {
-    background: color-mix(in srgb, var(--card) 76%, transparent);
-    -webkit-backdrop-filter: blur(18px);
-    backdrop-filter: blur(18px);
+    background: var(--card);
   }
   .row {
-    background: color-mix(in srgb, var(--card) 57%, transparent);
-    border: 1px solid rgba(255,255,255,.48);
+    background: color-mix(in srgb, var(--card) 82%, transparent);
+    border: 1px solid rgba(255,255,255,.66);
     box-shadow:
-      0 5px 18px rgba(40, 42, 105, .055),
-      inset 0 1px 0 rgba(255,255,255,.58);
-    -webkit-backdrop-filter: blur(16px) saturate(1.35);
-    backdrop-filter: blur(16px) saturate(1.35);
-    transition: transform .2s ease, background .2s ease, box-shadow .2s ease;
+      0 4px 14px rgba(40, 42, 105, .05),
+      inset 0 1px 0 rgba(255,255,255,.72);
+    transition: transform .16s ease, background-color .16s ease;
   }
   .row:hover {
-    background: color-mix(in srgb, var(--hover) 76%, transparent);
+    background: color-mix(in srgb, var(--hover) 92%, transparent);
     transform: translateY(-1px);
-    box-shadow: 0 9px 24px rgba(40, 42, 105, .10), inset 0 1px 0 rgba(255,255,255,.72);
   }
   .avatar {
     border-color: color-mix(in srgb, var(--card) 72%, white);
     box-shadow: 0 7px 22px rgba(40,44,120,.22), inset 0 1px 2px rgba(255,255,255,.42);
   }
-  .theme-toggle, .upi-dialog, .upi-app, .upi-idline {
-    -webkit-backdrop-filter: blur(20px) saturate(1.5);
-    backdrop-filter: blur(20px) saturate(1.5);
-  }
   .theme-toggle {
-    background: rgba(255,255,255,.23);
+    background: rgba(255,255,255,.26);
     border: 1px solid rgba(255,255,255,.52);
     box-shadow: 0 4px 16px rgba(32,28,100,.12), inset 0 1px 0 rgba(255,255,255,.55);
   }
   .upi-overlay {
-    background: rgba(24, 25, 52, .30);
-    -webkit-backdrop-filter: blur(10px);
-    backdrop-filter: blur(10px);
+    background: rgba(24, 25, 52, .45);
   }
   .upi-dialog {
-    background: color-mix(in srgb, var(--card) 82%, transparent);
+    background: var(--card);
     border: 1px solid rgba(255,255,255,.55);
     box-shadow: 0 24px 80px rgba(12,14,48,.24), inset 0 1px 0 rgba(255,255,255,.72);
   }
   .upi-app, .upi-idline {
-    background: color-mix(in srgb, var(--hover) 72%, transparent);
+    background: var(--hover);
     border-color: rgba(255,255,255,.42);
+  }
+  /* Pause background animations while a full-screen modal is open */
+  body.modal-open .bgc,
+  body.modal-open .hang .sw,
+  body.modal-open .hang .glow,
+  body.modal-open #wxRowIcon,
+  body.modal-open .avatar::after {
+    animation-play-state: paused !important;
   }
   :root[data-theme="dark"] .card {
     border-color: rgba(255,255,255,.13);
@@ -471,14 +474,12 @@
     gap: 7px;
     min-height: 36px;
     padding: 7px 11px;
-    border: 1px solid rgba(255,255,255,.42);
+    border: 1px solid rgba(255,255,255,.48);
     border-radius: 999px;
-    background: rgba(255,255,255,.18);
+    background: rgba(30, 32, 72, .34);
     color: #fff;
     font: 500 .72rem var(--f);
     cursor: pointer;
-    backdrop-filter: blur(8px);
-    -webkit-backdrop-filter: blur(8px);
     transition: background .15s ease, transform .15s ease;
   }
   .theme-toggle:hover { background: rgba(255,255,255,.28); transform: translateY(-1px); }
@@ -507,22 +508,23 @@
   .wx {
     position: fixed; inset: 0; z-index: 60;
     display: flex; align-items: center; justify-content: center;
-    background: rgba(8, 10, 30, 0.58);
-    -webkit-backdrop-filter: blur(14px) saturate(1.2); backdrop-filter: blur(14px) saturate(1.2);
-    animation: wx-fade 0.22s ease-out;
+    background: rgba(8, 10, 30, 0.72);
+    animation: wx-fade 0.2s ease-out;
   }
   @keyframes wx-fade { from { opacity: 0; } to { opacity: 1; } }
 
   .wx-phone {
     --bg-top: #10172e; --bg-bot: #27335e; --ridge: #33427a; --sheet: #1c2547; --glow: rgba(190, 210, 255, 0.3);
-    --txt: #F2F5FF; --txt2: rgba(228, 234, 255, 0.74); --glass: rgba(255, 255, 255, 0.11); --glass-line: rgba(255, 255, 255, 0.22);
+    --txt: #F2F5FF; --txt2: rgba(228, 234, 255, 0.74); --glass: rgba(255, 255, 255, 0.14); --glass-line: rgba(255, 255, 255, 0.24);
     position: relative; display: flex; flex-direction: column;
     width: 100%; height: 100%; overflow: hidden;
     color: var(--txt); font-family: var(--f);
     background: linear-gradient(180deg, var(--bg-top), var(--bg-bot) 62%);
     isolation: isolate;
+    contain: layout paint;
   }
   @media (min-width: 520px) {
+    .wx { -webkit-backdrop-filter: blur(10px); backdrop-filter: blur(10px); }
     .wx-phone { max-width: 430px; height: min(880px, calc(100% - 48px)); border-radius: 38px; box-shadow: 0 34px 100px rgba(0, 0, 0, 0.55), inset 0 0 0 1px rgba(255, 255, 255, 0.14); }
   }
   .wx-phone[data-scene="storm"] { --bg-top: #1a2150; --bg-bot: #33408a; --ridge: #3f50a0; --sheet: #26316a; --glow: rgba(130, 175, 255, 0.38); }
@@ -540,12 +542,12 @@
   .wx-top, .wx-head, .wx-hero, .wx-sheet { position: relative; z-index: 1; }
 
   .wx-top { display: flex; align-items: center; justify-content: space-between; gap: 12px; padding: max(16px, env(safe-area-inset-top, 0px)) max(18px, env(safe-area-inset-right, 0px)) 0 max(18px, env(safe-area-inset-left, 0px)); }
-  .wx-ibtn { display: grid; place-items: center; width: 40px; height: 40px; padding: 0; border: 1px solid var(--glass-line); border-radius: 50%; background: var(--glass); color: var(--txt); cursor: pointer; -webkit-backdrop-filter: blur(12px); backdrop-filter: blur(12px); box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.18); transition: background 0.15s ease, transform 0.15s ease; }
-  .wx-ibtn:hover { background: rgba(255, 255, 255, 0.2); }
+  .wx-ibtn { display: grid; place-items: center; width: 40px; height: 40px; padding: 0; border: 1px solid var(--glass-line); border-radius: 50%; background: var(--glass); color: var(--txt); cursor: pointer; box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.18); transition: background 0.15s ease, transform 0.15s ease; }
+  .wx-ibtn:hover { background: rgba(255, 255, 255, 0.22); }
   .wx-ibtn:active { transform: scale(0.94); }
   .wx-ibtn svg { width: 20px; height: 20px; fill: none; stroke: currentColor; stroke-width: 1.8; stroke-linecap: round; stroke-linejoin: round; display: block; }
   .wx-phone button:focus-visible { outline: 2px solid #fff; outline-offset: 3px; }
-  .wx-status { display: inline-flex; align-items: center; gap: 7px; min-height: 32px; padding: 6px 12px; border: 1px solid var(--glass-line); border-radius: 999px; background: var(--glass); color: var(--txt2); font: 500 0.7rem var(--f); cursor: pointer; -webkit-backdrop-filter: blur(12px); backdrop-filter: blur(12px); }
+  .wx-status { display: inline-flex; align-items: center; gap: 7px; min-height: 32px; padding: 6px 12px; border: 1px solid var(--glass-line); border-radius: 999px; background: var(--glass); color: var(--txt2); font: 500 0.7rem var(--f); cursor: pointer; }
   .wx-status .dot { width: 7px; height: 7px; border-radius: 50%; background: #8A93B8; }
   .wx-status[data-state="live"] .dot { background: #5BE3A0; box-shadow: 0 0 8px #5BE3A0; }
   .wx-status[data-state="loading"] .dot { background: #FFD27A; animation: wx-pulse 1s ease-in-out infinite; }
@@ -559,7 +561,7 @@
 
   .wx-hero { flex: 1 1 0; min-height: 0; display: grid; place-items: center; padding: 8px 24px 0; }
   .wx-float { width: 100%; height: 100%; display: grid; place-items: center; animation: wx-float 6s ease-in-out infinite; }
-  .wx-float svg { height: 100%; max-height: 250px; width: auto; max-width: 100%; aspect-ratio: 120 / 112; overflow: visible; filter: drop-shadow(0 16px 24px rgba(0, 0, 0, 0.32)) drop-shadow(0 0 26px var(--glow)); animation: wx-in 0.55s cubic-bezier(0.2, 0.8, 0.3, 1.1); }
+  .wx-float svg { height: 100%; max-height: 250px; width: auto; max-width: 100%; aspect-ratio: 120 / 112; overflow: visible; filter: drop-shadow(0 12px 18px rgba(0, 0, 0, 0.28)); animation: wx-in 0.45s cubic-bezier(0.2, 0.8, 0.3, 1.1); }
   @keyframes wx-float { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-7px); } }
   @keyframes wx-in { from { opacity: 0; transform: scale(0.88); } to { opacity: 1; transform: none; } }
   .wx-hero .s-rays { animation: wx-spin 48s linear infinite; }
@@ -594,7 +596,7 @@
   .wx-strip::-webkit-scrollbar { display: none; }
   .wx-item { flex: 0 0 auto; width: 58px; display: flex; flex-direction: column; align-items: center; gap: 9px; scroll-snap-align: start; }
   .wx-lbl { font-size: 0.78rem; font-weight: 500; font-variant-numeric: tabular-nums; }
-  .wx-bubble { display: grid; place-items: center; width: 56px; height: 56px; border-radius: 50%; border: 1px solid var(--glass-line); background: radial-gradient(circle at 32% 24%, rgba(255, 255, 255, 0.3), rgba(255, 255, 255, 0.06) 62%), var(--glass); box-shadow: 0 8px 18px rgba(0, 0, 0, 0.22), inset 0 1px 0 rgba(255, 255, 255, 0.28); -webkit-backdrop-filter: blur(10px); backdrop-filter: blur(10px); }
+  .wx-bubble { display: grid; place-items: center; width: 56px; height: 56px; border-radius: 50%; border: 1px solid var(--glass-line); background: radial-gradient(circle at 32% 24%, rgba(255, 255, 255, 0.32), rgba(255, 255, 255, 0.08) 62%), var(--glass); box-shadow: 0 6px 14px rgba(0, 0, 0, 0.2), inset 0 1px 0 rgba(255, 255, 255, 0.28); }
   .wx-bubble svg { width: 36px; height: 34px; display: block; overflow: visible; }
   .wx-item.is-now .wx-bubble { border-color: rgba(255, 255, 255, 0.6); box-shadow: 0 0 0 3px rgba(255, 255, 255, 0.12), 0 8px 18px rgba(0, 0, 0, 0.22), inset 0 1px 0 rgba(255, 255, 255, 0.4); }
   .wx-deg { font-size: 0.82rem; font-weight: 500; color: var(--txt2); font-variant-numeric: tabular-nums; }
@@ -615,8 +617,8 @@
   .wx-mlabels span.on { color: #fff; font-weight: 600; }
 
   /* Bottom sheets inside the phone */
-  .wx-layer { position: absolute; inset: 0; z-index: 6; display: flex; align-items: flex-end; background: rgba(5, 8, 25, 0.5); -webkit-backdrop-filter: blur(6px); backdrop-filter: blur(6px); animation: wx-fade 0.18s ease-out; }
-  .wx-panel { width: 100%; max-height: 82%; overflow-y: auto; padding: 18px max(20px, env(safe-area-inset-right, 0px)) max(22px, env(safe-area-inset-bottom, 0px)) max(20px, env(safe-area-inset-left, 0px)); border-top: 1px solid rgba(255, 255, 255, 0.2); border-radius: 28px 28px 0 0; background: rgba(22, 29, 66, 0.88); -webkit-backdrop-filter: blur(26px) saturate(1.5); backdrop-filter: blur(26px) saturate(1.5); box-shadow: 0 -20px 60px rgba(0, 0, 0, 0.35), inset 0 1px 0 rgba(255, 255, 255, 0.16); animation: wx-up 0.26s cubic-bezier(0.2, 0.8, 0.3, 1); }
+  .wx-layer { position: absolute; inset: 0; z-index: 6; display: flex; align-items: flex-end; background: rgba(5, 8, 25, 0.56); animation: wx-fade 0.18s ease-out; }
+  .wx-panel { width: 100%; max-height: 82%; overflow-y: auto; padding: 18px max(20px, env(safe-area-inset-right, 0px)) max(22px, env(safe-area-inset-bottom, 0px)) max(20px, env(safe-area-inset-left, 0px)); border-top: 1px solid rgba(255, 255, 255, 0.2); border-radius: 28px 28px 0 0; background: rgba(22, 29, 66, 0.96); box-shadow: 0 -20px 60px rgba(0, 0, 0, 0.35), inset 0 1px 0 rgba(255, 255, 255, 0.16); animation: wx-up 0.24s cubic-bezier(0.2, 0.8, 0.3, 1); }
   @keyframes wx-up { from { transform: translateY(24px); opacity: 0; } to { transform: none; opacity: 1; } }
   .wx-ph { display: flex; align-items: center; justify-content: space-between; gap: 12px; margin-bottom: 12px; font-size: 1rem; font-weight: 600; }
   .wx-x { width: 34px; height: 34px; border: 0; border-radius: 50%; background: rgba(255, 255, 255, 0.12); color: var(--txt); font-size: 1.3rem; line-height: 1; cursor: pointer; }
@@ -661,7 +663,11 @@
   .wx-head.wx-enter > :nth-child(2) { animation-delay: 0.06s; }
   .wx-head.wx-enter > :nth-child(3) { animation-delay: 0.12s; }
   .wx-head.wx-enter > :nth-child(4) { animation-delay: 0.18s; }
-  @keyframes wx-rise { from { opacity: 0; transform: translateY(12px); filter: blur(4px); } to { opacity: 1; transform: none; filter: none; } }
+  @keyframes wx-rise { from { opacity: 0; transform: translateY(12px); } to { opacity: 1; transform: none; } }
+  @media (max-width: 640px) {
+    .wx-bubble * { animation: none !important; }
+    .bgc:nth-child(even) { display: none; }
+  }
   /* Temperature gives a tiny bounce when the number changes */
   .wx-temp.wx-bump { animation: wx-bump 0.5s cubic-bezier(0.3, 1.6, 0.5, 1); }
   @keyframes wx-bump { 40% { transform: scale(1.06); } }
@@ -1652,19 +1658,22 @@
     bar.setAttribute("aria-hidden", "true");
     document.body.appendChild(bar);
 
-    var ticking = false;
+    var ticking = false, maxScroll = 1;
+    function calcMax() {
+      maxScroll = Math.max(1, document.documentElement.scrollHeight - window.innerHeight);
+    }
     function update() {
       ticking = false;
-      var max = document.documentElement.scrollHeight - window.innerHeight;
       var y = window.pageYOffset || document.documentElement.scrollTop || 0;
-      var p = max > 0 ? Math.min(1, Math.max(0, y / max)) : 0;
+      var p = Math.min(1, Math.max(0, y / maxScroll));
       bar.style.transform = "scaleX(" + p.toFixed(4) + ")";
       bar.classList.toggle("on", y > 8);
     }
     window.addEventListener("scroll", function () {
       if (!ticking) { ticking = true; requestAnimationFrame(update); }
     }, { passive: true });
-    window.addEventListener("resize", update);
+    window.addEventListener("resize", function () { calcMax(); update(); }, { passive: true });
+    calcMax();
     update();
 
     if (reduce || !("IntersectionObserver" in window)) return;
@@ -1882,15 +1891,17 @@
     var parts = [], fxType = "none", fxW = 0, fxH = 0, raf = 0, last = 0, shoot = null;
     function fxSetup(kind, day) {
       if (!fxCtx) return;
-      var w = fx.clientWidth, h = fx.clientHeight, dpr = Math.min(window.devicePixelRatio || 1, 2);
+      var w = fx.clientWidth, h = fx.clientHeight;
+      var isMob = w < 540;
+      var dpr = Math.min(window.devicePixelRatio || 1, isMob ? 1.25 : 2);
       if (!w || !h) return;
       fx.width = Math.round(w * dpr); fx.height = Math.round(h * dpr);
       fxCtx.setTransform(dpr, 0, 0, dpr, 0, 0);
       fxW = w; fxH = h; parts = [];
       var n = 0;
-      if (kind === "rain" || kind === "storm") { fxType = "rain"; n = 70; }
-      else if (kind === "snow") { fxType = "snow"; n = 55; }
-      else if (!day && kind !== "fog") { fxType = "stars"; n = 38; }
+      if (kind === "rain" || kind === "storm") { fxType = "rain"; n = isMob ? 34 : 70; }
+      else if (kind === "snow") { fxType = "snow"; n = isMob ? 26 : 55; }
+      else if (!day && kind !== "fog") { fxType = "stars"; n = isMob ? 20 : 38; }
       else fxType = "none";
       for (var i = 0; i < n; i++) {
         parts.push({ x: Math.random() * w, y: fxType === "stars" ? Math.random() * h * 0.5 : Math.random() * h, s: 0.5 + Math.random(), p: Math.random() * 6.28 });
