@@ -115,10 +115,10 @@ jobs:
 
             # 4. Restart/ensure live VPS telemetry agent is pointing at /var/www/rudra
             if [ -w /usr/local/bin ] || sudo -n true 2>/dev/null; then
-              sudo -n cp -f "${VPS_TARGET_DIR}/scripts/vps-agent.sh" /usr/local/bin/vps-agent.sh 2>/dev/null || cp -f "${VPS_TARGET_DIR}/scripts/vps-agent.sh" /usr/local/bin/vps-agent.sh 2>/dev/null || true
-              sudo -n chmod 755 /usr/local/bin/vps-agent.sh 2>/dev/null || true
+              cp -f "${VPS_TARGET_DIR}/scripts/vps-agent.sh" /usr/local/bin/vps-agent.sh 2>/dev/null || sudo -n cp -f "${VPS_TARGET_DIR}/scripts/vps-agent.sh" /usr/local/bin/vps-agent.sh 2>/dev/null || true
+              chmod 755 /usr/local/bin/vps-agent.sh 2>/dev/null || sudo -n chmod 755 /usr/local/bin/vps-agent.sh 2>/dev/null || true
               if systemctl is-active --quiet vps-agent 2>/dev/null; then
-                sudo -n systemctl restart vps-agent 2>/dev/null || true
+                systemctl restart vps-agent 2>/dev/null || sudo -n systemctl restart vps-agent 2>/dev/null || true
               elif ! pgrep -f "vps-agent.sh" >/dev/null 2>&1; then
                 nohup "${VPS_TARGET_DIR}/scripts/vps-agent.sh" "${VPS_TARGET_DIR}" >/dev/null 2>&1 &
               fi

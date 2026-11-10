@@ -138,6 +138,69 @@
     background: rgba(45,48,84,.62);
     border-color: rgba(255,255,255,.12);
   }
+  /* ===== Spider-Man Theme (Spider-Verse Crimson & Midnight Blue) ===== */
+  :root[data-theme="spiderman"] {
+    --page: #090D1E;
+    --card: #111730;
+    --ink: #F8FAFC;
+    --muted: #94A3B8;
+    --line: rgba(230, 36, 41, 0.28);
+    --hover: #192246;
+    --avatar: #E62429;
+    --shadow: 0 6px 20px rgba(230, 36, 41, 0.14);
+    --cloud: rgba(230, 36, 41, 0.16);
+    color-scheme: dark;
+  }
+  :root[data-theme="spiderman"] body {
+    background:
+      radial-gradient(ellipse at 18% 12%, rgba(230, 36, 41, 0.38), transparent 42%),
+      radial-gradient(ellipse at 85% 84%, rgba(37, 99, 235, 0.36), transparent 44%),
+      #090D1E;
+  }
+  :root[data-theme="spiderman"] .card {
+    background:
+      radial-gradient(circle at 50% 0%, rgba(230, 36, 41, 0.16), transparent 55%),
+      color-mix(in srgb, #111730 94%, transparent);
+    border: 1px solid rgba(230, 36, 41, 0.45);
+    box-shadow:
+      0 24px 75px rgba(0, 0, 0, 0.65),
+      0 0 32px rgba(230, 36, 41, 0.20),
+      inset 0 1px 0 rgba(255, 255, 255, 0.16);
+  }
+  :root[data-theme="spiderman"] .banner {
+    background: linear-gradient(135deg, #B91C1C 0%, #E62429 48%, #1D4ED8 100%);
+  }
+  :root[data-theme="spiderman"] .banner::after {
+    background: #111730;
+  }
+  :root[data-theme="spiderman"] .avatar {
+    background: radial-gradient(circle at 35% 30%, #FF3B3F, #C8102E 70%, #7F1D1D);
+    border-color: #111730;
+    box-shadow: 0 8px 26px rgba(230, 36, 41, 0.5), inset 0 1px 2px rgba(255, 255, 255, 0.45);
+  }
+  :root[data-theme="spiderman"] .row {
+    background: linear-gradient(135deg, rgba(25, 34, 70, 0.88), rgba(18, 25, 52, 0.92));
+    border-color: rgba(230, 36, 41, 0.28);
+    box-shadow: 0 5px 18px rgba(0, 0, 0, 0.28), inset 0 1px 0 rgba(255, 255, 255, 0.08);
+  }
+  :root[data-theme="spiderman"] .row:hover {
+    background: linear-gradient(135deg, rgba(230, 36, 41, 0.22), rgba(29, 78, 216, 0.28));
+    border-color: rgba(230, 36, 41, 0.65);
+  }
+  :root[data-theme="spiderman"] .row .ic {
+    background:
+      radial-gradient(circle at 28% 22%, rgba(255, 255, 255, 0.24), rgba(230, 36, 41, 0.14) 68%),
+      var(--t);
+    border-color: rgba(230, 36, 41, 0.42);
+  }
+  :root[data-theme="spiderman"] .theme-toggle {
+    background: rgba(230, 36, 41, 0.78);
+    border-color: rgba(255, 255, 255, 0.65);
+    box-shadow: 0 4px 16px rgba(230, 36, 41, 0.45);
+  }
+  :root[data-theme="spiderman"] .scene {
+    background: linear-gradient(180deg, #991B1B 0%, #1E3A8A 55%, #090D1E 100%);
+  }
   @supports not ((backdrop-filter: blur(1px)) or (-webkit-backdrop-filter: blur(1px))) {
     .card, .row, .theme-toggle, .upi-dialog, .upi-app, .upi-idline { background-color: var(--card); }
   }
@@ -333,17 +396,18 @@
   @keyframes drift { from { transform: translateX(-220px); } to { transform: translateX(100vw); } }
 
   /* Night scene at the bottom of the card */
-  footer { padding-inline: 24px; }
-  .scene { position: relative; height: 120px; margin-top: 20px; background: #34329B; }
-  .scene canvas { display: block; width: 100%; height: 100%; object-fit: cover; image-rendering: pixelated; }
+  .sections { position: relative; z-index: 2; }
+  footer { position: relative; z-index: 2; padding-inline: 24px; margin-top: 22px; text-align: center; font-size: 0.78rem; font-weight: 500; color: #686D82; }
+  .scene { position: relative; height: 168px; margin-top: 10px; background: linear-gradient(180deg, #6247EA 0%, #3E28B0 55%, #161154 100%); overflow: hidden; }
+  .scene canvas { display: block; width: 100%; height: 100%; object-fit: cover; }
   .scene::before {
     content: "";
     position: absolute;
     z-index: 1;
     left: 50%;
-    top: -58px;
-    width: 130%;
-    height: 96px;
+    top: -66px;
+    width: 126%;
+    height: 112px;
     transform: translateX(-50%);
     border-radius: 50%;
     background: var(--card);
@@ -368,14 +432,9 @@
   @keyframes ring { 0% { transform: scale(1); opacity: 0.5; } 100% { transform: scale(1.4); opacity: 0; } }
   .avatar { animation: pop 0.5s cubic-bezier(0.2, 0.8, 0.3, 1.2) 0.1s backwards; }
   .avatar::after { content: ""; position: absolute; inset: -4px; border-radius: 50%; border: 2px solid var(--avatar); opacity: 0; animation: ring 3.2s ease-out 1s infinite; pointer-events: none; }
-  .who h1 { animation: rise 0.55s ease-out 0.2s backwards; }
-  .who p { animation: rise 0.55s ease-out 0.3s backwards; }
-  .sections section { animation: rise 0.55s ease-out backwards; }
-  .sections section:nth-child(1) { animation-delay: 0.38s; }
-  .sections section:nth-child(2) { animation-delay: 0.46s; }
-  .sections section:nth-child(3) { animation-delay: 0.54s; }
-  .sections section:nth-child(4) { animation-delay: 0.62s; }
-  .sections section:nth-child(5) { animation-delay: 0.7s; }
+  .who h1 { animation: rise 0.35s ease-out 0.05s backwards; }
+  .who p { animation: rise 0.35s ease-out 0.08s backwards; }
+  .sections section { animation: rise 0.35s ease-out backwards; }
   .ic { transition: transform 0.18s ease; }
   .row:hover .ic { transform: scale(1.1) rotate(-4deg); }
   .go svg { transition: transform 0.18s ease; }
@@ -408,42 +467,9 @@
   .upi-foot { margin:11px 0 0; color:var(--muted); font-size:.66rem; line-height:1.5; }
   @media(prefers-reduced-motion:reduce) { .upi-dialog { animation:none; } }
 
-  /* Delicate scalloped fringe attached to the profile card edges */
+  /* Delicate scalloped fringe attached to the profile card edges (hidden for clean modern card border) */
   .card-fringe {
-    position: absolute;
-    inset: 0;
-    z-index: 3;
-    overflow: hidden;
-    pointer-events: none;
-    border-radius: inherit;
-  }
-  .card-fringe::before,
-  .card-fringe::after {
-    content: "";
-    position: absolute;
-    top: 10px;
-    bottom: 10px;
-    width: 9px;
-    opacity: .52;
-    background:
-      radial-gradient(circle at 0 6px, var(--page) 3.2px, transparent 3.7px)
-      0 0 / 9px 18px repeat-y;
-  }
-  .card-fringe::before { left: 0; }
-  .card-fringe::after {
-    right: 0;
-    transform: scaleX(-1);
-  }
-  .card-fringe span {
-    position: absolute;
-    top: 0;
-    left: 12px;
-    right: 12px;
-    height: 8px;
-    opacity: .45;
-    background:
-      radial-gradient(circle at 6px 0, var(--page) 3px, transparent 3.5px)
-      0 0 / 18px 8px repeat-x;
+    display: none;
   }
 
   /* Minecraft pixel typography for the profile name: solid colour, no gradient */
@@ -493,7 +519,6 @@
 
 <style id="weather-css">
   /* ===== Scroll motion ===== */
-  .sections section:nth-child(6) { animation-delay: 0.78s; }
   .sections section.sr-pending { opacity: 0; transform: translateY(20px); }
   .sections section.sr-pending.sr-in { opacity: 1; transform: none; transition: opacity 0.6s ease, transform 0.6s ease; }
   .scrollbar { position: fixed; top: env(safe-area-inset-top, 0px); left: 0; right: 0; height: 3px; z-index: 40; pointer-events: none; background: linear-gradient(90deg, #5B63E6, #8D97FF 60%, #7CD1FF); transform: scaleX(0); transform-origin: 0 50%; opacity: 0; transition: opacity 0.25s ease; }
@@ -859,6 +884,241 @@
   .vps-phone .wx-seg button { background: rgba(255, 255, 255, 0.8); border-color: rgba(59, 130, 246, 0.22); color: var(--txt); }
   .vps-phone .wx-seg button[aria-pressed="true"] { background: #2563EB; border-color: #2563EB; color: #fff; }
   .vps-btn-row { display: flex; gap: 8px; margin-top: 8px; }
+
+  /* ===== Pastel Bento Widget (Calendar, Upcoming Festival, Weather & Total Visitors) ===== */
+  .bento-wrap {
+    padding: 9px;
+    border-radius: 24px;
+    background: rgba(250, 250, 253, 0.94);
+    border: 1px solid rgba(255, 255, 255, 0.95);
+    box-shadow:
+      0 10px 28px rgba(38, 42, 98, 0.08),
+      inset 0 1px 0 #FFFFFF;
+    display: grid;
+    grid-template-columns: repeat(12, minmax(0, 1fr));
+    grid-template-rows: auto auto;
+    gap: 8px;
+    color: #22222A;
+  }
+  :root[data-theme="dark"] .bento-wrap {
+    background: rgba(32, 35, 66, 0.92);
+    border-color: rgba(255, 255, 255, 0.14);
+    box-shadow: 0 12px 32px rgba(0, 0, 0, 0.28), inset 0 1px 0 rgba(255, 255, 255, 0.1);
+  }
+  .bento-left {
+    grid-column: 1 / 4;
+    grid-row: 1 / 3;
+    border-radius: 17px;
+    background: #FCE4E1;
+    border: 1px solid rgba(235, 185, 180, 0.55);
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+  }
+  .bento-cal-top {
+    flex: 1 1 52%;
+    display: grid;
+    place-items: center;
+    padding: 10px 6px;
+  }
+  .bento-cal-badge {
+    width: 54px;
+    border-radius: 12px;
+    background: #FFFFFF;
+    box-shadow: 0 6px 14px rgba(185, 92, 82, 0.18), inset 0 1px 0 #FFFFFF;
+    overflow: hidden;
+    text-align: center;
+  }
+  .bento-cal-dow {
+    display: block;
+    padding: 3px 0 2px;
+    background: linear-gradient(180deg, #F26454, #E64D3D);
+    color: #FFFFFF;
+    font-size: 0.56rem;
+    font-weight: 700;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    border-bottom: 1px dashed rgba(255, 255, 255, 0.55);
+  }
+  .bento-cal-num {
+    display: block;
+    padding: 3px 0 5px;
+    font-family: "Outfit", var(--f);
+    font-size: 1.32rem;
+    font-weight: 800;
+    line-height: 1.05;
+    color: #1F1F26;
+    font-variant-numeric: tabular-nums;
+  }
+  .bento-fest {
+    flex: 1 1 48%;
+    border-top: 1px solid rgba(214, 162, 156, 0.42);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 10px 6px;
+    text-align: center;
+  }
+  .bento-fest-val {
+    font-family: "Outfit", var(--f);
+    font-size: 0.96rem;
+    font-weight: 700;
+    line-height: 1.2;
+    color: #241F1F;
+  }
+  .bento-fest-lbl {
+    margin-top: 5px;
+    font-size: 0.66rem;
+    font-weight: 500;
+    line-height: 1.26;
+    color: #876E6B;
+  }
+  .bento-week {
+    grid-column: 4 / 10;
+    grid-row: 1 / 2;
+    border-radius: 17px;
+    background: #FFFFFF;
+    border: 1px solid rgba(0, 0, 0, 0.05);
+    box-shadow: 0 3px 10px rgba(0, 0, 0, 0.02);
+    padding: 9px 8px 8px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    gap: 5px;
+  }
+  .bento-w-grid {
+    display: grid;
+    grid-template-columns: repeat(7, 1fr);
+    row-gap: 5px;
+    column-gap: 1px;
+    text-align: center;
+    align-items: center;
+    font-variant-numeric: tabular-nums;
+  }
+  .bento-w-hdr {
+    font-size: 0.62rem;
+    font-weight: 600;
+    color: #B2B5BF;
+    padding-bottom: 1px;
+  }
+  .bento-w-day {
+    font-size: 0.66rem;
+    font-weight: 600;
+    color: #2B2D38;
+    line-height: 1.65;
+    border-radius: 999px;
+    margin-inline: auto;
+    width: 22px;
+    height: 19px;
+    display: grid;
+    place-items: center;
+  }
+  .bento-w-day.is-today {
+    background: #EE6B59;
+    color: #FFFFFF;
+    font-weight: 700;
+    box-shadow: 0 2px 6px rgba(238, 107, 89, 0.38);
+  }
+  .bento-art {
+    grid-column: 10 / 13;
+    grid-row: 1 / 2;
+    border-radius: 17px;
+    background: #F7EDF6;
+    border: 1px solid rgba(226, 204, 224, 0.65);
+    padding: 5px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  .bento-art svg {
+    width: 100%;
+    height: 100%;
+    max-height: 76px;
+    border-radius: 12px;
+    display: block;
+  }
+  .bento-wx {
+    grid-column: 4 / 9;
+    grid-row: 2 / 3;
+    border-radius: 17px;
+    background: #FDF0DF;
+    border: 1px solid rgba(238, 212, 178, 0.65);
+    padding: 10px 9px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    cursor: pointer;
+    text-align: left;
+    font: inherit;
+    color: inherit;
+    transition: transform 0.16s ease;
+  }
+  .bento-wx:hover { transform: translateY(-1px); }
+  .bento-wx-ic {
+    width: 36px;
+    height: 36px;
+    flex: 0 0 36px;
+    display: block;
+    overflow: visible;
+  }
+  .bento-wx-val {
+    display: block;
+    font-family: "Outfit", var(--f);
+    font-size: 1.12rem;
+    font-weight: 700;
+    line-height: 1.1;
+    color: #24211D;
+    font-variant-numeric: tabular-nums;
+  }
+  .bento-wx-lbl {
+    display: block;
+    margin-top: 2px;
+    font-size: 0.63rem;
+    font-weight: 500;
+    color: #887B6C;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+  .bento-vis {
+    grid-column: 9 / 13;
+    grid-row: 2 / 3;
+    border-radius: 17px;
+    background: #E7F6EC;
+    border: 1px solid rgba(190, 228, 203, 0.7);
+    padding: 10px 9px;
+    display: flex;
+    align-items: center;
+    gap: 7px;
+  }
+  .bento-vis-ic {
+    width: 28px;
+    height: 34px;
+    flex: 0 0 28px;
+    display: block;
+  }
+  .bento-vis-val {
+    display: block;
+    font-family: "Outfit", var(--f);
+    font-size: 1.08rem;
+    font-weight: 700;
+    line-height: 1.1;
+    color: #1E2821;
+    font-variant-numeric: tabular-nums;
+  }
+  .bento-vis-lbl {
+    display: block;
+    margin-top: 2px;
+    font-size: 0.61rem;
+    font-weight: 500;
+    color: #6B8272;
+    white-space: nowrap;
+  }
+  @media (max-width: 370px) {
+    .bento-wx-val, .bento-vis-val { font-size: 0.96rem; }
+    .bento-w-day { width: 19px; font-size: 0.6rem; }
+  }
 </style>
 
 <svg width="0" height="0" style="position:absolute" aria-hidden="true">
@@ -962,10 +1222,131 @@
         <li><button type="button" class="row vps-row" id="vpsTrigger" aria-haspopup="dialog" aria-controls="vps"><span class="ic"><svg viewBox="0 0 32 32" aria-hidden="true"><defs><linearGradient id="vgBack" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#60A5FA"/><stop offset="1" stop-color="#2563EB"/></linearGradient><linearGradient id="vgFront" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#FFFFFF" stop-opacity="0.92"/><stop offset="1" stop-color="#BFDBFE" stop-opacity="0.72"/></linearGradient></defs><rect x="9" y="3.5" width="17" height="19" rx="4.5" fill="url(#vgBack)"/><rect x="5" y="7.5" width="17.5" height="20" rx="4.5" fill="url(#vgFront)" stroke="#FFFFFF" stroke-width="1.1"/><rect x="8.5" y="12" width="10.5" height="2.2" rx="1.1" fill="#3B82F6"/><rect x="8.5" y="16.2" width="10.5" height="2.2" rx="1.1" fill="#3B82F6" opacity="0.8"/><rect x="8.5" y="20.4" width="6.8" height="2.2" rx="1.1" fill="#3B82F6" opacity="0.6"/><circle cx="18" cy="21.5" r="1.3" fill="#10B981"/></svg></span><span class="txt"><span class="t">VPS Resources</span><span class="s" id="vpsRowSub">CPU, RAM, disk &amp; network usage</span></span><span class="go"><svg aria-hidden="true"><use href="#i-arr"/></svg></span></button></li>
       </ul>
     </section>
+
+    <section aria-label="Live Overview Widget">
+      <div class="bento-wrap" id="bentoWidget">
+        <!-- Left column: Calendar badge + Upcoming Festival -->
+        <div class="bento-left">
+          <div class="bento-cal-top">
+            <div class="bento-cal-badge">
+              <span class="bento-cal-dow" id="bentoDow">SAT</span>
+              <span class="bento-cal-num" id="bentoDay">18</span>
+            </div>
+          </div>
+          <div class="bento-fest">
+            <span class="bento-fest-val" id="bentoFestName">Dev<br>Deepawali</span>
+            <span class="bento-fest-lbl">Upcoming<br>Festival</span>
+          </div>
+        </div>
+
+        <!-- Top-middle: 2-Week Calendar Strip -->
+        <div class="bento-week" aria-label="Two-week calendar">
+          <div class="bento-w-grid" id="bentoWeekGrid">
+            <span class="bento-w-hdr">M</span><span class="bento-w-hdr">T</span><span class="bento-w-hdr">W</span><span class="bento-w-hdr">T</span><span class="bento-w-hdr">F</span><span class="bento-w-hdr">S</span><span class="bento-w-hdr">S</span>
+          </div>
+        </div>
+
+        <!-- Top-right: Spider-Man Night Sky Art Tile (Click to toggle Spider-Man Theme) -->
+        <div class="bento-art" id="bentoSpiderBtn" title="Toggle Spider-Man Theme" style="background:#FCE7E9;border-color:rgba(230,36,41,0.22);cursor:pointer">
+          <svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+            <defs>
+              <linearGradient id="spSky" x1="0" y1="0" x2="0" y2="1">
+                <stop offset="0" stop-color="#090D24"/>
+                <stop offset="0.6" stop-color="#172554"/>
+                <stop offset="1" stop-color="#7F1D1D"/>
+              </linearGradient>
+              <linearGradient id="spSuitRed" x1="0" y1="0" x2="1" y2="1">
+                <stop offset="0" stop-color="#FF3B3F"/>
+                <stop offset="0.55" stop-color="#E62429"/>
+                <stop offset="1" stop-color="#991B1B"/>
+              </linearGradient>
+              <linearGradient id="spSuitBlue" x1="0" y1="0" x2="0" y2="1">
+                <stop offset="0" stop-color="#2563EB"/>
+                <stop offset="1" stop-color="#1E3A8A"/>
+              </linearGradient>
+            </defs>
+            <!-- Deep Spider-Verse night sky background -->
+            <rect width="100" height="100" rx="14" fill="url(#spSky)"/>
+            <!-- Subtle background spider-web in top-left corner -->
+            <g stroke="rgba(255,255,255,0.22)" stroke-width="0.8" fill="none">
+              <line x1="0" y1="0" x2="42" y2="12"/>
+              <line x1="0" y1="0" x2="36" y2="28"/>
+              <line x1="0" y1="0" x2="22" y2="40"/>
+              <line x1="0" y1="0" x2="8" y2="44"/>
+              <path d="M14 4 Q12 12 4 15 M24 7 Q20 20 5 26 M34 10 Q28 28 7 37"/>
+            </g>
+            <!-- Stars & city skyline silhouette at bottom -->
+            <circle cx="82" cy="14" r="1.2" fill="#FFF" opacity="0.85"/>
+            <circle cx="68" cy="22" r="0.9" fill="#FFF" opacity="0.65"/>
+            <circle cx="88" cy="30" r="1" fill="#FFF" opacity="0.75"/>
+            <path d="M0 100V78h12v8h8V72h13v14h52V74h15v26z" fill="#070A1A" opacity="0.75"/>
+            <!-- Web thread from top center (Spider-Man hanging / posing) -->
+            <line x1="50" y1="0" x2="50" y2="30" stroke="#E2E8F0" stroke-width="1.5" stroke-dasharray="3,1.5"/>
+            <!-- Spider-Man Shoulders & Torso -->
+            <path d="M20 100 C21 69 79 69 80 100 Z" fill="url(#spSuitBlue)"/>
+            <path d="M27 100 C30 72 70 72 73 100 Z" fill="url(#spSuitRed)"/>
+            <!-- Torso web lines & black spider emblem on chest -->
+            <path d="M50 72 V100 M38 75 L43 100 M62 75 L57 100 M30 84 Q50 89 70 84 M28 94 Q50 98 72 94" fill="none" stroke="#111827" stroke-width="1" opacity="0.65"/>
+            <circle cx="50" cy="86" r="3" fill="#0F172A"/>
+            <ellipse cx="50" cy="91" rx="4" ry="5" fill="#0F172A"/>
+            <path d="M47 86l-5-3M46 89l-6-1M46 92l-6 2M47 94l-4 4M53 86l5-3M54 89l6-1M54 92l6 2M53 94l4 4" stroke="#0F172A" stroke-width="1.2" stroke-linecap="round"/>
+            <!-- Spider-Man Head / Mask -->
+            <ellipse cx="50" cy="49" rx="22" ry="24" fill="url(#spSuitRed)" stroke="#7F1D1D" stroke-width="1"/>
+            <!-- Mask Webbing Lines -->
+            <g stroke="#111827" stroke-width="1" fill="none" opacity="0.72">
+              <line x1="50" y1="25" x2="50" y2="73"/>
+              <line x1="28" y1="49" x2="72" y2="49"/>
+              <path d="M33 32 L50 51 L67 32"/>
+              <path d="M33 66 L50 51 L67 66"/>
+              <ellipse cx="50" cy="51" rx="9" ry="10"/>
+              <ellipse cx="50" cy="51" rx="16" ry="17"/>
+            </g>
+            <!-- Iconic Expressive White Spider-Man Mask Eyes with thick black rims -->
+            <path d="M31 43 C32 35 43 39 47 49 C43 55 32 53 31 43 Z" fill="#FFFFFF" stroke="#0B0F19" stroke-width="3.2" stroke-linejoin="round"/>
+            <path d="M69 43 C68 35 57 39 53 49 C57 55 68 53 69 43 Z" fill="#FFFFFF" stroke="#0B0F19" stroke-width="3.2" stroke-linejoin="round"/>
+          </svg>
+        </div>
+
+        <!-- Bottom-middle: Live Weather Tile -->
+        <button type="button" class="bento-wx" id="bentoWxBtn" aria-label="Open live weather">
+          <svg class="bento-wx-ic" viewBox="0 0 48 48" aria-hidden="true">
+            <defs>
+              <radialGradient id="bwSun" cx="0.35" cy="0.3" r="0.7">
+                <stop offset="0" stop-color="#FFCA57"/>
+                <stop offset="1" stop-color="#F28C18"/>
+              </radialGradient>
+              <linearGradient id="bwCloud" x1="0" y1="0" x2="0" y2="1">
+                <stop offset="0" stop-color="#FFFFFF"/>
+                <stop offset="1" stop-color="#EFECE6"/>
+              </linearGradient>
+            </defs>
+            <circle cx="27" cy="22" r="14" fill="#FFF" opacity="0.65"/>
+            <circle cx="26" cy="23" r="13" fill="url(#bwSun)"/>
+            <path d="M8 37h21a6.5 6.5 0 0 0 .8-12.9A8.5 8.5 0 0 0 13.5 22 7 7 0 0 0 8 37z" fill="url(#bwCloud)"/>
+          </svg>
+          <span>
+            <span class="bento-wx-val" id="bentoWxTemp">25°</span>
+            <span class="bento-wx-lbl" id="bentoWxCond">Clear Sky</span>
+          </span>
+        </button>
+
+        <!-- Bottom-right: Total Visitors Tile -->
+        <div class="bento-vis">
+          <svg class="bento-vis-ic" viewBox="0 0 32 40" aria-hidden="true">
+            <circle cx="17" cy="6.5" r="4" fill="#63C784"/>
+            <path d="M15.5 13.5 L11 21 L7 19.5 M16 13 L21 19.5 L25.5 20.5 M15.5 13 L14.5 24 L10 35.5 M15 24 L20.5 35.5" fill="none" stroke="#63C784" stroke-width="3.4" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+          <span>
+            <span class="bento-vis-val" id="bentoVisCount">1</span>
+            <span class="bento-vis-lbl">Total Visitors</span>
+          </span>
+        </div>
+      </div>
+    </section>
 </div>
 
   <footer>Copyright &copy; 2026 Rudra Sarkar</footer>
-  <div class="scene"><canvas id="night" width="108" height="30" role="img" aria-label="Pixel-art night scene with a campfire, moon and fireflies"></canvas></div>
+  <div class="scene"><canvas id="night" width="860" height="336" role="img" aria-label="Night mountain landscape with glowing moon, shooting stars and pine trees"></canvas></div>
 </div>
 <div class="sr" role="status" aria-live="polite" id="live"></div>
 
@@ -1115,68 +1496,134 @@
       return '<div class="bgc" style="top:' + b[1] + "%;animation-duration:" + b[2] + "s;animation-delay:" + b[3] + 's">' + pixelArt(cloudRows, { "#": "currentColor" }, [], b[0]) + "</div>";
     }).join("");
 
-    // Night scene at the bottom of the card: moon, campfire, sparks, fireflies and flowers.
+    // Smooth HD Night Mountain Scene at the bottom of the card:
+    // Glowing rising moon in center valley, layered indigo/violet mountain peaks, shooting stars & pine silhouettes.
     var nc = document.getElementById("night");
     var ng = nc.getContext("2d");
     var NW = nc.width, NH = nc.height;
-    function nlayer() { var o = document.createElement("canvas"); o.width = NW; o.height = NH; return o; }
-    var nSkyC = nlayer(), nFgC = nlayer();
-    var nps = painter(nSkyC.getContext("2d")), npf = painter(nFgC.getContext("2d")), npd = painter(ng);
-    var nSky = ["#34329B", "#403FB0", "#5047C4", "#6A55CE", "#8460D2"];
-    var nBand = Math.ceil(NH / nSky.length);
-    for (var b1 = 0; b1 < nSky.length; b1++) nps(0, b1 * nBand, NW, nBand, nSky[b1]);
-    for (var my = -6; my <= 6; my++) for (var mx = -6; mx <= 6; mx++) {
-      var md = Math.sqrt(mx * mx + my * my);
-      if (md <= 4.2) nps(22 + mx, 15 + my, 1, 1, "#F6F2D4");
-      else if (md <= 6) nps(22 + mx, 15 + my, 1, 1, "#F6F2D4", 0.18);
-    }
-    nps(21, 14, 1, 1, "#DCD7AE"); nps(24, 16, 2, 1, "#DCD7AE"); nps(20, 17, 1, 1, "#DCD7AE");
-    function nHills(base, amp, f, ph, col) {
-      for (var x = 0; x < NW; x++) {
-        var h = Math.round(base + amp * Math.sin(x * f + ph) + (amp / 2) * Math.sin(x * f * 2.4 + ph * 1.9));
-        npf(x, h, 1, NH - h, col);
-      }
-    }
-    nHills(19, 2.6, 0.09, 2.0, "#5A49B8");
-    nHills(22, 2.2, 0.12, 0.5, "#43379B");
-    npf(0, 24, NW, 2, "#3DAA70");
-    npf(0, 26, NW, NH - 26, "#6B4A30");
-    for (var dn = 0; dn < 40; dn++) npf((dn * 29 + 7) % NW, 27 + (dn * 11) % 3, 1, 1, "#573A24");
-    function nTree(x) { npf(x + 2, 19, 2, 5, "#5A3A22"); npf(x, 14, 6, 5, "#237A56"); npf(x + 1, 12, 4, 2, "#2E8F66"); }
-    nTree(6); nTree(96);
-    [[14, "#FF8FB8"], [33, "#FFD84D"], [40, "#FFFFFF"], [67, "#FFD84D"], [75, "#FF8FB8"], [86, "#FFFFFF"], [103, "#FFD84D"]].forEach(function (f) { npf(f[0], 23, 1, 1, f[1]); });
-    [11, 19, 28, 37, 44, 63, 70, 80, 91, 100].forEach(function (x) { npf(x, 23, 1, 1, "#4FCB88"); });
+    var nSkyC = document.createElement("canvas"); nSkyC.width = NW; nSkyC.height = NH;
+    var nFgC = document.createElement("canvas"); nFgC.width = NW; nFgC.height = NH;
+    var sctx = nSkyC.getContext("2d"), fctx = nFgC.getContext("2d");
 
-    var nStars = [[4, 6], [10, 10], [34, 5], [42, 12], [66, 6], [74, 11], [90, 5], [101, 12], [83, 14], [16, 4]];
-    var flies = [[14, 19], [30, 21], [72, 20], [88, 18], [46, 17], [100, 22]];
+    // 1. Deep violet-indigo sky gradient + central moon glow
+    var skyGrad = sctx.createLinearGradient(0, 0, 0, NH);
+    skyGrad.addColorStop(0, "#5C3EE8");
+    skyGrad.addColorStop(0.55, "#4A2FD1");
+    skyGrad.addColorStop(1, "#231978");
+    sctx.fillStyle = skyGrad;
+    sctx.fillRect(0, 0, NW, NH);
+
+    var moonGlow = sctx.createRadialGradient(NW * 0.5, NH * 0.44, 10, NW * 0.5, NH * 0.44, 240);
+    moonGlow.addColorStop(0, "rgba(255, 255, 255, 0.55)");
+    moonGlow.addColorStop(0.35, "rgba(198, 182, 255, 0.28)");
+    moonGlow.addColorStop(1, "rgba(110, 82, 235, 0)");
+    sctx.fillStyle = moonGlow;
+    sctx.fillRect(0, 0, NW, NH);
+
+    // Rising full moon disc in the center
+    sctx.fillStyle = "#F8FAFF";
+    sctx.beginPath();
+    sctx.arc(NW * 0.5, NH * 0.46, 52, 0, Math.PI * 2);
+    sctx.fill();
+
+    // Soft distant horizon waves behind mountains
+    function drawPoly(ctx, pts, fill) {
+      ctx.fillStyle = fill;
+      ctx.beginPath();
+      ctx.moveTo(pts[0][0], pts[0][1]);
+      for (var i = 1; i < pts.length; i++) ctx.lineTo(pts[i][0], pts[i][1]);
+      ctx.closePath();
+      ctx.fill();
+    }
+
+    // Soft misty background ridges
+    drawPoly(fctx, [[0, 120], [180, 148], [370, 175], [530, 145], [700, 128], [860, 105], [860, NH], [0, NH]], "rgba(155, 132, 248, 0.38)");
+    drawPoly(fctx, [[0, 145], [140, 180], [290, 152], [440, 185], [610, 150], [760, 165], [860, 135], [860, NH], [0, NH]], "rgba(122, 96, 236, 0.45)");
+
+    // Midground mountain range (lit right slopes + shaded left slopes)
+    var mMid = fctx.createLinearGradient(0, 120, 0, NH);
+    mMid.addColorStop(0, "#6648E6");
+    mMid.addColorStop(1, "#35229E");
+    drawPoly(fctx, [[0, 210], [120, 165], [245, 212], [355, 162], [462, 138], [585, 205], [715, 155], [860, 205], [860, NH], [0, NH]], mMid);
+    // Illuminated facet on center peak
+    drawPoly(fctx, [[462, 138], [515, 168], [485, 215], [425, 195]], "rgba(158, 136, 255, 0.28)");
+
+    // Foreground dark-indigo mountain peaks
+    var mFront = fctx.createLinearGradient(0, 165, 0, NH);
+    mFront.addColorStop(0, "#3D29A8");
+    mFront.addColorStop(1, "#14104F");
+    drawPoly(fctx, [[0, 248], [95, 205], [220, 255], [378, 192], [530, 258], [648, 204], [785, 248], [860, 228], [860, NH], [0, NH]], mFront);
+    drawPoly(fctx, [[378, 192], [445, 222], [405, 265], [340, 242]], "rgba(112, 92, 230, 0.24)");
+
+    // Bottom darkest ridge sweeping from sides
+    drawPoly(fctx, [[0, 268], [165, 292], [350, 325], [540, 290], [720, 268], [860, 255], [860, NH], [0, NH]], "#120E47");
+
+    // Pine tree silhouettes on left and right
+    function drawPine(ctx, cx, baseY, scale) {
+      ctx.fillStyle = "#0F0C3D";
+      var levels = [
+        [0, -48, 18, -22],
+        [0, -34, 24, -6],
+        [0, -18, 30, 12]
+      ];
+      levels.forEach(function (lv) {
+        ctx.beginPath();
+        ctx.moveTo(cx, baseY + lv[1] * scale);
+        ctx.lineTo(cx - lv[2] * scale, baseY + lv[3] * scale);
+        ctx.lineTo(cx + lv[2] * scale, baseY + lv[3] * scale);
+        ctx.closePath();
+        ctx.fill();
+      });
+      ctx.fillRect(cx - 2.5 * scale, baseY + 10 * scale, 5 * scale, 12 * scale);
+    }
+    drawPine(fctx, 56, 268, 1.18);
+    drawPine(fctx, 102, 282, 0.82);
+    drawPine(fctx, 804, 268, 1.18);
+    drawPine(fctx, 758, 282, 0.82);
+
+    var nStars = [
+      [78, 92, 2.2, 0.4], [156, 122, 1.8, 1.3], [248, 114, 2.0, 2.5],
+      [625, 112, 2.0, 0.9], [712, 96, 1.8, 2.1], [792, 82, 2.3, 1.7],
+      [310, 148, 1.6, 0.8], [568, 140, 1.7, 2.8], [670, 182, 1.6, 1.1]
+    ];
+    var meteors = [
+      { x: 205, y: 150, dx: -52, dy: 42 },
+      { x: 525, y: 196, dx: -46, dy: 38 },
+      { x: 755, y: 122, dx: -48, dy: 38 }
+    ];
+
+    function drawMeteor(x, y, dx, dy, alpha) {
+      var g = ng.createLinearGradient(x, y, x + dx, y + dy);
+      g.addColorStop(0, "rgba(255,255,255,0)");
+      g.addColorStop(1, "rgba(255,255,255," + (0.85 * alpha).toFixed(2) + ")");
+      ng.strokeStyle = g;
+      ng.lineWidth = 2.2;
+      ng.lineCap = "round";
+      ng.beginPath();
+      ng.moveTo(x, y);
+      ng.lineTo(x + dx, y + dy);
+      ng.stroke();
+      ng.fillStyle = "rgba(255,255,255," + alpha.toFixed(2) + ")";
+      ng.beginPath();
+      ng.arc(x + dx, y + dy, 2.2, 0, Math.PI * 2);
+      ng.fill();
+    }
+
     function nframe(t) {
       var s = t / 1000;
       ng.clearRect(0, 0, NW, NH);
       ng.drawImage(nSkyC, 0, 0);
-      nStars.forEach(function (st, k) {
-        npd(st[0], st[1], 1, 1, "#FFFFFF", 0.25 + 0.6 * (0.5 + 0.5 * Math.sin(s * 1.5 + k * 1.9)));
+      nStars.forEach(function (st) {
+        var a = 0.45 + 0.55 * (0.5 + 0.5 * Math.sin(s * 1.8 + st[3]));
+        ng.fillStyle = "rgba(255,255,255," + a.toFixed(2) + ")";
+        ng.beginPath();
+        ng.arc(st[0], st[1], st[2], 0, Math.PI * 2);
+        ng.fill();
       });
       ng.drawImage(nFgC, 0, 0);
-      npd(42, 22, 24, 2, "#FFB02E", 0.1 + 0.05 * Math.sin(s * 9));
-      npd(46, 21, 16, 1, "#FFB02E", 0.08 + 0.05 * Math.sin(s * 9 + 1));
-      var fa = 1 + Math.round(1.2 * Math.sin(s * 11));
-      var fb = 1 + Math.round(1.2 * Math.sin(s * 10 + 2));
-      var fc = 2 + Math.round(1.5 * Math.sin(s * 7 + 1));
-      npd(51, 18, 6, 3, "#FF6B2D");
-      npd(52, 17, 4, 3, "#FFA62B");
-      npd(53, 18, 2, 2, "#FFE27A");
-      npd(52, 17 - fa, 1, fa, "#FF6B2D");
-      npd(55, 17 - fb, 1, fb, "#FF6B2D");
-      npd(53, 16 - fc, 2, fc + 1, "#FFA62B");
-      npd(50, 21, 8, 2, "#6B4423"); npd(51, 21, 6, 1, "#8B5A33");
-      npd(48, 22, 2, 2, "#8D8FA6"); npd(58, 22, 2, 2, "#8D8FA6");
-      for (var sk = 0; sk < 5; sk++) {
-        var ph = (s * 5 + sk * 3.7) % 12;
-        npd(Math.round(53 + 3 * Math.sin(s * 2 + sk * 2)), Math.round(16 - ph), 1, 1, "#FFC15A", 1 - ph / 12);
-      }
-      flies.forEach(function (f, k) {
-        var al = Math.max(0, Math.sin(s * 1.4 + k * 1.7));
-        npd(Math.round(f[0] + 4 * Math.sin(s * 0.7 + k)), Math.round(f[1] + 2 * Math.sin(s * 1.1 + k * 2)), 1, 1, "#E8FF8A", 0.25 + 0.75 * al);
+      meteors.forEach(function (m, idx) {
+        var pulse = 0.55 + 0.45 * Math.sin(s * 1.2 + idx * 2.1);
+        drawMeteor(m.x, m.y, m.dx, m.dy, pulse);
       });
     }
     nframe(0);
@@ -1417,24 +1864,38 @@
     var toggle = document.getElementById("themeToggle");
     if (!toggle) return;
 
-    /* Light by default. Dark only if the visitor picked it with the toggle. */
+    /* Supports 3 modes: "light" (default) -> "spiderman" (Spider-Man theme) -> "dark" */
+    var THEMES = ["light", "spiderman", "dark"];
     var saved = null;
     try { saved = localStorage.getItem("rudra-theme-choice"); } catch (e) {}
-    var initial = saved === "dark" ? "dark" : "light";
+    var initial = THEMES.indexOf(saved) > -1 ? saved : "light";
 
     function applyTheme(theme, remember) {
       root.setAttribute("data-theme", theme);
-      var dark = theme === "dark";
-      toggle.setAttribute("aria-pressed", String(dark));
-      toggle.setAttribute("aria-label", dark ? "Switch to light mode" : "Switch to dark mode");
-      toggle.querySelector(".theme-toggle-icon").textContent = dark ? "☀" : "☾";
-      toggle.querySelector(".theme-toggle-label").textContent = dark ? "Light mode" : "Dark mode";
+      toggle.setAttribute("aria-pressed", String(theme !== "light"));
+      var iconEl = toggle.querySelector(".theme-toggle-icon");
+      var labelEl = toggle.querySelector(".theme-toggle-label");
+      if (theme === "light") {
+        iconEl.textContent = "🕷️";
+        labelEl.textContent = "Spider-Man";
+        toggle.setAttribute("aria-label", "Switch to Spider-Man theme");
+      } else if (theme === "spiderman") {
+        iconEl.textContent = "☾";
+        labelEl.textContent = "Dark mode";
+        toggle.setAttribute("aria-label", "Switch to dark mode");
+      } else {
+        iconEl.textContent = "☀";
+        labelEl.textContent = "Light mode";
+        toggle.setAttribute("aria-label", "Switch to light mode");
+      }
       if (remember) { try { localStorage.setItem("rudra-theme-choice", theme); } catch (e) {} }
     }
 
     applyTheme(initial, false);
     toggle.addEventListener("click", function () {
-      applyTheme(root.getAttribute("data-theme") === "dark" ? "light" : "dark", true);
+      var cur = root.getAttribute("data-theme") || "light";
+      var next = THEMES[(THEMES.indexOf(cur) + 1) % THEMES.length];
+      applyTheme(next, true);
     });
   })();
 
@@ -1675,18 +2136,6 @@
     window.addEventListener("resize", function () { calcMax(); update(); }, { passive: true });
     calcMax();
     update();
-
-    if (reduce || !("IntersectionObserver" in window)) return;
-    var secs = document.querySelectorAll(".sections > section");
-    var io = new IntersectionObserver(function (entries) {
-      entries.forEach(function (e) {
-        if (e.isIntersecting) { e.target.classList.add("sr-in"); io.unobserve(e.target); }
-      });
-    }, { threshold: 0.12 });
-    secs.forEach(function (s) {
-      var top = s.getBoundingClientRect().top;
-      if (top > window.innerHeight * 0.92) { s.classList.add("sr-pending"); io.observe(s); }
-    });
   })();
 
   /* Weather page */
@@ -2084,7 +2533,15 @@
         '<circle cx="76" cy="40" r="24" fill="url(#wxsG)"/>' +
         '<path d="M30 82h56a18 18 0 0 0 2-35.8A25 25 0 0 0 40 42a20 20 0 0 0-10 40z" fill="url(#wxcG)" stroke="#FFFFFF" stroke-width="2"/>';
       $("wxRowIcon").innerHTML = sunCloud;
-      if (d) $("wxRowIcon").parentNode.setAttribute("data-sky", d.cur.day ? "day" : "night");
+      if (d) {
+        $("wxRowIcon").parentNode.setAttribute("data-sky", d.cur.day ? "day" : "night");
+        var bt = $("bentoWxTemp"), bc = $("bentoWxCond");
+        if (bt) bt.textContent = fmt(d.cur.t);
+        if (bc) {
+          var lbl = label(d.cur.kind, d.cur.day);
+          bc.textContent = lbl === "Clear" || lbl === "Sunny" ? "Clear Sky" : lbl;
+        }
+      }
     }
 
     /* ---------- loading ---------- */
@@ -2479,6 +2936,9 @@
           var dTotal = Number(j.diskTotal || j.disk_total) || n.diskTotal;
           var dUsed = j.diskUsed != null ? Number(j.diskUsed) : (j.disk_used != null ? Number(j.disk_used) : n.diskUsed);
           if (j.cores) n.cpuCores = Number(j.cores);
+          if (j.visitors != null && Number(j.visitors) > 0 && window._updateRealVisitors) {
+            window._updateRealVisitors(Number(j.visitors));
+          }
           n.ramUsed = rUsed; n.ramTotal = rTotal; n.diskUsed = dUsed; n.diskTotal = dTotal;
           if (j.cpu != null) n.baseCpu = Number(j.cpu);
           applyMetrics({
@@ -2675,6 +3135,118 @@
 
     stepTelemetry();
     if (location.hash === "#vps") openVps();
+  })();
+
+  /* Pastel Bento Overview Widget: Calendar, Upcoming Indian Festival, Weather & Total Visitors */
+  (function () {
+    var $ = function (id) { return document.getElementById(id); };
+    if (!$("bentoWidget")) return;
+
+    var now = new Date();
+    var DOW = ["SUN", "MON", "TUE", "WED", "THU", "FRI", "SAT"];
+    var MONTHS = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
+    $("bentoDow").textContent = DOW[now.getDay()];
+    $("bentoDay").textContent = String(now.getDate());
+
+    /* Populate 2-week Monday-Sunday calendar grid around today */
+    var grid = $("bentoWeekGrid");
+    var dayOfWeek = (now.getDay() + 6) % 7; // Monday = 0 .. Sunday = 6
+    var monday = new Date(now.getFullYear(), now.getMonth(), now.getDate() - dayOfWeek);
+    var cells = '<span class="bento-w-hdr">M</span><span class="bento-w-hdr">T</span><span class="bento-w-hdr">W</span><span class="bento-w-hdr">T</span><span class="bento-w-hdr">F</span><span class="bento-w-hdr">S</span><span class="bento-w-hdr">S</span>';
+    for (var i = 0; i < 14; i++) {
+      var d = new Date(monday.getFullYear(), monday.getMonth(), monday.getDate() + i);
+      var isToday = d.toDateString() === now.toDateString();
+      cells += '<span class="bento-w-day' + (isToday ? " is-today" : "") + '">' + d.getDate() + "</span>";
+    }
+    grid.innerHTML = cells;
+
+    /* Upcoming Indian Festival auto-detector (sorted month/day list across the year) */
+    var FESTIVALS = [
+      { m: 1, d: 14, name: "Makar Sankranti" },
+      { m: 1, d: 26, name: "Republic Day" },
+      { m: 2, d: 15, name: "Maha Shivaratri" },
+      { m: 3, d: 4,  name: "Holi" },
+      { m: 3, d: 20, name: "Chaitra Navratri" },
+      { m: 3, d: 27, name: "Ram Navami" },
+      { m: 8, d: 15, name: "Independence Day" },
+      { m: 8, d: 28, name: "Raksha Bandhan" },
+      { m: 9, d: 4,  name: "Janmashtami" },
+      { m: 9, d: 14, name: "Ganesh Chaturthi" },
+      { m: 10, d: 11, name: "Navratri" },
+      { m: 10, d: 20, name: "Dussehra" },
+      { m: 11, d: 8,  name: "Diwali" },
+      { m: 11, d: 15, name: "Dev Deepawali" },
+      { m: 11, d: 24, name: "Guru Nanak Jayanti" },
+      { m: 12, d: 25, name: "Christmas" }
+    ];
+    var todayStart = new Date(now.getFullYear(), now.getMonth(), now.getDate()).getTime();
+    var nextFest = null;
+    for (var f = 0; f < FESTIVALS.length; f++) {
+      var fDate = new Date(now.getFullYear(), FESTIVALS[f].m - 1, FESTIVALS[f].d);
+      if (fDate.getTime() >= todayStart) { nextFest = { name: FESTIVALS[f].name, date: fDate }; break; }
+    }
+    if (!nextFest) {
+      nextFest = { name: FESTIVALS[0].name, date: new Date(now.getFullYear() + 1, FESTIVALS[0].m - 1, FESTIVALS[0].d) };
+    }
+    $("bentoFestName").innerHTML = nextFest.name.replace(" ", "<br>");
+
+    /* Wire Bento Weather tile to open #wx modal & Spider-Man tile to toggle Spider-Man theme */
+    var wxBtn = $("bentoWxBtn"), wxTrig = $("wxTrigger");
+    if (wxBtn && wxTrig) wxBtn.addEventListener("click", function () { wxTrig.click(); });
+    var spBtn = $("bentoSpiderBtn"), thBtn = $("themeToggle");
+    if (spBtn && thBtn) {
+      spBtn.addEventListener("click", function () {
+        var cur = document.documentElement.getAttribute("data-theme") || "light";
+        if (cur !== "spiderman") {
+          document.documentElement.setAttribute("data-theme", "spiderman");
+          try { localStorage.setItem("rudra-theme", "spiderman"); } catch (e) {}
+        } else {
+          thBtn.click();
+        }
+      });
+    }
+
+    /* Real Live Visitors Counter (Direct from Ubuntu VPS Nginx logs via vps-status.json + vps-status.php) */
+    var visEl = $("bentoVisCount");
+    var bestCount = 1;
+    try { bestCount = Math.max(1, parseInt(localStorage.getItem("rudra-real-visitors") || "1", 10) || 1); } catch (e) {}
+
+    function showVisitors(n) {
+      if (!n || isNaN(n)) return;
+      if (n > bestCount) {
+        bestCount = n;
+        try { localStorage.setItem("rudra-real-visitors", String(bestCount)); } catch (e) {}
+      }
+      if (visEl) visEl.textContent = bestCount.toLocaleString("en-US");
+    }
+    window._updateRealVisitors = showVisitors;
+    showVisitors(bestCount);
+
+    var isNewSession = false;
+    try {
+      if (!sessionStorage.getItem("rudra-visit-counted")) {
+        isNewSession = true;
+        sessionStorage.setItem("rudra-visit-counted", "1");
+      }
+    } catch (e) {}
+
+    if (window.fetch) {
+      var vpsJsonUrl = location.protocol === "file:" ? "https://rudrasarkar.omicron.host/vps-status.json" : "./vps-status.json";
+      fetch(vpsJsonUrl + "?_t=" + Date.now(), { cache: "no-store" })
+        .then(function (r) { return r.json(); })
+        .then(function (j) {
+          if (j && j.visitors != null) showVisitors(Number(j.visitors));
+        })
+        .catch(function () {});
+      if (location.protocol !== "file:") {
+        fetch("./vps-status.php" + (isNewSession ? "?hit=1" : ""), { cache: "no-store" })
+          .then(function (r) { return r.json(); })
+          .then(function (j) {
+            if (j && j.visitors != null) showVisitors(Number(j.visitors));
+          })
+          .catch(function () {});
+      }
+    }
   })();
 </script>
 

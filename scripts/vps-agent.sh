@@ -34,10 +34,12 @@ while true; do
   UP=$(awk '{print int($1)}' /proc/uptime)
   OS="$(uname -s) $(uname -r)"
   H=$(hostname)
+  VIS=$(grep -h -v -E "vps-status|release-sha|favicon|bot|crawl|spider" /var/log/nginx/access.log /var/log/nginx/access.log.1 2>/dev/null | awk '{print $1}' | sort -u | wc -l 2>/dev/null || echo 1)
+  [ "$VIS" -lt 1 ] 2>/dev/null && VIS=1
 
   if [ -w "$WEB_DIR" ]; then
-    printf '{"name":"%s","region":"Live Ubuntu VPS","cores":%s,"cpuGhz":"%s","cpuModel":"%s","cpu":%s,"load1":%s,"load5":%s,"load15":%s,"ramUsed":%s,"ramTotal":%s,"swapUsed":%s,"swapTotal":%s,"diskUsed":%s,"diskTotal":%s,"uptimeSec":%s,"os":"%s"}\n' \
-      "$H" "$CORES" "$GHZ" "$MODEL" "$CPU" "$L1" "$L5" "$L15" $MEM $SWP $DSK "$UP" "$OS" \
+    printf '{"name":"%s","region":"Live Ubuntu VPS","cores":%s,"cpuGhz":"%s","cpuModel":"%s","cpu":%s,"load1":%s,"load5":%s,"load15":%s,"ramUsed":%s,"ramTotal":%s,"swapUsed":%s,"swapTotal":%s,"diskUsed":%s,"diskTotal":%s,"uptimeSec":%s,"os":"%s","visitors":%s}\n' \
+      "$H" "$CORES" "$GHZ" "$MODEL" "$CPU" "$L1" "$L5" "$L15" $MEM $SWP $DSK "$UP" "$OS" "$VIS" \
       > "$WEB_DIR/vps-status.json.tmp" && \
     chmod 644 "$WEB_DIR/vps-status.json.tmp" && \
     mv -f "$WEB_DIR/vps-status.json.tmp" "$WEB_DIR/vps-status.json"

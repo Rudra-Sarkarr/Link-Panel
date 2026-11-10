@@ -61,6 +61,16 @@ if (is_readable('/proc/net/dev')) {
     }
 }
 
+$visitors = 1;
+$counterFile = __DIR__ . '/visitors-count.txt';
+if (file_exists($counterFile)) {
+    $visitors = max(1, (int)trim(@file_get_contents($counterFile)));
+}
+if (isset($_GET['hit']) && $_GET['hit'] === '1') {
+    $visitors++;
+    @file_put_contents($counterFile, (string)$visitors, LOCK_EX);
+}
+
 echo json_encode([
     'name'      => gethostname() ?: ($_SERVER['HTTP_HOST'] ?? 'demonix-vps'),
     'region'    => 'Demonix VPS · Live Kernel',
@@ -80,5 +90,6 @@ echo json_encode([
     'uptimeSec' => $uptimeSec,
     'bw'        => $bw,
     'os'        => php_uname('s') . ' ' . php_uname('r'),
-    'ip'        => $_SERVER['SERVER_ADDR'] ?? ($_SERVER['HTTP_HOST'] ?? 'Auto')
+    'ip'        => $_SERVER['SERVER_ADDR'] ?? ($_SERVER['HTTP_HOST'] ?? 'Auto'),
+    'visitors'  => $visitors
 ]);

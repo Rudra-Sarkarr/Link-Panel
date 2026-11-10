@@ -29,12 +29,10 @@
 | **Core Layout, CSS Variables & Profile CSS** | `L149–L365` | `:root`, `.banner`, `.avatar`, `.who`, `.sections`, `.row`, `.ic` |
 | **UPI Modal & Hanging Lanterns / Clouds CSS** | `L366–L500` | `.upi-overlay`, `.upi-dialog`, `.hangs`, `.bgclouds`, `.night` |
 | **Weather App (`#wx`) CSS & Animations** | `L501–L704` | `.wx`, `.wx-phone`, `.wx-hero`, `.wx-sheet`, `.wx-strip`, `.wx-layer` |
-| **3D Frosted Glass Icons & VPS (`#vps`) CSS** | `L705–L862` | `.vps-row`, `.row .ic`, `.vps-phone`, `.vps-banner`, `.vps-card`, `.vps-meter` |
-| **SVG Brand Icon Sprite Sheet** | `L864–L887` | `#i-ig`, `#i-sc`, `#i-x`, `#i-wa`, `#i-ml`, `#i-dc`, `#i-sp`, `#i-gh`, `#i-up` |
-| **Profile Header, Bio & Offline Runner DOM** | `L889–L917` | `#bgclouds`, `#themeToggle`, `#banner`, `#avatar`, `.who p`, `#offlineGame` |
-| **Link Sections (`Pay`, `Social`, `Utility`, etc.)** | `L918–L969` | `#upiTrigger`, `#wxTrigger`, `#vpsTrigger`, `[data-copy]` rows, `#night` |
-| **Script 1: Pixel Banner, Lanterns, Night Canvas & Copy/UPI** | `L972–L1315` | `frame()`, `loop()`, `nframe()`, `nloop()`, `[data-copy]`, `#upiDialog` |
-| **Weather App (`#wx`) & VPS Monitor (`#vps`) DOM** | `L1316–L1695` | `#wx`, `#wxPhone`, `#wxLayer`, `#vps`, `#vpsPhone`, `#vpsLayer`, `#vpsConfigPanel` |
-| **Script 2A: Theme Toggle & Offline Dino Game** | `L1696–L1850` | `rudra-theme-choice`, `#offlineCanvas` game loop |
-| **Script 2B: Live Weather App (`#wx`) Logic** | `L1851–L2291` | `CITIES`, `art()`, `fxStart()`, `fetchCity()`, `openWx()`, `closeWx()` |
-| **Script 2C: Live VPS Monitor (`#vps`) Logic** | `L2293–L2667` | `NODES`, `probeHostEndpoints()`, `applyMetrics()`, `stepTelemetry()`, `openVps()`, `closeVps()` |
+| **3D Frosted Glass Icons, VPS (`#vps`) & Bento Widget CSS** | `L705–L1060` | `.vps-row`, `.row .ic`, `.vps-phone`, `.bento-wrap`, `.bento-left`, `.bento-week`, `.bento-wx`, `.bento-vis` |
+| **SVG Brand Icon Sprite Sheet** | `L1062–L1085` | `#i-ig`, `#i-sc`, `#i-x`, `#i-wa`, `#i-ml`, `#i-dc`, `#i-sp`, `#i-gh`, `#i-up` |
+| **Profile Header, Bio & Offline Runner DOM** | `L1087–L1115` | `#bgclouds`, `#themeToggle`, `#banner`, `#avatar`, `.who p`, `#offlineGame` |
+| **Link Sections & Pastel Bento Widget DOM** | `L1116–L1298` | `#upiTrigger`, `#wxTrigger`, `#vpsTrigger`, `#bentoWidget`, `#night` |
+| **Script 1: Pixel Banner, Lanterns, HD Mountain Night Canvas & Copy/UPI** | `L1301–L1750` | `frame()`, `loop()`, `nframe()`, `nloop()`, `[data-copy]`, `#upiDialog` |
+| **Weather App (`#wx`) & VPS Monitor (`#vps`) DOM** | `L1751–L2035` | `#wx`, `#wxPhone`, `#wxLayer`, `#vps`, `#vpsPhone`, `#vpsLayer`, `#vpsConfigPanel` |
+| **Script 2A–2D: Scrollbar, Live Weather (`#wx`), VPS Monitor (`#vps`) & Bento Logic** | `L2036–L3140` | `CITIES`, `NODES`, `openWx()`, `openVps()`, `FESTIVALS`, `#bentoVisCount` |
