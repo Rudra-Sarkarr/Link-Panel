@@ -1,0 +1,24 @@
+# Secrets & Environment Variables (NEVER COMMIT)
+.env
+.env.*
+*.pem
+*.key
+*.ppk
+id_rsa*
+id_ed25519*
+authorized_keys
+
+# Runtime Telemetry & Temporary Files
+vps-status.json
+vps-status.json.tmp
+*.tmp
+*.log
+*.bak
+
+# Backups & OS Artifacts
+.backups/
+backups/
+node_modules/
+.DS_Store
+Thumbs.db
+Desktop.ini

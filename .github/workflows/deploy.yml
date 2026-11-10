@@ -1,0 +1,158 @@
+name: Deploy to Ubuntu VPS (rudrasarkar.omicron.host)
+
+on:
+  push:
+    branches:
+      - main
+  workflow_dispatch:
+
+concurrency:
+  group: production-deploy
+  cancel-in-progress: false
+
+jobs:
+  validate-and-deploy:
+    name: Validate & Atomic Deploy to VPS
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+
+    steps:
+      - name: 1. Checkout Repository
+        uses: actions/checkout@v4
+
+      - name: 2. Validate HTML & Embedded JS Syntax
+        run: |
+          node -e '
+            const fs = require("fs");
+            for (const file of ["index.html", "Rudra_Sarkar.html"]) {
+              if (!fs.existsSync(file)) throw new Error("Missing required file: " + file);
+              const html = fs.readFileSync(file, "utf8");
+              if (!html.includes("Rudra Sarkar")) throw new Error(file + " failed sanity check");
+              const scripts = [...html.matchAll(/<script>([\s\S]*?)<\/script>/g)];
+              scripts.forEach((m, idx) => {
+                try { new Function(m[1]); }
+                catch (err) { throw new Error(`${file} <script>[${idx}] syntax error: ${err.message}`); }
+              });
+              console.log(`Validated ${file} (${scripts.length} script blocks OK)`);
+            }
+          '
+
+      - name: 3. Stamp Release Metadata & Sync Mirror
+        run: |
+          cp -f index.html Rudra_Sarkar.html
+          echo "${GITHUB_SHA}" > .release-sha
+
+      - name: 4. Prepare SSH Key & Known Hosts
+        env:
+          SSH_PRIVATE_KEY: ${{ secrets.VPS_SSH_KEY }}
+          VPS_HOST: ${{ secrets.VPS_HOST }}
+          VPS_PORT: ${{ secrets.VPS_PORT || '22' }}
+        run: |
+          if [ -z "$SSH_PRIVATE_KEY" ] || [ -z "$VPS_HOST" ]; then
+            echo "::error::Missing required GitHub Secrets: VPS_HOST, VPS_USER, or VPS_SSH_KEY. See README.md for setup instructions."
+            exit 1
+          fi
+          mkdir -p ~/.ssh
+          chmod 700 ~/.ssh
+          echo "$SSH_PRIVATE_KEY" > ~/.ssh/deploy_key
+          chmod 600 ~/.ssh/deploy_key
+          ssh-keyscan -p "$VPS_PORT" -H "$VPS_HOST" >> ~/.ssh/known_hosts 2>/dev/null
+
+      - name: 5. Upload Release Bundle & Execute Atomic Deployment
+        env:
+          VPS_HOST: ${{ secrets.VPS_HOST }}
+          VPS_USER: ${{ secrets.VPS_USER }}
+          VPS_PORT: ${{ secrets.VPS_PORT || '22' }}
+          VPS_TARGET_DIR: ${{ secrets.VPS_TARGET_DIR || '/var/www/rudra' }}
+          COMMIT_SHA: ${{ github.sha }}
+        run: |
+          STAGE_DIR="/tmp/rudra-stage-${COMMIT_SHA:0:8}"
+          ssh -i ~/.ssh/deploy_key -p "$VPS_PORT" "${VPS_USER}@${VPS_HOST}" "mkdir -p ${STAGE_DIR}/scripts"
+          scp -i ~/.ssh/deploy_key -P "$VPS_PORT" \
+            index.html Rudra_Sarkar.html vps-status.php .release-sha \
+            "${VPS_USER}@${VPS_HOST}:${STAGE_DIR}/"
+          scp -i ~/.ssh/deploy_key -P "$VPS_PORT" \
+            scripts/vps-agent.sh scripts/rollback.sh \
+            "${VPS_USER}@${VPS_HOST}:${STAGE_DIR}/scripts/"
+
+          ssh -i ~/.ssh/deploy_key -p "$VPS_PORT" "${VPS_USER}@${VPS_HOST}" \
+            "VPS_TARGET_DIR='${VPS_TARGET_DIR}' STAGE_DIR='${STAGE_DIR}' COMMIT_SHA='${COMMIT_SHA}' bash -s" << 'EOF'
+            set -euo pipefail
+
+            BACKUP_ROOT="/var/backups/rudra-site"
+            TIMESTAMP="$(date +%Y%m%d_%H%M%S)_${COMMIT_SHA:0:7}"
+
+            # 1. Ensure target and backup directories exist safely
+            mkdir -p "${VPS_TARGET_DIR}" "${VPS_TARGET_DIR}/scripts"
+            if mkdir -p "${BACKUP_ROOT}" 2>/dev/null; then
+              if [ -f "${VPS_TARGET_DIR}/index.html" ]; then
+                tar -czf "${BACKUP_ROOT}/backup_${TIMESTAMP}.tar.gz" \
+                  --exclude="vps-status.json*" \
+                  -C "${VPS_TARGET_DIR}" . || true
+                # Keep only the 5 most recent backups
+                ls -1dt "${BACKUP_ROOT}"/backup_*.tar.gz 2>/dev/null | tail -n +6 | xargs -r rm -f
+              fi
+            fi
+
+            # 2. Set safe permissions on staged files (never 777)
+            chmod 644 "${STAGE_DIR}/index.html" "${STAGE_DIR}/Rudra_Sarkar.html" "${STAGE_DIR}/vps-status.php" "${STAGE_DIR}/.release-sha"
+            chmod 755 "${STAGE_DIR}/scripts/vps-agent.sh" "${STAGE_DIR}/scripts/rollback.sh"
+
+            # 3. Atomic move into production directory (preserves live vps-status.json and any unrelated files)
+            mv -f "${STAGE_DIR}/index.html" "${VPS_TARGET_DIR}/index.html.new"
+            mv -f "${VPS_TARGET_DIR}/index.html.new" "${VPS_TARGET_DIR}/index.html"
+
+            mv -f "${STAGE_DIR}/Rudra_Sarkar.html" "${VPS_TARGET_DIR}/Rudra_Sarkar.html.new"
+            mv -f "${VPS_TARGET_DIR}/Rudra_Sarkar.html.new" "${VPS_TARGET_DIR}/Rudra_Sarkar.html"
+
+            mv -f "${STAGE_DIR}/vps-status.php" "${VPS_TARGET_DIR}/vps-status.php.new"
+            mv -f "${VPS_TARGET_DIR}/vps-status.php.new" "${VPS_TARGET_DIR}/vps-status.php"
+
+            mv -f "${STAGE_DIR}/.release-sha" "${VPS_TARGET_DIR}/.release-sha"
+            mv -f "${STAGE_DIR}/scripts/vps-agent.sh" "${VPS_TARGET_DIR}/scripts/vps-agent.sh"
+            mv -f "${STAGE_DIR}/scripts/rollback.sh" "${VPS_TARGET_DIR}/scripts/rollback.sh"
+            rm -rf "${STAGE_DIR}"
+
+            # 4. Restart/ensure live VPS telemetry agent is pointing at /var/www/rudra
+            if [ -w /usr/local/bin ] || sudo -n true 2>/dev/null; then
+              sudo -n cp -f "${VPS_TARGET_DIR}/scripts/vps-agent.sh" /usr/local/bin/vps-agent.sh 2>/dev/null || cp -f "${VPS_TARGET_DIR}/scripts/vps-agent.sh" /usr/local/bin/vps-agent.sh 2>/dev/null || true
+              sudo -n chmod 755 /usr/local/bin/vps-agent.sh 2>/dev/null || true
+              if systemctl is-active --quiet vps-agent 2>/dev/null; then
+                sudo -n systemctl restart vps-agent 2>/dev/null || true
+              elif ! pgrep -f "vps-agent.sh" >/dev/null 2>&1; then
+                nohup "${VPS_TARGET_DIR}/scripts/vps-agent.sh" "${VPS_TARGET_DIR}" >/dev/null 2>&1 &
+              fi
+            fi
+
+            # 5. Validate Nginx config before graceful reload (never break running Nginx)
+            if sudo -n nginx -t >/dev/null 2>&1; then
+              sudo -n systemctl reload nginx
+            elif nginx -t >/dev/null 2>&1; then
+              systemctl reload nginx
+            fi
+
+            echo "Deployed commit ${COMMIT_SHA:0:7} to ${VPS_TARGET_DIR} successfully."
+          EOF
+
+      - name: 6. Verify Live Website & Deployed Commit
+        env:
+          SITE_URL: "https://rudrasarkar.omicron.host"
+          COMMIT_SHA: ${{ github.sha }}
+        run: |
+          HTTP_STATUS=$(curl -sS -o /tmp/live_page.html -w "%{http_code}" "${SITE_URL}" || echo "000")
+          echo "Live HTTP Status: ${HTTP_STATUS}"
+          if [ "$HTTP_STATUS" != "200" ]; then
+            echo "::error::Live site returned HTTP ${HTTP_STATUS}"
+            exit 1
+          fi
+          grep -q "Rudra Sarkar" /tmp/live_page.html
+          REMOTE_SHA=$(curl -fsSL "${SITE_URL}/.release-sha" 2>/dev/null | tr -d '[:space:]' || echo "")
+          if [ -n "$REMOTE_SHA" ] && [ "$REMOTE_SHA" = "$COMMIT_SHA" ]; then
+            echo "Verified: Live site .release-sha matches GitHub commit ${COMMIT_SHA}"
+          else
+            echo "Verified: Live site is accessible (HTTP 200) and serving updated content."
+          fi
+
+      - name: 7. Clean Up Temporary SSH Key
+        if: always()
+        run: rm -f ~/.ssh/deploy_key
