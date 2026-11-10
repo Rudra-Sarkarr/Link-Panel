@@ -40,7 +40,7 @@ jobs:
       - name: 3. Stamp Release Metadata & Sync Mirror
         run: |
           cp -f index.html Rudra_Sarkar.html
-          echo "${GITHUB_SHA}" > .release-sha
+          echo "${GITHUB_SHA}" > release-sha.txt
 
       - name: 4. Prepare SSH Key & Known Hosts
         env:
@@ -69,7 +69,7 @@ jobs:
           STAGE_DIR="/tmp/rudra-stage-${COMMIT_SHA:0:8}"
           ssh -i ~/.ssh/deploy_key -p "$VPS_PORT" "${VPS_USER}@${VPS_HOST}" "mkdir -p ${STAGE_DIR}/scripts"
           scp -i ~/.ssh/deploy_key -P "$VPS_PORT" \
-            index.html Rudra_Sarkar.html vps-status.php .release-sha \
+            index.html Rudra_Sarkar.html vps-status.php release-sha.txt \
             "${VPS_USER}@${VPS_HOST}:${STAGE_DIR}/"
           scp -i ~/.ssh/deploy_key -P "$VPS_PORT" \
             scripts/vps-agent.sh scripts/rollback.sh \
@@ -95,7 +95,7 @@ jobs:
             fi
 
             # 2. Set safe permissions on staged files (never 777)
-            chmod 644 "${STAGE_DIR}/index.html" "${STAGE_DIR}/Rudra_Sarkar.html" "${STAGE_DIR}/vps-status.php" "${STAGE_DIR}/.release-sha"
+            chmod 644 "${STAGE_DIR}/index.html" "${STAGE_DIR}/Rudra_Sarkar.html" "${STAGE_DIR}/vps-status.php" "${STAGE_DIR}/release-sha.txt"
             chmod 755 "${STAGE_DIR}/scripts/vps-agent.sh" "${STAGE_DIR}/scripts/rollback.sh"
 
             # 3. Atomic move into production directory (preserves live vps-status.json and any unrelated files)
@@ -108,7 +108,7 @@ jobs:
             mv -f "${STAGE_DIR}/vps-status.php" "${VPS_TARGET_DIR}/vps-status.php.new"
             mv -f "${VPS_TARGET_DIR}/vps-status.php.new" "${VPS_TARGET_DIR}/vps-status.php"
 
-            mv -f "${STAGE_DIR}/.release-sha" "${VPS_TARGET_DIR}/.release-sha"
+            mv -f "${STAGE_DIR}/release-sha.txt" "${VPS_TARGET_DIR}/release-sha.txt"
             mv -f "${STAGE_DIR}/scripts/vps-agent.sh" "${VPS_TARGET_DIR}/scripts/vps-agent.sh"
             mv -f "${STAGE_DIR}/scripts/rollback.sh" "${VPS_TARGET_DIR}/scripts/rollback.sh"
             rm -rf "${STAGE_DIR}"
@@ -146,9 +146,9 @@ jobs:
             exit 1
           fi
           grep -q "Rudra Sarkar" /tmp/live_page.html
-          REMOTE_SHA=$(curl -fsSL "${SITE_URL}/.release-sha" 2>/dev/null | tr -d '[:space:]' || echo "")
+          REMOTE_SHA=$(curl -fsSL "${SITE_URL}/release-sha.txt" 2>/dev/null | tr -d '[:space:]' || echo "")
           if [ -n "$REMOTE_SHA" ] && [ "$REMOTE_SHA" = "$COMMIT_SHA" ]; then
-            echo "Verified: Live site .release-sha matches GitHub commit ${COMMIT_SHA}"
+            echo "Verified: Live site release-sha.txt (${REMOTE_SHA}) matches GitHub commit ${COMMIT_SHA}"
           else
             echo "Verified: Live site is accessible (HTTP 200) and serving updated content."
           fi
