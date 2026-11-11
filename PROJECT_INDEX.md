@@ -35,4 +35,5 @@
 | **Link Sections & Pastel Bento Widget DOM** | `L1116–L1298` | `#upiTrigger`, `#wxTrigger`, `#vpsTrigger`, `#bentoWidget`, `#night` |
 | **Script 1: Pixel Banner, Lanterns, HD Mountain Night Canvas & Copy/UPI** | `L1301–L1750` | `frame()`, `loop()`, `nframe()`, `nloop()`, `[data-copy]`, `#upiDialog` |
 | **Weather App (`#wx`) & VPS Monitor (`#vps`) DOM** | `L1751–L2035` | `#wx`, `#wxPhone`, `#wxLayer`, `#vps`, `#vpsPhone`, `#vpsLayer`, `#vpsConfigPanel` |
-| **Script 2A–2D: Scrollbar, Live Weather (`#wx`), VPS Monitor (`#vps`) & Bento Logic** | `L2036–L3140` | `CITIES`, `NODES`, `openWx()`, `openVps()`, `FESTIVALS`, `#bentoVisCount` |
+| **Script 2A–2D: Scrollbar, Live Weather (`#wx`), VPS Monitor (`#vps`) & Bento Logic** | `L2036–L3688` | `CITIES`, `NODES`, `openWx()`, `openVps()`, `FESTIVALS`, `#bentoVisCount` |
+| **Folder-Based Utility Hub (8 Categories, 67 Working Tools: CSS + Modal + JS)** | `L3689–L5170` | `#utility-hub-css`, `#uhOverviewCard`, `#uhFolderGrid`, `#uhModal`, `#utility-hub-js`, `CATEGORIES`, `TOOLS`, `renderToolWorkspace()` |
