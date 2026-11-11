@@ -1,0 +1,1220 @@
+<!doctype html>
+<html data-theme="light">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>VPS Resources Telemetry — Rudra Sarkar</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Outfit:wght@600;700;800&display=swap">
+<script>
+(function(){
+  try {
+    var saved = localStorage.getItem("rudra-theme-choice");
+    if (saved === "dark" || saved === "spiderman" || saved === "light") {
+      document.documentElement.setAttribute("data-theme", saved);
+    }
+  } catch(e){}
+})();
+</script>
+<style>
+  :root {
+    --page: #DEDFF4;
+    --card: #FFFFFF;
+    --ink: #16182B;
+    --muted: #7A7F94;
+    --line: #ECEDF5;
+    --hover: #F6F6FD;
+    --avatar: #5B63E6;
+    --shadow: 0 1px 2px rgba(30, 32, 80, 0.06);
+    --f: "Poppins", system-ui, -apple-system, "Segoe UI", sans-serif;
+    color-scheme: light;
+  }
+  :root[data-theme="dark"] {
+    --page: #12132A;
+    --card: #1B1D38;
+    --ink: #EDEEF8;
+    --muted: #9A9FB8;
+    --line: #2A2D4D;
+    --hover: #222546;
+    --avatar: #5B63E6;
+    --shadow: none;
+    color-scheme: dark;
+  }
+  :root[data-theme="spiderman"] {
+    --page: #090D1E;
+    --card: #111730;
+    --ink: #F8FAFC;
+    --muted: #94A3B8;
+    --line: rgba(230, 36, 41, 0.28);
+    --hover: #192246;
+    --avatar: #E62429;
+    --shadow: 0 6px 20px rgba(230, 36, 41, 0.14);
+    color-scheme: dark;
+  }
+  *, *::before, *::after { box-sizing: border-box; }
+  html, body {
+    margin: 0;
+    padding: 0;
+    width: 100%;
+    height: 100%;
+    font: 14px var(--f);
+    background: #3F4359;
+    color: var(--ink);
+    -webkit-font-smoothing: antialiased;
+    overflow: hidden;
+  }
+  :root[data-theme="dark"] body { background: #0C0E1E; }
+  :root[data-theme="spiderman"] body {
+    background:
+      radial-gradient(ellipse at 18% 12%, rgba(230, 36, 41, 0.32), transparent 42%),
+      radial-gradient(ellipse at 85% 84%, rgba(37, 99, 235, 0.30), transparent 44%),
+      #070A17;
+  }
+  [hidden]:not([hidden=until-found i]) { display: none !important; }
+  .upi-idline { display:flex; align-items:center; justify-content:space-between; gap:8px; margin-top:13px; padding:10px 11px; border-radius:11px; background:var(--hover); font-size:.72rem; }
+  .upi-idline span { min-width:0; overflow-wrap:anywhere; color:var(--muted); }
+  .upi-copy { border:0; background:transparent; color:var(--avatar); font:600 .72rem var(--f); cursor:pointer; }
+  .wx-phone button:focus, .wx-phone button:focus-visible { outline: none !important; }
+</style>
+<style id="weather-css">
+  /* ===== Scroll motion ===== */
+  .sections section.sr-pending { opacity: 0; transform: translateY(20px); }
+  .sections section.sr-pending.sr-in { opacity: 1; transform: none; transition: opacity 0.6s ease, transform 0.6s ease; }
+  .scrollbar { position: fixed; top: env(safe-area-inset-top, 0px); left: 0; right: 0; height: 3px; z-index: 40; pointer-events: none; background: linear-gradient(90deg, #5B63E6, #8D97FF 60%, #7CD1FF); transform: scaleX(0); transform-origin: 0 50%; opacity: 0; transition: opacity 0.25s ease; }
+  .scrollbar.on { opacity: 0.9; }
+
+  /* ===== Weather page ===== */
+  .wx-row { --t: rgba(91, 140, 255, 0.16); }
+  /* Weather row icon: a little sky tile (day blue / night navy) so the live icon is always visible */
+  .wx-row .ic { position: relative; overflow: hidden; background: linear-gradient(160deg, #6FC0FF, #2F7BE6); box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.45), 0 4px 10px rgba(47, 123, 230, 0.3); transition: background 0.4s ease, transform 0.18s ease; }
+  .wx-row .ic[data-sky="night"] { background: linear-gradient(160deg, #1C2552, #3D4E95); box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.2), 0 4px 10px rgba(28, 37, 82, 0.35); }
+  .wx-row .ic svg { width: 30px; height: 28px; overflow: visible; filter: drop-shadow(0 2px 2px rgba(0, 0, 0, 0.18)); }
+  .wx {
+    position: fixed; inset: 0; z-index: 60;
+    display: flex; align-items: center; justify-content: center;
+    background: rgba(8, 10, 30, 0.72);
+    animation: wx-fade 0.2s ease-out;
+  }
+  @keyframes wx-fade { from { opacity: 0; } to { opacity: 1; } }
+
+  .wx-phone {
+    --bg-top: #10172e; --bg-bot: #27335e; --ridge: #33427a; --sheet: #1c2547; --glow: rgba(190, 210, 255, 0.3);
+    --txt: #F2F5FF; --txt2: rgba(228, 234, 255, 0.74); --glass: rgba(255, 255, 255, 0.14); --glass-line: rgba(255, 255, 255, 0.24);
+    position: relative; display: flex; flex-direction: column;
+    width: 100%; height: 100%; overflow: hidden;
+    color: var(--txt); font-family: var(--f);
+    background: linear-gradient(180deg, var(--bg-top), var(--bg-bot) 62%);
+    isolation: isolate;
+    contain: layout paint;
+  }
+  @media (min-width: 520px) {
+    .wx { -webkit-backdrop-filter: blur(10px); backdrop-filter: blur(10px); }
+    .wx-phone { max-width: 430px; height: min(880px, calc(100% - 48px)); border-radius: 38px; box-shadow: 0 34px 100px rgba(0, 0, 0, 0.55), inset 0 0 0 1px rgba(255, 255, 255, 0.14); }
+  }
+  .wx-phone[data-scene="storm"] { --bg-top: #1a2150; --bg-bot: #33408a; --ridge: #3f50a0; --sheet: #26316a; --glow: rgba(130, 175, 255, 0.38); }
+  .wx-phone[data-scene="rain"] { --bg-top: #212b5e; --bg-bot: #3a4b8d; --ridge: #44559a; --sheet: #2a366f; --glow: rgba(130, 175, 255, 0.28); }
+  .wx-phone[data-scene="snow"] { --bg-top: #222e50; --bg-bot: #4a5f8e; --ridge: #5870a3; --sheet: #34456f; --glow: rgba(200, 225, 255, 0.32); }
+  .wx-phone[data-scene="fog"] { --bg-top: #454f69; --bg-bot: #79829a; --ridge: #6b7690; --sheet: #4a5570; --glow: rgba(230, 236, 250, 0.25); }
+  .wx-phone[data-scene="cloud-day"] { --bg-top: #35477a; --bg-bot: #6279ae; --ridge: #5b72a8; --sheet: #3a4c7e; --glow: rgba(220, 232, 255, 0.28); }
+  .wx-phone[data-scene="cloud-night"] { --bg-top: #171f3d; --bg-bot: #303e6a; --ridge: #3a4a7a; --sheet: #222c52; --glow: rgba(150, 185, 255, 0.25); }
+  .wx-phone[data-scene="clear-day"] { --bg-top: #2159b8; --bg-bot: #5a9be0; --ridge: #4a86d2; --sheet: #2d5fae; --glow: rgba(255, 214, 130, 0.5); }
+  .wx-phone[data-scene="clear-night"] { --bg-top: #10172e; --bg-bot: #27335e; --ridge: #33427a; --sheet: #1c2547; --glow: rgba(190, 210, 255, 0.3); }
+  .wx-phone[data-scene="storm"]::after { content: ""; position: absolute; inset: 0; z-index: 3; pointer-events: none; background: rgba(190, 215, 255, 0.5); opacity: 0; animation: wx-lightning 7s ease-in-out infinite; }
+  @keyframes wx-lightning { 0%, 86%, 100% { opacity: 0; } 87% { opacity: 0.26; } 89% { opacity: 0.04; } 91% { opacity: 0.2; } 94% { opacity: 0; } }
+
+  .wx-fx { position: absolute; inset: 0; z-index: 0; width: 100%; height: 100%; pointer-events: none; }
+  .wx-top, .wx-head, .wx-hero, .wx-sheet { position: relative; z-index: 1; }
+
+  .wx-top { display: flex; align-items: center; justify-content: space-between; gap: 12px; padding: max(16px, env(safe-area-inset-top, 0px)) max(18px, env(safe-area-inset-right, 0px)) 0 max(18px, env(safe-area-inset-left, 0px)); }
+  .wx-ibtn { display: grid; place-items: center; width: 40px; height: 40px; padding: 0; border: 1px solid var(--glass-line); border-radius: 50%; background: var(--glass); color: var(--txt); cursor: pointer; box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.18); transition: background 0.15s ease, transform 0.15s ease; }
+  .wx-ibtn:hover { background: rgba(255, 255, 255, 0.22); }
+  .wx-ibtn:active { transform: scale(0.94); }
+  .wx-ibtn svg { width: 20px; height: 20px; fill: none; stroke: currentColor; stroke-width: 1.8; stroke-linecap: round; stroke-linejoin: round; display: block; }
+  .wx-phone button:focus-visible { outline: 2px solid #fff; outline-offset: 3px; }
+  .wx-status { display: inline-flex; align-items: center; gap: 7px; min-height: 32px; padding: 6px 12px; border: 1px solid var(--glass-line); border-radius: 999px; background: var(--glass); color: var(--txt2); font: 500 0.7rem var(--f); cursor: pointer; }
+  .wx-status .dot { width: 7px; height: 7px; border-radius: 50%; background: #8A93B8; }
+  .wx-status[data-state="live"] .dot { background: #5BE3A0; box-shadow: 0 0 8px #5BE3A0; }
+  .wx-status[data-state="loading"] .dot { background: #FFD27A; animation: wx-pulse 1s ease-in-out infinite; }
+  @keyframes wx-pulse { 50% { opacity: 0.3; } }
+
+  .wx-head { display: flex; flex-direction: column; align-items: center; gap: 2px; padding: 14px 24px 0; text-align: center; }
+  .wx-city { font-size: 1.1rem; font-weight: 500; color: var(--txt2); letter-spacing: 0.01em; }
+  .wx-temp { font-family: "Outfit", var(--f); font-size: clamp(3.4rem, 17vw, 4.6rem); font-weight: 700; line-height: 1.05; letter-spacing: -0.01em; font-variant-numeric: tabular-nums; text-shadow: 0 4px 24px rgba(0, 0, 0, 0.25); }
+  .wx-cond { font-size: 0.95rem; font-weight: 500; }
+  .wx-meta { font-size: 0.78rem; color: var(--txt2); font-variant-numeric: tabular-nums; }
+
+  .wx-hero { flex: 1 1 0; min-height: 0; display: grid; place-items: center; padding: 8px 24px 0; }
+  .wx-float { width: 100%; height: 100%; display: grid; place-items: center; animation: wx-float 6s ease-in-out infinite; }
+  .wx-float svg { height: 100%; max-height: 250px; width: auto; max-width: 100%; aspect-ratio: 120 / 112; overflow: visible; filter: drop-shadow(0 12px 18px rgba(0, 0, 0, 0.28)); animation: wx-in 0.45s cubic-bezier(0.2, 0.8, 0.3, 1.1); }
+  @keyframes wx-float { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-7px); } }
+  @keyframes wx-in { from { opacity: 0; transform: scale(0.88); } to { opacity: 1; transform: none; } }
+  .wx-hero .s-rays { animation: wx-spin 48s linear infinite; }
+  .wx-hero .drop { animation: wx-drop 1.5s ease-in infinite; }
+  .wx-hero .flake { animation: wx-flake 4s ease-in-out infinite; }
+  .wx-hero .bolt-glow { animation: wx-glow 3.4s ease-in-out infinite; }
+  .wx-hero .m-star { animation: wx-tw 2.8s ease-in-out infinite; }
+  .wx-hero .fog-bar { animation: wx-fog 7s ease-in-out infinite alternate; }
+  .wx-hero .c-back { animation: wx-sway 7s ease-in-out infinite alternate; }
+  @keyframes wx-spin { to { transform: rotate(360deg); } }
+  @keyframes wx-drop { 0% { transform: translateY(-4px); opacity: 0; } 18% { opacity: 1; } 100% { transform: translateY(17px); opacity: 0; } }
+  @keyframes wx-flake { 0% { transform: translate(0, -3px); opacity: 0; } 20% { opacity: 1; } 50% { transform: translate(3px, 7px); } 100% { transform: translate(-2px, 17px); opacity: 0; } }
+  @keyframes wx-glow { 0%, 60%, 100% { opacity: 0.25; } 66% { opacity: 1; } 72% { opacity: 0.3; } 78% { opacity: 0.9; } }
+  @keyframes wx-tw { 0%, 100% { opacity: 0.25; } 50% { opacity: 1; } }
+  @keyframes wx-fog { from { transform: translateX(-5px); } to { transform: translateX(5px); } }
+  @keyframes wx-sway { from { transform: translateX(-3px); } to { transform: translateX(3px); } }
+
+  /* Hill-shaped forecast sheet */
+  .wx-sheet { flex: 0 0 auto; margin-top: 4px; }
+  .wx-wave { display: block; width: 100%; height: 54px; margin-bottom: -1px; overflow: visible; }
+  .wx-wave .ridge { fill: var(--ridge); }
+  .wx-drips, .wx-snowcap { display: none; }
+  .wx-phone[data-scene="rain"] .wx-drips, .wx-phone[data-scene="storm"] .wx-drips { display: block; fill: var(--ridge); }
+  .wx-phone[data-scene="snow"] .wx-snowcap { display: block; fill: #F4F8FF; }
+  .wx-sheet-body { background: linear-gradient(180deg, var(--ridge), var(--sheet) 78%); padding: 2px 0 0; }
+  .wx-fc { display: flex; align-items: center; justify-content: space-between; gap: 12px; padding: 4px max(22px, env(safe-area-inset-right, 0px)) 12px max(22px, env(safe-area-inset-left, 0px)); font-size: 0.8rem; color: var(--txt2); }
+  .wx-fc-l { display: inline-flex; align-items: center; gap: 8px; }
+  .wx-fc-l svg { width: 16px; height: 16px; fill: none; stroke: currentColor; stroke-width: 1.8; stroke-linecap: round; stroke-linejoin: round; }
+  .wx-fc-r { font-size: 0.7rem; }
+
+  .wx-strip { display: flex; flex-direction: row; gap: 14px; margin: 0; padding: 2px max(22px, env(safe-area-inset-right, 0px)) 14px max(22px, env(safe-area-inset-left, 0px)); overflow-x: auto; scroll-snap-type: x proximity; scroll-padding: 0 22px; scrollbar-width: none; -webkit-mask-image: linear-gradient(90deg, #000 86%, transparent); mask-image: linear-gradient(90deg, #000 86%, transparent); }
+  .wx-strip::-webkit-scrollbar { display: none; }
+  .wx-item { flex: 0 0 auto; width: 58px; display: flex; flex-direction: column; align-items: center; gap: 9px; scroll-snap-align: start; }
+  .wx-lbl { font-size: 0.78rem; font-weight: 500; font-variant-numeric: tabular-nums; }
+  .wx-bubble { display: grid; place-items: center; width: 56px; height: 56px; border-radius: 50%; border: 1px solid var(--glass-line); background: radial-gradient(circle at 32% 24%, rgba(255, 255, 255, 0.32), rgba(255, 255, 255, 0.08) 62%), var(--glass); box-shadow: 0 6px 14px rgba(0, 0, 0, 0.2), inset 0 1px 0 rgba(255, 255, 255, 0.28); }
+  .wx-bubble svg { width: 36px; height: 34px; display: block; overflow: visible; }
+  .wx-item.is-now .wx-bubble { border-color: rgba(255, 255, 255, 0.6); box-shadow: 0 0 0 3px rgba(255, 255, 255, 0.12), 0 8px 18px rgba(0, 0, 0, 0.22), inset 0 1px 0 rgba(255, 255, 255, 0.4); }
+  .wx-deg { font-size: 0.82rem; font-weight: 500; color: var(--txt2); font-variant-numeric: tabular-nums; }
+  .wx-lo { margin-top: -6px; font-size: 0.7rem; color: var(--txt2); opacity: 0.7; font-variant-numeric: tabular-nums; }
+  .wx-nodata { flex: 1 1 auto; padding: 14px 4px 16px; font-size: 0.8rem; line-height: 1.5; color: var(--txt2); }
+  .wx-nodata button { margin-left: 4px; padding: 0; border: 0; background: none; color: var(--txt); font: 600 0.8rem var(--f); text-decoration: underline; cursor: pointer; }
+
+  .wx-bar { display: grid; grid-template-columns: 1fr auto 1fr; align-items: center; padding: 6px max(26px, env(safe-area-inset-right, 0px)) max(14px, env(safe-area-inset-bottom, 0px)) max(26px, env(safe-area-inset-left, 0px)); background: rgba(0, 0, 0, 0.14); }
+  .wx-bar .wx-ibtn:first-child { justify-self: start; }
+  .wx-bar .wx-ibtn:last-child { justify-self: end; }
+  .wx-mode { display: flex; flex-direction: column; align-items: center; gap: 4px; padding-top: 8px; }
+  .wx-switch { position: relative; width: 70px; height: 30px; padding: 0; border: 1px solid rgba(255, 255, 255, 0.18); border-radius: 999px; background: rgba(0, 0, 0, 0.3); cursor: pointer; box-shadow: inset 0 2px 5px rgba(0, 0, 0, 0.35); }
+  .wx-knob { position: absolute; top: 3px; left: 3px; width: 36px; height: 22px; border-radius: 999px; background: linear-gradient(180deg, #E9EEFF, #AEBBE8); box-shadow: 0 3px 8px rgba(0, 0, 0, 0.35); transition: transform 0.22s cubic-bezier(0.3, 0.8, 0.3, 1.1); }
+  .wx-knob::after { content: ""; position: absolute; left: 50%; top: 50%; width: 12px; height: 3px; margin: -1.5px 0 0 -6px; border-radius: 3px; background: rgba(40, 52, 110, 0.55); }
+  .wx-switch[aria-checked="true"] .wx-knob { transform: translateX(28px); }
+  .wx-mlabels { font-size: 0.62rem; letter-spacing: 0.14em; color: var(--txt2); opacity: 0.85; }
+  .wx-mlabels span { cursor: pointer; transition: color 0.15s ease, opacity 0.15s ease; }
+  .wx-mlabels span.on { color: #fff; font-weight: 600; }
+
+  /* Bottom sheets inside the phone */
+  .wx-layer { position: absolute; inset: 0; z-index: 6; display: flex; align-items: flex-end; background: rgba(5, 8, 25, 0.56); animation: wx-fade 0.18s ease-out; }
+  .wx-panel { width: 100%; max-height: 82%; overflow-y: auto; padding: 18px max(20px, env(safe-area-inset-right, 0px)) max(22px, env(safe-area-inset-bottom, 0px)) max(20px, env(safe-area-inset-left, 0px)); border-top: 1px solid rgba(255, 255, 255, 0.2); border-radius: 28px 28px 0 0; background: rgba(22, 29, 66, 0.96); box-shadow: 0 -20px 60px rgba(0, 0, 0, 0.35), inset 0 1px 0 rgba(255, 255, 255, 0.16); animation: wx-up 0.24s cubic-bezier(0.2, 0.8, 0.3, 1); }
+  @keyframes wx-up { from { transform: translateY(24px); opacity: 0; } to { transform: none; opacity: 1; } }
+  .wx-ph { display: flex; align-items: center; justify-content: space-between; gap: 12px; margin-bottom: 12px; font-size: 1rem; font-weight: 600; }
+  .wx-x { width: 34px; height: 34px; border: 0; border-radius: 50%; background: rgba(255, 255, 255, 0.12); color: var(--txt); font-size: 1.3rem; line-height: 1; cursor: pointer; }
+  .wx-clist { display: flex; flex-direction: column; gap: 8px; margin: 0; padding: 0; list-style: none; }
+  .wx-city-row { display: grid; grid-template-columns: 44px minmax(0, 1fr) auto; align-items: center; column-gap: 12px; width: 100%; padding: 8px 14px 8px 8px; border: 1px solid rgba(255, 255, 255, 0.14); border-radius: 16px; background: rgba(255, 255, 255, 0.07); color: var(--txt); font: inherit; text-align: left; cursor: pointer; }
+  .wx-city-row:hover { background: rgba(255, 255, 255, 0.13); }
+  .wx-city-row[aria-current="true"] { border-color: rgba(255, 255, 255, 0.5); background: rgba(255, 255, 255, 0.14); }
+  .wx-city-row .wx-bubble { width: 44px; height: 44px; box-shadow: none; }
+  .wx-city-row .wx-bubble svg { width: 28px; height: 26px; }
+  .wx-city-name { font-size: 0.9rem; font-weight: 500; }
+  .wx-city-sub { display: block; font-size: 0.72rem; color: var(--txt2); }
+  .wx-city-deg { font-size: 1.05rem; font-weight: 600; font-variant-numeric: tabular-nums; }
+  .wx-help { margin: 12px 2px 0; font-size: 0.7rem; line-height: 1.5; color: var(--txt2); }
+  .wx-set { margin-bottom: 16px; }
+  .wx-set-l { margin-bottom: 8px; font-size: 0.72rem; letter-spacing: 0.08em; text-transform: uppercase; color: var(--txt2); }
+  .wx-seg { display: flex; flex-wrap: wrap; gap: 8px; }
+  .wx-seg button { min-height: 38px; padding: 8px 14px; border: 1px solid rgba(255, 255, 255, 0.18); border-radius: 999px; background: rgba(255, 255, 255, 0.07); color: var(--txt); font: 500 0.8rem var(--f); cursor: pointer; }
+  .wx-seg button[aria-pressed="true"] { background: #F2F5FF; border-color: #F2F5FF; color: #1b2556; font-weight: 600; }
+
+  @media (max-height: 640px) { .wx-temp { font-size: 3rem; } .wx-bubble { width: 50px; height: 50px; } .wx-bubble svg { width: 32px; height: 30px; } }
+
+  /* ===== Weather motion (no layout changes) ===== */
+  /* Registered colours so the sky smoothly blends when the weather / city changes. */
+  @property --bg-top { syntax: "<color>"; inherits: true; initial-value: #10172e; }
+  @property --bg-bot { syntax: "<color>"; inherits: true; initial-value: #27335e; }
+  @property --ridge { syntax: "<color>"; inherits: true; initial-value: #33427a; }
+  @property --sheet { syntax: "<color>"; inherits: true; initial-value: #1c2547; }
+  .wx-phone { transition: --bg-top 0.9s ease, --bg-bot 0.9s ease, --ridge 0.9s ease, --sheet 0.9s ease; }
+  /* Phone pops in when opened and slides down when closed */
+  .wx:not([hidden]) .wx-phone { animation: wx-open 0.5s cubic-bezier(0.2, 0.9, 0.25, 1.05); }
+  @keyframes wx-open { from { opacity: 0; transform: translateY(26px) scale(0.96); } to { opacity: 1; transform: none; } }
+  .wx.wx-closing { animation: wx-fade-out 0.26s ease-in forwards; pointer-events: none; }
+  .wx.wx-closing .wx-phone { animation: wx-close 0.26s cubic-bezier(0.4, 0, 0.85, 0.6) forwards; }
+  @keyframes wx-fade-out { to { opacity: 0; } }
+  @keyframes wx-close { to { opacity: 0; transform: translateY(28px) scale(0.95); } }
+  /* Bottom sheet slides down when closed */
+  .wx-layer.wx-closing { animation: wx-fade-out 0.22s ease-in forwards; pointer-events: none; }
+  .wx-layer.wx-closing .wx-panel { animation: wx-down 0.22s cubic-bezier(0.4, 0, 0.85, 0.6) forwards; }
+  @keyframes wx-down { to { transform: translateY(28px); opacity: 0; } }
+  /* Header lines rise one after another */
+  .wx-head.wx-enter > * { animation: wx-rise 0.55s cubic-bezier(0.2, 0.8, 0.3, 1) both; }
+  .wx-head.wx-enter > :nth-child(2) { animation-delay: 0.06s; }
+  .wx-head.wx-enter > :nth-child(3) { animation-delay: 0.12s; }
+  .wx-head.wx-enter > :nth-child(4) { animation-delay: 0.18s; }
+  @keyframes wx-rise { from { opacity: 0; transform: translateY(12px); } to { opacity: 1; transform: none; } }
+  @media (max-width: 640px) {
+    .wx-bubble * { animation: none !important; }
+    .bgc:nth-child(even) { display: none; }
+  }
+  /* Temperature gives a tiny bounce when the number changes */
+  .wx-temp.wx-bump { animation: wx-bump 0.5s cubic-bezier(0.3, 1.6, 0.5, 1); }
+  @keyframes wx-bump { 40% { transform: scale(1.06); } }
+  /* Forecast cards cascade in */
+  .wx-strip.wx-anim .wx-item { animation: wx-card 0.5s cubic-bezier(0.2, 0.8, 0.3, 1) both; animation-delay: calc(var(--i, 0) * 45ms); }
+  @keyframes wx-card { from { opacity: 0; transform: translateY(18px) scale(0.9); } to { opacity: 1; transform: none; } }
+  .wx-item .wx-bubble { transition: transform 0.25s cubic-bezier(0.3, 1.4, 0.5, 1), box-shadow 0.25s ease; }
+  .wx-item:hover .wx-bubble { transform: translateY(-4px) scale(1.06); }
+  .wx-item.is-now .wx-bubble { animation: wx-now 2.6s ease-in-out infinite; }
+  @keyframes wx-now { 0%, 100% { box-shadow: 0 0 0 3px rgba(255, 255, 255, 0.12), 0 8px 18px rgba(0, 0, 0, 0.22), inset 0 1px 0 rgba(255, 255, 255, 0.4); } 50% { box-shadow: 0 0 0 7px rgba(255, 255, 255, 0.05), 0 8px 18px rgba(0, 0, 0, 0.22), inset 0 1px 0 rgba(255, 255, 255, 0.4); } }
+  /* Small icons inside the cards move like the big one */
+  .wx-bubble .s-rays { transform-box: view-box; animation: wx-spin 30s linear infinite; }
+  .wx-bubble .drop { animation: wx-drop 1.6s ease-in infinite; }
+  .wx-bubble .flake { animation: wx-flake 4s ease-in-out infinite; }
+  .wx-bubble .m-star { animation: wx-tw 2.8s ease-in-out infinite; }
+  .wx-bubble .c-back { animation: wx-sway 6s ease-in-out infinite alternate; }
+  /* Hill ridge slowly breathes, drips fall */
+  .wx-wave { transform-origin: 50% 100%; animation: wx-breathe 9s ease-in-out infinite; }
+  @keyframes wx-breathe { 0%, 100% { transform: scaleY(1); } 50% { transform: scaleY(1.12); } }
+  /* Refresh: status dot spins into a ring while loading */
+  .wx-status[data-state="loading"] .dot { background: transparent; border: 2px solid currentColor; border-right-color: transparent; animation: wx-spin 0.8s linear infinite; }
+  .wx-status { transition: transform 0.15s ease, background 0.15s ease; }
+  .wx-status:active { transform: scale(0.95); }
+  /* Switch knob squish + city rows cascade */
+  .wx-switch:active .wx-knob { width: 42px; }
+  .wx-switch[aria-checked="true"]:active .wx-knob { transform: translateX(22px); }
+  .wx-clist li { animation: wx-card 0.4s cubic-bezier(0.2, 0.8, 0.3, 1) both; }
+  .wx-clist li:nth-child(2) { animation-delay: 0.04s; } .wx-clist li:nth-child(3) { animation-delay: 0.08s; }
+  .wx-clist li:nth-child(4) { animation-delay: 0.12s; } .wx-clist li:nth-child(5) { animation-delay: 0.16s; }
+  .wx-clist li:nth-child(6) { animation-delay: 0.2s; }
+  .wx-clist.wx-still li { animation: none; }
+  .wx-city-row { transition: background 0.15s ease, transform 0.2s ease; }
+  .wx-city-row:hover { transform: translateX(3px); }
+  .wx-city-row:active { transform: scale(0.98); }
+  .wx-seg button { transition: background 0.2s ease, color 0.2s ease, transform 0.15s ease; }
+  .wx-seg button:active { transform: scale(0.94); }
+  /* Weather row on the profile page: icon floats gently */
+  #wxRowIcon { animation: wx-float 4s ease-in-out infinite; }
+  @media (prefers-reduced-motion: reduce) { .wx-phone { transition: none; } }
+
+  /* ===== VPS Resources monitor (Light Frosted Glass) ===== */
+  .vps-row { --t: rgba(59, 130, 246, 0.12); }
+  .vps-row .ic {
+    position: relative;
+    overflow: visible;
+    border-radius: 13px;
+    background: linear-gradient(145deg, rgba(255, 255, 255, 0.92), rgba(226, 238, 255, 0.72));
+    border: 1px solid rgba(255, 255, 255, 0.95);
+    box-shadow:
+      0 6px 14px rgba(59, 130, 246, 0.18),
+      inset 0 1.5px 2px rgba(255, 255, 255, 1),
+      inset 0 -2px 4px rgba(59, 130, 246, 0.12);
+  }
+  .vps-row .ic svg { width: 28px; height: 28px; overflow: visible; filter: drop-shadow(0 3px 5px rgba(37, 99, 235, 0.22)); }
+
+  /* Frosted 3D glass icon treatment across profile rows */
+  .row .ic {
+    border-radius: 13px;
+    background:
+      radial-gradient(circle at 28% 22%, rgba(255, 255, 255, 0.92), rgba(255, 255, 255, 0.32) 62%),
+      var(--t);
+    border: 1px solid rgba(255, 255, 255, 0.88);
+    box-shadow:
+      0 6px 14px rgba(38, 44, 110, 0.10),
+      inset 0 1.5px 2px rgba(255, 255, 255, 0.95),
+      inset 0 -2px 4px rgba(38, 44, 110, 0.06);
+  }
+  :root[data-theme="dark"] .row .ic {
+    background:
+      radial-gradient(circle at 28% 22%, rgba(255, 255, 255, 0.22), rgba(255, 255, 255, 0.04) 65%),
+      var(--t);
+    border-color: rgba(255, 255, 255, 0.22);
+    box-shadow:
+      0 6px 14px rgba(0, 0, 0, 0.28),
+      inset 0 1px 1.5px rgba(255, 255, 255, 0.28);
+  }
+  .wx-row .ic {
+    border-radius: 13px;
+    background: linear-gradient(155deg, rgba(255, 255, 255, 0.92), rgba(219, 236, 255, 0.78));
+    border: 1px solid rgba(255, 255, 255, 0.95);
+    box-shadow:
+      0 6px 14px rgba(59, 130, 246, 0.18),
+      inset 0 1.5px 2px rgba(255, 255, 255, 1),
+      inset 0 -2px 4px rgba(59, 130, 246, 0.12);
+  }
+  .wx-row .ic[data-sky="night"] {
+    background: linear-gradient(155deg, rgba(235, 242, 255, 0.92), rgba(199, 214, 255, 0.78));
+    box-shadow:
+      0 6px 14px rgba(67, 85, 176, 0.18),
+      inset 0 1.5px 2px rgba(255, 255, 255, 1);
+  }
+
+  .vps-phone {
+    --bg-top: #EEF3FF;
+    --bg-bot: #DCE6FF;
+    --ridge: #CFDDFC;
+    --sheet: #E5ECFF;
+    --glow: rgba(59, 130, 246, 0.22);
+    --txt: #151C36;
+    --txt2: #5B668A;
+    --glass: rgba(255, 255, 255, 0.72);
+    --glass-line: rgba(255, 255, 255, 0.92);
+    background:
+      radial-gradient(circle at 18% 12%, rgba(147, 197, 253, 0.55), transparent 42%),
+      radial-gradient(circle at 86% 78%, rgba(196, 181, 253, 0.5), transparent 44%),
+      linear-gradient(180deg, var(--bg-top), var(--bg-bot));
+    color: var(--txt);
+  }
+  @media (min-width: 520px) {
+    .vps-phone {
+      box-shadow: 0 32px 90px rgba(24, 34, 78, 0.28), inset 0 0 0 1.5px rgba(255, 255, 255, 0.9);
+    }
+  }
+  .vps-phone .wx-ibtn, .vps-phone .wx-status {
+    background: rgba(255, 255, 255, 0.76);
+    border: 1px solid rgba(255, 255, 255, 0.95);
+    color: var(--txt);
+    box-shadow: 0 6px 16px rgba(37, 56, 118, 0.08), inset 0 1px 1px #fff;
+  }
+  .vps-phone .wx-ibtn:hover, .vps-phone .wx-status:hover { background: rgba(255, 255, 255, 0.92); }
+  .vps-body { flex: 1 1 0; min-height: 0; overflow-y: auto; padding: 12px max(18px, env(safe-area-inset-right, 0px)) max(22px, env(safe-area-inset-bottom, 0px)) max(18px, env(safe-area-inset-left, 0px)); display: flex; flex-direction: column; gap: 12px; position: relative; z-index: 1; scrollbar-width: none; }
+  .vps-body::-webkit-scrollbar { display: none; }
+  .vps-banner {
+    padding: 14px 16px;
+    border: 1px solid rgba(255, 255, 255, 0.95);
+    border-radius: 22px;
+    background: linear-gradient(135deg, rgba(255, 255, 255, 0.92), rgba(235, 243, 255, 0.78));
+    box-shadow: 0 12px 28px rgba(37, 56, 118, 0.09), inset 0 1.5px 1px #fff;
+    animation: wx-rise 0.45s cubic-bezier(0.2, 0.8, 0.3, 1) both;
+  }
+  .vps-b-top { display: flex; align-items: center; justify-content: space-between; gap: 10px; }
+  .vps-host { font-family: "Outfit", var(--f); font-size: 1.15rem; font-weight: 700; letter-spacing: -0.01em; color: var(--txt); }
+  .vps-badge { display: inline-flex; align-items: center; gap: 6px; padding: 4px 10px; border-radius: 999px; background: rgba(16, 185, 129, 0.14); border: 1px solid rgba(16, 185, 129, 0.35); color: #059669; font-size: 0.68rem; font-weight: 600; }
+  .vps-badge::before { content: ""; width: 6px; height: 6px; border-radius: 50%; background: #10B981; box-shadow: 0 0 8px #10B981; animation: wx-pulse 1.8s ease-in-out infinite; }
+  .vps-b-sub { margin-top: 4px; font-size: 0.74rem; color: var(--txt2); display: flex; flex-wrap: wrap; gap: 6px 12px; font-variant-numeric: tabular-nums; }
+  .vps-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+  .vps-card {
+    padding: 13px 14px;
+    border: 1px solid rgba(255, 255, 255, 0.92);
+    border-radius: 20px;
+    background: linear-gradient(155deg, rgba(255, 255, 255, 0.90), rgba(240, 246, 255, 0.74));
+    box-shadow: 0 10px 24px rgba(37, 56, 118, 0.07), inset 0 1.5px 1px #fff;
+    display: flex; flex-direction: column; gap: 7px;
+    animation: wx-card 0.48s cubic-bezier(0.2, 0.8, 0.3, 1) both;
+    animation-delay: calc(var(--i, 0) * 55ms);
+  }
+  .vps-card.wide { grid-column: 1 / -1; }
+  .vps-c-head { display: flex; align-items: center; justify-content: space-between; gap: 8px; font-size: 0.74rem; color: var(--txt2); font-weight: 500; }
+  .vps-c-ic { width: 26px; height: 26px; display: block; flex: 0 0 26px; overflow: visible; }
+  .vps-val { font-family: "Outfit", var(--f); font-size: 1.55rem; font-weight: 700; line-height: 1.1; color: var(--txt); font-variant-numeric: tabular-nums; display: flex; align-items: baseline; justify-content: space-between; gap: 6px; }
+  .vps-sub { font-family: var(--f); font-size: 0.7rem; font-weight: 500; color: var(--txt2); font-variant-numeric: tabular-nums; }
+  .vps-meter { height: 8px; width: 100%; border-radius: 999px; background: rgba(59, 130, 246, 0.12); overflow: hidden; box-shadow: inset 0 1px 2px rgba(24, 38, 92, 0.10); }
+  .vps-fill { height: 100%; width: 0%; border-radius: inherit; background: var(--bar, linear-gradient(90deg, #3B82F6, #6366F1)); transition: width 0.55s cubic-bezier(0.22, 0.9, 0.3, 1), background 0.3s ease; }
+  .vps-spark { display: block; width: 100%; height: 44px; border-radius: 10px; background: rgba(59, 130, 246, 0.06); border: 1px solid rgba(59, 130, 246, 0.12); }
+  .vps-net-row { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; padding-top: 2px; }
+  .vps-net-item { padding: 9px 11px; border-radius: 14px; background: rgba(255, 255, 255, 0.66); border: 1px solid rgba(255, 255, 255, 0.92); box-shadow: inset 0 1px 0 #fff; font-variant-numeric: tabular-nums; }
+  .vps-net-lbl { font-size: 0.66rem; color: var(--txt2); display: flex; align-items: center; gap: 5px; font-weight: 500; }
+  .vps-net-val { margin-top: 2px; font-family: "Outfit", var(--f); font-size: 1rem; font-weight: 700; color: var(--txt); }
+  .vps-specs { display: grid; grid-template-columns: 1fr 1fr; gap: 8px 12px; font-size: 0.72rem; font-variant-numeric: tabular-nums; }
+  .vps-spec span { display: block; font-size: 0.65rem; color: var(--txt2); }
+  .vps-spec strong { font-weight: 600; color: var(--txt); }
+  .vps-phone .wx-bar { background: rgba(255, 255, 255, 0.68); border-top: 1px solid rgba(255, 255, 255, 0.88); }
+  .vps-phone #vpsFooterLabel { color: var(--txt) !important; opacity: 0.85 !important; }
+  .vps-phone .wx-panel {
+    background: rgba(244, 248, 255, 0.92);
+    border-top: 1px solid #fff;
+    color: var(--txt);
+    box-shadow: 0 -20px 50px rgba(28, 42, 96, 0.16), inset 0 1px 0 #fff;
+  }
+  .vps-phone .wx-x { background: rgba(30, 41, 59, 0.08); color: var(--txt); }
+  .vps-phone .wx-city-row {
+    background: rgba(255, 255, 255, 0.75);
+    border: 1px solid rgba(255, 255, 255, 0.95);
+    color: var(--txt);
+    box-shadow: 0 4px 12px rgba(30, 45, 100, 0.06);
+  }
+  .vps-phone .wx-city-row[aria-current="true"] {
+    background: #fff;
+    border-color: #3B82F6;
+    box-shadow: 0 6px 16px rgba(59, 130, 246, 0.16);
+  }
+  .vps-phone .wx-bubble {
+    background: linear-gradient(145deg, #EFF6FF, #DBEAFE);
+    border-color: #BFDBFE;
+    box-shadow: inset 0 1px 1px #fff;
+  }
+  .vps-input { width: 100%; padding: 10px 12px; border: 1px solid rgba(59, 130, 246, 0.28); border-radius: 12px; background: rgba(255, 255, 255, 0.88); color: var(--txt); font: 400 0.78rem var(--f); outline: none; }
+  .vps-input:focus { border-color: #2563EB; box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.15); }
+  .vps-phone .wx-seg button { background: rgba(255, 255, 255, 0.8); border-color: rgba(59, 130, 246, 0.22); color: var(--txt); }
+  .vps-phone .wx-seg button[aria-pressed="true"] { background: #2563EB; border-color: #2563EB; color: #fff; }
+  .vps-btn-row { display: flex; gap: 8px; margin-top: 8px; }
+
+  /* ===== Pastel Bento Widget (Calendar, Upcoming Festival, Weather & Total Visitors) ===== */
+  .bento-wrap {
+    padding: 9px;
+    border-radius: 24px;
+    background: rgba(250, 250, 253, 0.94);
+    border: 1px solid rgba(255, 255, 255, 0.95);
+    box-shadow:
+      0 10px 28px rgba(38, 42, 98, 0.08),
+      inset 0 1px 0 #FFFFFF;
+    display: grid;
+    grid-template-columns: repeat(12, minmax(0, 1fr));
+    grid-template-rows: auto auto;
+    gap: 8px;
+    color: #22222A;
+  }
+  :root[data-theme="dark"] .bento-wrap {
+    background: rgba(32, 35, 66, 0.92);
+    border-color: rgba(255, 255, 255, 0.14);
+    box-shadow: 0 12px 32px rgba(0, 0, 0, 0.28), inset 0 1px 0 rgba(255, 255, 255, 0.1);
+  }
+  .bento-left {
+    grid-column: 1 / 4;
+    grid-row: 1 / 3;
+    border-radius: 17px;
+    background: #FCE4E1;
+    border: 1px solid rgba(235, 185, 180, 0.55);
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+  }
+  .bento-cal-top {
+    flex: 1 1 52%;
+    display: grid;
+    place-items: center;
+    padding: 10px 6px;
+  }
+  .bento-cal-badge {
+    width: 54px;
+    border-radius: 12px;
+    background: #FFFFFF;
+    box-shadow: 0 6px 14px rgba(185, 92, 82, 0.18), inset 0 1px 0 #FFFFFF;
+    overflow: hidden;
+    text-align: center;
+  }
+  .bento-cal-dow {
+    display: block;
+    padding: 3px 0 2px;
+    background: linear-gradient(180deg, #F26454, #E64D3D);
+    color: #FFFFFF;
+    font-size: 0.56rem;
+    font-weight: 700;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    border-bottom: 1px dashed rgba(255, 255, 255, 0.55);
+  }
+  .bento-cal-num {
+    display: block;
+    padding: 3px 0 5px;
+    font-family: "Outfit", var(--f);
+    font-size: 1.32rem;
+    font-weight: 800;
+    line-height: 1.05;
+    color: #1F1F26;
+    font-variant-numeric: tabular-nums;
+  }
+  .bento-fest {
+    flex: 1 1 48%;
+    border-top: 1px solid rgba(214, 162, 156, 0.42);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 10px 6px;
+    text-align: center;
+  }
+  .bento-fest-val {
+    font-family: "Outfit", var(--f);
+    font-size: 0.96rem;
+    font-weight: 700;
+    line-height: 1.2;
+    color: #241F1F;
+  }
+  .bento-fest-lbl {
+    margin-top: 5px;
+    font-size: 0.66rem;
+    font-weight: 500;
+    line-height: 1.26;
+    color: #876E6B;
+  }
+  .bento-week {
+    grid-column: 4 / 10;
+    grid-row: 1 / 2;
+    border-radius: 17px;
+    background: #FFFFFF;
+    border: 1px solid rgba(0, 0, 0, 0.05);
+    box-shadow: 0 3px 10px rgba(0, 0, 0, 0.02);
+    padding: 9px 8px 8px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    gap: 5px;
+  }
+  .bento-w-grid {
+    display: grid;
+    grid-template-columns: repeat(7, 1fr);
+    row-gap: 5px;
+    column-gap: 1px;
+    text-align: center;
+    align-items: center;
+    font-variant-numeric: tabular-nums;
+  }
+  .bento-w-hdr {
+    font-size: 0.62rem;
+    font-weight: 600;
+    color: #B2B5BF;
+    padding-bottom: 1px;
+  }
+  .bento-w-day {
+    font-size: 0.66rem;
+    font-weight: 600;
+    color: #2B2D38;
+    line-height: 1.65;
+    border-radius: 999px;
+    margin-inline: auto;
+    width: 22px;
+    height: 19px;
+    display: grid;
+    place-items: center;
+  }
+  .bento-w-day.is-today {
+    background: #EE6B59;
+    color: #FFFFFF;
+    font-weight: 700;
+    box-shadow: 0 2px 6px rgba(238, 107, 89, 0.38);
+  }
+  .bento-art {
+    grid-column: 10 / 13;
+    grid-row: 1 / 2;
+    border-radius: 17px;
+    background: #F7EDF6;
+    border: 1px solid rgba(226, 204, 224, 0.65);
+    padding: 5px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  .bento-art svg {
+    width: 100%;
+    height: 100%;
+    max-height: 76px;
+    border-radius: 12px;
+    display: block;
+  }
+  .bento-wx {
+    grid-column: 4 / 9;
+    grid-row: 2 / 3;
+    border-radius: 17px;
+    background: #FDF0DF;
+    border: 1px solid rgba(238, 212, 178, 0.65);
+    padding: 10px 9px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    cursor: pointer;
+    text-align: left;
+    font: inherit;
+    color: inherit;
+    transition: transform 0.16s ease;
+  }
+  .bento-wx:hover { transform: translateY(-1px); }
+  .bento-wx-ic {
+    width: 36px;
+    height: 36px;
+    flex: 0 0 36px;
+    display: block;
+    overflow: visible;
+  }
+  .bento-wx-val {
+    display: block;
+    font-family: "Outfit", var(--f);
+    font-size: 1.12rem;
+    font-weight: 700;
+    line-height: 1.1;
+    color: #24211D;
+    font-variant-numeric: tabular-nums;
+  }
+  .bento-wx-lbl {
+    display: block;
+    margin-top: 2px;
+    font-size: 0.63rem;
+    font-weight: 500;
+    color: #887B6C;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+  .bento-vis {
+    grid-column: 9 / 13;
+    grid-row: 2 / 3;
+    border-radius: 17px;
+    background: #E7F6EC;
+    border: 1px solid rgba(190, 228, 203, 0.7);
+    padding: 10px 9px;
+    display: flex;
+    align-items: center;
+    gap: 7px;
+  }
+  .bento-vis-ic {
+    width: 28px;
+    height: 34px;
+    flex: 0 0 28px;
+    display: block;
+  }
+  .bento-vis-val {
+    display: block;
+    font-family: "Outfit", var(--f);
+    font-size: 1.08rem;
+    font-weight: 700;
+    line-height: 1.1;
+    color: #1E2821;
+    font-variant-numeric: tabular-nums;
+  }
+  .bento-vis-lbl {
+    display: block;
+    margin-top: 2px;
+    font-size: 0.61rem;
+    font-weight: 500;
+    color: #6B8272;
+    white-space: nowrap;
+  }
+  @media (max-width: 370px) {
+    .bento-wx-val, .bento-vis-val { font-size: 0.96rem; }
+    .bento-w-day { width: 19px; font-size: 0.6rem; }
+  }
+</style>
+</head>
+<body>
+<button type="button" id="vpsTrigger" hidden></button>
+<div class="wx" id="vps" role="main" aria-labelledby="vpsTitle">
+  <div class="wx-phone vps-phone" id="vpsPhone">
+    <div class="wx-top">
+      <button class="wx-ibtn" id="vpsBack" type="button" aria-label="Back to profile"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M15 5l-7 7 7 7"/></svg></button>
+      <button class="wx-status" id="vpsStatus" type="button" data-state="live" aria-label="Refresh VPS stats"><span class="dot"></span><span id="vpsStatusText">Live · Telemetry</span></button>
+    </div>
+
+    <div class="vps-body">
+      <div class="vps-banner">
+        <div class="vps-b-top">
+          <span class="vps-host" id="vpsTitle">nx-in-mum-01</span>
+          <span class="vps-badge" id="vpsStateBadge">ONLINE</span>
+        </div>
+        <div class="vps-b-sub">
+          <span id="vpsNodeRegion">Mumbai, IN · KVM NVMe</span>
+          <span>Uptime: <strong id="vpsUptime">42d 18h 11m</strong></span>
+        </div>
+      </div>
+
+      <div class="vps-grid">
+        <div class="vps-card" style="--i:1">
+          <div class="vps-c-head"><span>CPU Usage</span><svg class="vps-c-ic" viewBox="0 0 32 32" aria-hidden="true"><defs><linearGradient id="vcCpuB" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#60A5FA"/><stop offset="1" stop-color="#2563EB"/></linearGradient><linearGradient id="vcCpuF" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#FFFFFF" stop-opacity="0.92"/><stop offset="1" stop-color="#BFDBFE" stop-opacity="0.72"/></linearGradient></defs><rect x="9" y="4" width="17" height="19" rx="4.5" fill="url(#vcCpuB)"/><rect x="5" y="8" width="17" height="19" rx="4.5" fill="url(#vcCpuF)" stroke="#fff" stroke-width="1"/><rect x="9" y="13" width="9" height="2.2" rx="1.1" fill="#3B82F6"/><rect x="9" y="17.2" width="9" height="2.2" rx="1.1" fill="#3B82F6"/><rect x="9" y="21.4" width="5.5" height="2.2" rx="1.1" fill="#3B82F6"/></svg></div>
+          <div class="vps-val"><span id="vpsCpuPct">24%</span><span class="vps-sub" id="vpsCpuMeta">4 vCPU · 3.4 GHz</span></div>
+          <div class="vps-meter"><div class="vps-fill" id="vpsCpuBar" style="width:24%"></div></div>
+        </div>
+
+        <div class="vps-card" style="--i:2">
+          <div class="vps-c-head"><span>RAM Usage</span><svg class="vps-c-ic" viewBox="0 0 32 32" aria-hidden="true"><defs><linearGradient id="vcRamB" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#FB923C"/><stop offset="1" stop-color="#EA580C"/></linearGradient><linearGradient id="vcRamF" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#FFF7ED" stop-opacity="0.94"/><stop offset="1" stop-color="#FED7AA" stop-opacity="0.74"/></linearGradient></defs><rect x="10" y="4" width="16" height="18" rx="4.5" fill="url(#vcRamB)"/><rect x="5" y="8" width="17" height="19" rx="4.5" fill="url(#vcRamF)" stroke="#fff" stroke-width="1"/><path d="M13.5 13.5v8M9.5 17.5h8" stroke="#EA580C" stroke-width="2.4" stroke-linecap="round"/></svg></div>
+          <div class="vps-val"><span id="vpsRamPct">52%</span><span class="vps-sub" id="vpsRamMeta">8.3 / 16 GB</span></div>
+          <div class="vps-meter"><div class="vps-fill" id="vpsRamBar" style="width:52%;--bar:linear-gradient(90deg,#FB923C,#EC4899)"></div></div>
+        </div>
+
+        <div class="vps-card" style="--i:3">
+          <div class="vps-c-head"><span>NVMe Disk</span><svg class="vps-c-ic" viewBox="0 0 32 32" aria-hidden="true"><defs><linearGradient id="vcDskB" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#3B82F6"/><stop offset="1" stop-color="#1D4ED8"/></linearGradient><linearGradient id="vcDskF" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#EFF6FF" stop-opacity="0.94"/><stop offset="1" stop-color="#93C5FD" stop-opacity="0.78"/></linearGradient></defs><path d="M5 9.5A3.5 3.5 0 0 1 8.5 6h5.2l2.3 2.5h7.5A3.5 3.5 0 0 1 27 12v10a3.5 3.5 0 0 1-3.5 3.5h-15A3.5 3.5 0 0 1 5 22z" fill="url(#vcDskB)"/><rect x="4" y="11" width="24" height="15" rx="4" fill="url(#vcDskF)" stroke="#fff" stroke-width="1"/></svg></div>
+          <div class="vps-val"><span id="vpsDiskPct">39%</span><span class="vps-sub" id="vpsDiskMeta">62.4 / 160 GB</span></div>
+          <div class="vps-meter"><div class="vps-fill" id="vpsDiskBar" style="width:39%;--bar:linear-gradient(90deg,#34D399,#10B981)"></div></div>
+        </div>
+
+        <div class="vps-card" style="--i:4">
+          <div class="vps-c-head"><span>Swap Memory</span><svg class="vps-c-ic" viewBox="0 0 32 32" aria-hidden="true"><defs><linearGradient id="vcSwpB" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#4ADE80"/><stop offset="1" stop-color="#16A34A"/></linearGradient><linearGradient id="vcSwpF" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#FFFFFF" stop-opacity="0.94"/><stop offset="1" stop-color="#BBF7D0" stop-opacity="0.76"/></linearGradient></defs><circle cx="15.5" cy="16.5" r="10.5" fill="url(#vcSwpB)"/><path d="M15.5 6A10.5 10.5 0 0 1 26 16.5H15.5z" fill="url(#vcSwpF)" stroke="#fff" stroke-width="1" transform="translate(1.5 -1.5)"/></svg></div>
+          <div class="vps-val"><span id="vpsSwapPct">10%</span><span class="vps-sub" id="vpsSwapMeta">0.4 / 4.0 GB</span></div>
+          <div class="vps-meter"><div class="vps-fill" id="vpsSwapBar" style="width:10%;--bar:linear-gradient(90deg,#FBBF24,#F59E0B)"></div></div>
+        </div>
+
+        <div class="vps-card wide" style="--i:5">
+          <div class="vps-c-head"><span>Real-Time CPU &amp; Load History</span><span class="vps-sub" id="vpsLoadAvg">Load: 0.48 · 0.42 · 0.36</span></div>
+          <canvas class="vps-spark" id="vpsSpark" width="360" height="46" aria-hidden="true"></canvas>
+        </div>
+
+        <div class="vps-card wide" style="--i:6">
+          <div class="vps-c-head"><span style="display:inline-flex;align-items:center;gap:7px"><svg class="vps-c-ic" viewBox="0 0 32 32" aria-hidden="true"><defs><linearGradient id="vcNetF" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#FFFFFF" stop-opacity="0.96"/><stop offset="1" stop-color="#DBEAFE" stop-opacity="0.78"/></linearGradient></defs><path d="M9 21h14a4.5 4.5 0 0 0 .6-8.95A6.5 6.5 0 0 0 11.2 11a5.2 5.2 0 0 0-2.2 10z" fill="url(#vcNetF)" stroke="#fff" stroke-width="1"/><path d="M16 16v9m0 0l-3.5-3.5M16 25l3.5-3.5" stroke="#2563EB" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg>Network Traffic (1 Gbps Port)</span><span class="vps-sub" id="vpsPing">Ping: 22 ms</span></div>
+          <div class="vps-net-row">
+            <div class="vps-net-item">
+              <div class="vps-net-lbl"><span style="color:#059669">↓</span> Inbound (RX)</div>
+              <div class="vps-net-val" id="vpsNetIn">14.2 Mbps</div>
+            </div>
+            <div class="vps-net-item">
+              <div class="vps-net-lbl"><span style="color:#2563EB">↑</span> Outbound (TX)</div>
+              <div class="vps-net-val" id="vpsNetOut">8.6 Mbps</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="vps-card wide" style="--i:7">
+          <div class="vps-c-head"><span style="display:inline-flex;align-items:center;gap:7px"><svg class="vps-c-ic" viewBox="0 0 32 32" aria-hidden="true"><defs><linearGradient id="vcShdB" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#4ADE80"/><stop offset="1" stop-color="#16A34A"/></linearGradient></defs><path d="M16 4l10 4v7.5c0 6.4-4.2 11.4-10 13-5.8-1.6-10-6.6-10-13V8z" fill="url(#vcShdB)"/><circle cx="11" cy="18" r="5" fill="rgba(255,255,255,0.88)" stroke="#fff" stroke-width="0.8"/><path d="M9.2 18l1.3 1.3 2.6-2.6" stroke="#16A34A" stroke-width="1.6" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg>System Specifications</span><span class="vps-sub" id="vpsTemp">Temp: 46°C</span></div>
+          <div class="vps-specs">
+            <div class="vps-spec"><span>Processor</span><strong id="vpsSpecCpu">AMD EPYC 7763 (4 Cores)</strong></div>
+            <div class="vps-spec"><span>OS / Kernel</span><strong id="vpsSpecOs">Ubuntu 24.04 LTS · 6.8</strong></div>
+            <div class="vps-spec"><span>IPv4 Address</span><strong id="vpsSpecIp">103.148.xx.xx</strong></div>
+            <div class="vps-spec"><span>Bandwidth Used</span><strong id="vpsSpecBw">1.42 / 4.0 TB</strong></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="wx-bar">
+      <button class="wx-ibtn" id="vpsNodesBtn" type="button" aria-label="Choose VPS node" aria-haspopup="dialog"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="4" width="18" height="6" rx="2"/><rect x="3" y="14" width="18" height="6" rx="2"/><circle cx="7" cy="7" r="1"/><circle cx="7" cy="17" r="1"/></svg></button>
+      <div class="wx-mode">
+        <div class="wx-mlabels" style="opacity:1;font-weight:600;color:#fff;letter-spacing:0.1em" id="vpsFooterLabel">LIVE MONITOR · 2S</div>
+      </div>
+      <button class="wx-ibtn" id="vpsConfigBtn" type="button" aria-label="VPS API settings" aria-haspopup="dialog"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12.22 2h-.44a2 2 0 0 0-2 2v.18a2 2 0 0 1-1 1.73l-.43.25a2 2 0 0 1-2 0l-.15-.08a2 2 0 0 0-2.73.73l-.22.38a2 2 0 0 0 .73 2.73l.15.1a2 2 0 0 1 1 1.72v.51a2 2 0 0 1-1 1.74l-.15.09a2 2 0 0 0-.73 2.73l.22.38a2 2 0 0 0 2.73.73l.15-.08a2 2 0 0 1 2 0l.43.25a2 2 0 0 1 1 1.73V20a2 2 0 0 0 2 2h.44a2 2 0 0 0 2-2v-.18a2 2 0 0 1 1-1.73l.43-.25a2 2 0 0 1 2 0l.15.08a2 2 0 0 0 2.73-.73l.22-.39a2 2 0 0 0-.73-2.73l-.15-.08a2 2 0 0 1-1-1.74v-.5a2 2 0 0 1 1-1.74l.15-.09a2 2 0 0 0 .73-2.73l-.22-.38a2 2 0 0 0-2.73-.73l-.15.08a2 2 0 0 1-2 0l-.43-.25a2 2 0 0 1-1-1.73V4a2 2 0 0 0-2-2z"/><circle cx="12" cy="12" r="3"/></svg></button>
+    </div>
+
+    <div class="wx-layer" id="vpsLayer" hidden>
+      <div class="wx-panel" id="vpsNodesPanel" role="dialog" aria-label="Choose VPS node" hidden>
+        <div class="wx-ph"><span>VPS Nodes</span><button class="wx-x" type="button" data-vps-close aria-label="Close">&times;</button></div>
+        <ul class="wx-clist" id="vpsNodeList"></ul>
+        <p class="wx-help">Switch between nodes to inspect CPU, RAM, NVMe storage, and network throughput.</p>
+      </div>
+      <div class="wx-panel" id="vpsConfigPanel" role="dialog" aria-label="VPS Telemetry Settings" hidden>
+        <div class="wx-ph"><span>Host VPS Telemetry</span><button class="wx-x" type="button" data-vps-close aria-label="Close">&times;</button></div>
+        <div class="wx-set">
+          <div class="wx-set-l">Auto-Detected Host / Custom JSON URL</div>
+          <input class="vps-input" id="vpsApiInput" type="text" placeholder="Auto: ./vps-status.json or ./vps-status.php">
+          <div class="vps-btn-row">
+            <div class="wx-seg"><button type="button" id="vpsApiSave" aria-pressed="true">Save URL</button><button type="button" id="vpsApiClear" aria-pressed="false">Auto-Detect Host</button></div>
+          </div>
+        </div>
+        <div class="wx-set">
+          <div class="wx-set-l">1-Command Linux VPS Agent (Cron / Background)</div>
+          <div class="upi-idline" style="background:rgba(255,255,255,0.75);border:1px solid rgba(59,130,246,0.22)"><span id="vpsCmdText" style="font-family:monospace;font-size:0.65rem;color:#1E293B">while true; do top -bn1... &gt; vps-status.json; sleep 2; done</span><button class="upi-copy" type="button" id="vpsCopyCmd">Copy Script</button></div>
+        </div>
+        <p class="wx-help">Page automatically checks <code>./vps-status.json</code>, <code>./vps-status.php</code>, or <code>/api/vps-status</code> on the hosted server, plus real browser hardware/ping metrics.</p>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+<script>
+
+function navigateBackToHub(containerEl, closingClass) {
+  if (containerEl && closingClass) {
+    containerEl.classList.add(closingClass);
+    setTimeout(function() {
+      window.location.href = "./index.html";
+    }, 230);
+  } else {
+    window.location.href = "./index.html";
+  }
+}
+
+/* VPS Resources monitor */
+  (function () {
+    var root = document.getElementById("vps");
+    var trigger = document.getElementById("vpsTrigger");
+    if (!root || !trigger) return;
+    var $ = function (id) { return document.getElementById(id); };
+    var reduce = window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+
+    var hostName = (location.hostname && location.hostname !== "localhost" && location.hostname !== "127.0.0.1") ? location.hostname : "demonix-vps";
+    var NODES = [
+      {
+        id: "host", name: hostName, region: (location.protocol === "file:" ? "Local Host · Auto-Detected" : "Hosted Server · " + (location.host || "Live")),
+        cpuCores: 4, cpuGhz: "3.3 GHz", cpuModel: "AMD Ryzen 9 (4 vCPU)",
+        os: "Ubuntu · Linux x86_64", ip: location.hostname || "Auto-Detected", bw: "Live Port · 1 Gbps",
+        ramTotal: 30.6, ramUsed: 11.2, diskTotal: 103, diskUsed: 19.0, swapTotal: 4.0, swapUsed: 0.0,
+        baseCpu: 8, baseRx: 0.4, baseTx: 0.2, ping: 22, uptimeSec: 45200, isHost: true
+      }
+    ];
+
+    var state = { node: "host", open: false, apiUrl: "", detectedUrl: null, probing: false, lastProbe: 0, history: [6, 8, 7, 9, 8, 7, 10, 8, 7, 8, 9, 7, 8, 8, 7, 9, 8, 7, 8, 8] };
+    try {
+      state.apiUrl = localStorage.getItem("rudra-vps-api") || "";
+    } catch (e) {}
+
+    var AUTO_ENDPOINTS = ["./vps-status.json", "/vps-status.json", "./vps-status.php", "/vps-status.php"];
+    function probeHostEndpoints(force) {
+      if (state.probing || location.protocol === "file:") return;
+      if (!force && state.lastProbe && Date.now() - state.lastProbe < 30000) return;
+      state.probing = true;
+      state.lastProbe = Date.now();
+      var idx = 0;
+      function next() {
+        if (idx >= AUTO_ENDPOINTS.length) { state.probing = false; return; }
+        var candidate = AUTO_ENDPOINTS[idx++];
+        fetch(candidate + "?_t=" + Date.now(), { cache: "no-store" }).then(function (r) {
+          if (!r.ok) throw new Error("status");
+          var srv = r.headers.get("Server") || r.headers.get("X-Powered-By");
+          if (srv) NODES[0].os = srv + " · Linux";
+          return r.json();
+        }).then(function (j) {
+          if (j && (j.cpu != null || j.ramUsed != null || j.mem_used != null)) {
+            state.detectedUrl = candidate;
+            state.probing = false;
+            stepTelemetry();
+          } else next();
+        }).catch(next);
+      }
+      next();
+      /* Also Measure real HTTP round-trip ping + Server header from current page */
+      var t0 = performance.now();
+      fetch(location.href.split("#")[0], { method: "HEAD", cache: "no-store" }).then(function (r) {
+        NODES[0].ping = Math.max(1, Math.round(performance.now() - t0));
+        var srv = r.headers.get("Server") || r.headers.get("X-Powered-By");
+        if (srv) NODES[0].os = srv + " · Linux";
+      }).catch(function () {});
+    }
+    probeHostEndpoints();
+
+    function currentNode() {
+      for (var i = 0; i < NODES.length; i++) if (NODES[i].id === state.node) return NODES[i];
+      return NODES[0];
+    }
+
+    function fmtUptime(sec) {
+      var d = Math.floor(sec / 86400);
+      var h = Math.floor((sec % 86400) / 3600);
+      var m = Math.floor((sec % 3600) / 60);
+      return d + "d " + h + "h " + m + "m";
+    }
+
+    function barGradient(pct, def) {
+      if (pct >= 85) return "linear-gradient(90deg, #F87171, #EF4444)";
+      if (pct >= 70) return "linear-gradient(90deg, #FBBF24, #F59E0B)";
+      return def;
+    }
+
+    function drawSpark() {
+      var c = $("vpsSpark");
+      if (!c || !c.getContext) return;
+      var ctx = c.getContext("2d");
+      var w = c.width, h = c.height;
+      ctx.clearRect(0, 0, w, h);
+      var pts = state.history;
+      if (pts.length < 2) return;
+      var step = w / (pts.length - 1);
+      ctx.beginPath();
+      for (var i = 0; i < pts.length; i++) {
+        var x = i * step;
+        var y = h - 5 - (Math.min(100, Math.max(0, pts[i])) / 100) * (h - 12);
+        if (i === 0) ctx.moveTo(x, y); else ctx.lineTo(x, y);
+      }
+      ctx.strokeStyle = "#38BDF8";
+      ctx.lineWidth = 2;
+      ctx.lineCap = "round";
+      ctx.lineJoin = "round";
+      ctx.stroke();
+
+      ctx.lineTo(w, h);
+      ctx.lineTo(0, h);
+      ctx.closePath();
+      var g = ctx.createLinearGradient(0, 0, 0, h);
+      g.addColorStop(0, "rgba(56, 189, 248, 0.36)");
+      g.addColorStop(1, "rgba(56, 189, 248, 0.0)");
+      ctx.fillStyle = g;
+      ctx.fill();
+    }
+
+    function updateRowSummary(cpuPct, ramUsed, ramTotal) {
+      var sub = $("vpsRowSub");
+      if (sub) sub.textContent = "CPU " + cpuPct + "% · RAM " + ramUsed.toFixed(1) + "/" + ramTotal + " GB · Online";
+    }
+
+    function applyMetrics(m) {
+      var n = currentNode();
+      $("vpsTitle").textContent = m.name || n.name;
+      $("vpsNodeRegion").textContent = m.region || n.region;
+      $("vpsUptime").textContent = m.uptime || fmtUptime(n.uptimeSec);
+
+      var cpu = Math.round(Math.min(100, Math.max(0, m.cpu)));
+      $("vpsCpuPct").textContent = cpu + "%";
+      $("vpsCpuMeta").textContent = (m.cores || n.cpuCores) + " vCPU · " + (m.cpuGhz || n.cpuGhz);
+      $("vpsCpuBar").style.width = Math.max(2, cpu) + "%";
+      $("vpsCpuBar").style.setProperty("--bar", barGradient(cpu, "linear-gradient(90deg, #38BDF8, #818CF8)"));
+
+      var ramPct = Math.round((m.ramUsed / m.ramTotal) * 100);
+      $("vpsRamPct").textContent = ramPct + "%";
+      $("vpsRamMeta").textContent = m.ramUsed.toFixed(2).replace(/\.00$/, ".0") + " / " + m.ramTotal + " GB";
+      $("vpsRamBar").style.width = ramPct + "%";
+      $("vpsRamBar").style.setProperty("--bar", barGradient(ramPct, "linear-gradient(90deg, #FB923C, #EC4899)"));
+
+      var diskPct = Math.round((m.diskUsed / m.diskTotal) * 100);
+      $("vpsDiskPct").textContent = diskPct + "%";
+      $("vpsDiskMeta").textContent = m.diskUsed.toFixed(1).replace(/\.0$/, "") + " / " + m.diskTotal + " GB";
+      $("vpsDiskBar").style.width = diskPct + "%";
+
+      var swapPct = m.swapTotal > 0 ? Math.round((m.swapUsed / m.swapTotal) * 100) : 0;
+      $("vpsSwapPct").textContent = swapPct + "%";
+      $("vpsSwapMeta").textContent = m.swapUsed.toFixed(1) + " / " + m.swapTotal.toFixed(1) + " GB";
+      $("vpsSwapBar").style.width = swapPct + "%";
+
+      var l1 = m.load1 != null ? Number(m.load1).toFixed(2) : ((cpu / 100) * n.cpuCores * 0.15).toFixed(2);
+      var l5 = m.load5 != null ? Number(m.load5).toFixed(2) : ((cpu / 100) * n.cpuCores * 0.10).toFixed(2);
+      var l15 = m.load15 != null ? Number(m.load15).toFixed(2) : ((cpu / 100) * n.cpuCores * 0.05).toFixed(2);
+      $("vpsLoadAvg").textContent = "Load: " + l1 + " · " + l5 + " · " + l15;
+
+      $("vpsNetIn").textContent = m.rxLabel || (m.rxMbps.toFixed(2) + " Mbps");
+      $("vpsNetOut").textContent = m.txLabel || (m.txMbps.toFixed(2) + " Mbps");
+      $("vpsPing").textContent = "Ping: " + m.ping + " ms";
+      $("vpsTemp").textContent = "Temp: " + Math.round(38 + cpu * 0.32) + "°C";
+
+      $("vpsSpecCpu").textContent = m.cpuModel || n.cpuModel;
+      $("vpsSpecOs").textContent = m.os || n.os;
+      $("vpsSpecIp").textContent = m.ip || n.ip;
+      $("vpsSpecBw").textContent = m.bw || n.bw;
+
+      state.history.push(cpu);
+      if (state.history.length > 24) state.history.shift();
+      drawSpark();
+      updateRowSummary(cpu, m.ramUsed, m.ramTotal);
+    }
+
+    function stepTelemetry() {
+      var n = currentNode();
+      n.uptimeSec += 2;
+      if (!state.detectedUrl && !state.apiUrl) probeHostEndpoints();
+      var activeUrl = state.apiUrl || state.detectedUrl;
+      if (activeUrl && window.fetch) {
+        $("vpsStatus").dataset.state = "loading";
+        var t0 = performance.now();
+        fetch(activeUrl + (activeUrl.indexOf("?") > -1 ? "&" : "?") + "_t=" + Date.now(), { cache: "no-store" }).then(function (r) {
+          if (!r.ok) throw new Error("http");
+          n.ping = Math.max(1, Math.round(performance.now() - t0));
+          return r.json();
+        }).then(function (j) {
+          $("vpsStatus").dataset.state = "live";
+          $("vpsStatusText").textContent = "Live · Real VPS";
+          var rTotal = Number(j.ramTotal || j.mem_total) || n.ramTotal;
+          var rUsed = j.ramUsed != null ? Number(j.ramUsed) : (j.mem_used != null ? Number(j.mem_used) : n.ramUsed);
+          var dTotal = Number(j.diskTotal || j.disk_total) || n.diskTotal;
+          var dUsed = j.diskUsed != null ? Number(j.diskUsed) : (j.disk_used != null ? Number(j.disk_used) : n.diskUsed);
+          if (j.cores) n.cpuCores = Number(j.cores);
+          if (j.visitors != null && Number(j.visitors) > 0 && window._updateRealVisitors) {
+            window._updateRealVisitors(Number(j.visitors));
+          }
+          n.ramUsed = rUsed; n.ramTotal = rTotal; n.diskUsed = dUsed; n.diskTotal = dTotal;
+          if (j.cpu != null) n.baseCpu = Number(j.cpu);
+          applyMetrics({
+            name: j.name || j.hostname || n.name, region: j.region || n.region,
+            cores: j.cores, cpuGhz: j.cpuGhz,
+            cpu: j.cpu != null ? Number(j.cpu) : n.baseCpu,
+            ramUsed: rUsed, ramTotal: rTotal,
+            diskUsed: dUsed, diskTotal: dTotal,
+            swapUsed: j.swapUsed != null ? Number(j.swapUsed) : n.swapUsed,
+            swapTotal: j.swapTotal != null ? Number(j.swapTotal) : n.swapTotal,
+            load1: j.load1, load5: j.load5, load15: j.load15,
+            rxMbps: Number(j.rxMbps || j.rx) || 0,
+            txMbps: Number(j.txMbps || j.tx) || 0,
+            rxLabel: j.rxLabel, txLabel: j.txLabel,
+            ping: Number(j.ping) || n.ping,
+            uptime: j.uptime || fmtUptime(Number(j.uptimeSec) || n.uptimeSec),
+            cpuModel: j.cpuModel, os: j.os, ip: j.ip, bw: j.bw
+          });
+        }).catch(function () {
+          $("vpsStatus").dataset.state = "snapshot";
+          $("vpsStatusText").textContent = "Agent Offline · Setup";
+          simulateNode(n);
+        });
+      } else {
+        $("vpsStatus").dataset.state = "snapshot";
+        $("vpsStatusText").textContent = "Agent Offline · Setup";
+        simulateNode(n);
+      }
+    }
+
+    function simulateNode(n) {
+      if (n.isHost) {
+        var cpuH = Math.max(0, Math.min(100, Math.round(n.baseCpu + (Math.random() - 0.45) * 1.4)));
+        var ramH = +(n.ramUsed + (Math.random() - 0.5) * 0.02).toFixed(2);
+        applyMetrics({
+          cpu: cpuH, ramUsed: ramH, ramTotal: n.ramTotal,
+          diskUsed: n.diskUsed, diskTotal: n.diskTotal,
+          swapUsed: n.swapUsed, swapTotal: n.swapTotal,
+          load1: 0.03, load5: 0.02, load15: 0.00,
+          rxMbps: 0.01, txMbps: 0.09,
+          rxLabel: (Math.round(450 + Math.random() * 180)) + " B/s",
+          txLabel: (10.5 + (Math.random() - 0.5) * 2.2).toFixed(1) + " KiB/s",
+          ping: n.ping
+        });
+        return;
+      }
+      var wave = Math.sin(Date.now() / 2400) * 6 + (Math.random() - 0.48) * 7;
+      var cpu = Math.max(4, Math.min(96, n.baseCpu + wave));
+      var ramJitter = (Math.random() - 0.5) * 0.14;
+      var ramUsed = Math.max(0.8, Math.min(n.ramTotal - 0.4, n.ramUsed + ramJitter));
+      var rx = Math.max(0.4, n.baseRx + Math.sin(Date.now() / 1700) * 4.2 + (Math.random() - 0.45) * 3.5);
+      var tx = Math.max(0.3, n.baseTx + Math.cos(Date.now() / 1900) * 2.8 + (Math.random() - 0.45) * 2.4);
+      var ping = Math.max(8, Math.round(n.ping + (Math.random() - 0.5) * 4));
+      applyMetrics({
+        cpu: cpu, ramUsed: ramUsed, ramTotal: n.ramTotal,
+        diskUsed: n.diskUsed, diskTotal: n.diskTotal,
+        swapUsed: n.swapUsed, swapTotal: n.swapTotal,
+        rxMbps: rx, txMbps: tx, ping: ping
+      });
+    }
+
+    function renderNodes() {
+      var html = "";
+      NODES.forEach(function (n) {
+        var ramPct = Math.round((n.ramUsed / n.ramTotal) * 100);
+        html += '<li><button type="button" class="wx-city-row" data-node="' + n.id + '" aria-current="' + (n.id === state.node) + '">' +
+          '<span class="wx-bubble" style="width:44px;height:44px;font-weight:700;font-size:0.74rem;color:#2563EB">' + n.cpuCores + 'C</span>' +
+          '<span><span class="wx-city-name">' + n.name + '</span><span class="wx-city-sub">' + n.region + ' · RAM ' + ramPct + '%</span></span>' +
+          '<span class="wx-city-deg">' + n.baseCpu + '%</span></button></li>';
+      });
+      $("vpsNodeList").innerHTML = html;
+    }
+
+    var layer = $("vpsLayer"), pNodes = $("vpsNodesPanel"), pConfig = $("vpsConfigPanel"), lastFocus = null, layerTimer = 0;
+    function openLayer(panel, btn) {
+      clearTimeout(layerTimer);
+      layer.classList.remove("wx-closing");
+      lastFocus = btn; layer.hidden = false; pNodes.hidden = panel !== pNodes; pConfig.hidden = panel !== pConfig;
+      if (panel === pNodes) renderNodes();
+      if (panel === pConfig) $("vpsApiInput").value = state.apiUrl;
+      var f = panel.querySelector("button, input"); if (f) f.focus();
+    }
+    function closeLayer(now) {
+      if (layer.hidden) return;
+      var btn = lastFocus; lastFocus = null;
+      if (now || reduce) {
+        clearTimeout(layerTimer);
+        layer.classList.remove("wx-closing");
+        layer.hidden = true; pNodes.hidden = true; pConfig.hidden = true;
+        if (btn) btn.focus();
+        return;
+      }
+      if (layer.classList.contains("wx-closing")) return;
+      layer.classList.add("wx-closing");
+      clearTimeout(layerTimer);
+      layerTimer = setTimeout(function () {
+        layer.classList.remove("wx-closing");
+        layer.hidden = true; pNodes.hidden = true; pConfig.hidden = true;
+        if (btn && state.open) btn.focus();
+      }, 220);
+    }
+
+    var prevOverflow = "", vpsTimer = 0, tickTimer = 0;
+    function openVps() {
+      clearTimeout(vpsTimer);
+      root.classList.remove("wx-closing");
+      if (state.open) return;
+      state.open = true; root.hidden = false;
+      document.body.classList.add("modal-open");
+      prevOverflow = document.body.style.overflow; document.body.style.overflow = "hidden";
+      
+      stepTelemetry();
+      clearInterval(tickTimer);
+      tickTimer = setInterval(function () { if (state.open && !document.hidden) stepTelemetry(); }, 2000);
+      $("vpsBack").focus({ preventScroll: true });
+    }
+    function finishCloseVps() {
+      root.classList.remove("wx-closing");
+      closeLayer(true);
+      root.hidden = true;
+      clearInterval(tickTimer);
+      document.body.classList.remove("modal-open");
+      document.body.style.overflow = prevOverflow;
+      trigger.focus({ preventScroll: true });
+    }
+    function closeVps() {
+      if (!state.open) return;
+      state.open = false;
+      clearInterval(tickTimer);
+      if (location.hash === "#vps") {
+        try { history.replaceState(null, "", location.pathname + location.search); } catch (e) { try { location.hash = ""; } catch (e2) {} }
+      }
+      if (reduce) { finishCloseVps(); return; }
+      if (!layer.hidden) closeLayer();
+      root.classList.add("wx-closing");
+      clearTimeout(vpsTimer);
+      vpsTimer = setTimeout(finishCloseVps, 260);
+    }
+
+    if (trigger.tagName !== "A") trigger.addEventListener("click", openVps);
+    $("vpsBack").addEventListener("click", closeVps);
+    root.addEventListener("click", function (e) { if (e.target === root) closeVps(); });
+    document.addEventListener("keydown", function (e) {
+      if (e.key !== "Escape" || !state.open) return;
+      if (!layer.hidden && !layer.classList.contains("wx-closing")) closeLayer(); else closeVps();
+    });
+    
+
+    $("vpsStatus").addEventListener("click", stepTelemetry);
+    $("vpsNodesBtn").addEventListener("click", function () { openLayer(pNodes, $("vpsNodesBtn")); });
+    $("vpsConfigBtn").addEventListener("click", function () { openLayer(pConfig, $("vpsConfigBtn")); });
+    layer.addEventListener("click", function (e) {
+      if (e.target === layer || e.target.hasAttribute("data-vps-close")) closeLayer();
+    });
+    $("vpsNodeList").addEventListener("click", function (e) {
+      var b = e.target.closest("[data-node]"); if (!b) return;
+      state.node = b.getAttribute("data-node");
+      try { localStorage.setItem("rudra-vps-node", state.node); } catch (e2) {}
+      var n = currentNode();
+      state.history = [];
+      for (var i = 0; i < 20; i++) state.history.push(Math.max(5, Math.min(95, n.baseCpu + (Math.random() - 0.5) * 10)));
+      closeLayer();
+      stepTelemetry();
+    });
+    $("vpsApiSave").addEventListener("click", function () {
+      state.apiUrl = ($("vpsApiInput").value || "").trim();
+      try { localStorage.setItem("rudra-vps-api", state.apiUrl); } catch (e) {}
+      closeLayer();
+      stepTelemetry();
+    });
+    $("vpsApiClear").addEventListener("click", function () {
+      state.apiUrl = "";
+      $("vpsApiInput").value = "";
+      try { localStorage.removeItem("rudra-vps-api"); } catch (e) {}
+      state.node = "host";
+      probeHostEndpoints();
+      closeLayer();
+      stepTelemetry();
+    });
+    var copyCmdBtn = $("vpsCopyCmd");
+    if (copyCmdBtn) {
+      var linuxScript = 'cat << \'EOF\' > /usr/local/bin/vps-agent.sh\n#!/bin/bash\nWEB_DIR=$(dirname "$(find /var/www /home /usr/share/nginx -name "index.html" 2>/dev/null | head -n 1)")\n[ -z "$WEB_DIR" ] && WEB_DIR="/var/www/html"\nwhile true; do\n  CORES=$(nproc 2>/dev/null || echo 4)\n  MODEL=$(awk -F: \'/model name/{gsub(/^[ \\t]+/,"",$2); print $2; exit}\' /proc/cpuinfo)\n  GHZ=$(awk -F: \'/cpu MHz/{printf "%.1f GHz", $2/1000; exit}\' /proc/cpuinfo)\n  read L1 L5 L15 _ < /proc/loadavg\n  read _ U1 N1 S1 I1 _ < /proc/stat; sleep 1; read _ U2 N2 S2 I2 _ < /proc/stat\n  DT=$(( (U2+N2+S2+I2) - (U1+N1+S1+I1) )); DI=$(( I2 - I1 ))\n  CPU=$(( DT > 0 ? (100 * (DT - DI) / DT) : 1 ))\n  MEM=$(awk \'/MemTotal:/{t=$2}/MemAvailable:/{a=$2}END{u=(t-a)/1048576; tt=t/1048576; printf "%.2f %.1f", u, tt}\' /proc/meminfo)\n  SWP=$(awk \'/SwapTotal:/{t=$2}/SwapFree:/{f=$2}END{printf "%.2f %.1f", (t-f)/1048576, t/1048576}\' /proc/meminfo)\n  DSK=$(df -BG / | awk \'NR==2{gsub("G",""); printf "%s %s", $3, $2}\')\n  UP=$(awk \'{print int($1)}\' /proc/uptime)\n  OS="$(uname -s) $(uname -r)"\n  H=$(hostname)\n  printf "{\\"name\\":\\"%s\\",\\"region\\":\\"Live Ubuntu VPS\\",\\"cores\\":%s,\\"cpuGhz\\":\\"%s\\",\\"cpuModel\\":\\"%s\\",\\"cpu\\":%s,\\"load1\\":%s,\\"load5\\":%s,\\"load15\\":%s,\\"ramUsed\\":%s,\\"ramTotal\\":%s,\\"swapUsed\\":%s,\\"swapTotal\\":%s,\\"diskUsed\\":%s,\\"diskTotal\\":%s,\\"uptimeSec\\":%s,\\"os\\":\\"%s\\"}\\n" "$H" "$CORES" "$GHZ" "$MODEL" "$CPU" "$L1" "$L5" "$L15" $MEM $SWP $DSK "$UP" "$OS" > "$WEB_DIR/vps-status.json.tmp" && mv "$WEB_DIR/vps-status.json.tmp" "$WEB_DIR/vps-status.json"\ndone\nEOF\nchmod +x /usr/local/bin/vps-agent.sh && pkill -f vps-agent.sh; nohup /usr/local/bin/vps-agent.sh >/dev/null 2>&1 &';
+      copyCmdBtn.addEventListener("click", function () {
+        if (navigator.clipboard && navigator.clipboard.writeText) {
+          navigator.clipboard.writeText(linuxScript).then(function () {
+            copyCmdBtn.textContent = "Copied!";
+            setTimeout(function () { copyCmdBtn.textContent = "Copy Script"; }, 1600);
+          });
+        }
+      });
+    }
+
+    stepTelemetry();
+    
+  })();
+
+  
+// Automatically launch VPS view and wire Back button to return to index.html
+(function(){
+  var trig = document.getElementById("vpsTrigger");
+  if (trig) trig.click();
+  var backBtn = document.getElementById("vpsBack");
+  var vpsRoot = document.getElementById("vps");
+  if (backBtn) {
+    backBtn.addEventListener("click", function(e) {
+      e.stopImmediatePropagation();
+      navigateBackToHub(vpsRoot, "wx-closing");
+    }, true);
+  }
+  if (vpsRoot) {
+    vpsRoot.addEventListener("click", function(e) {
+      if (e.target === vpsRoot) {
+        e.stopImmediatePropagation();
+        navigateBackToHub(vpsRoot, "wx-closing");
+      }
+    }, true);
+  }
+  document.addEventListener("keydown", function(e) {
+    var layer = document.getElementById("vpsLayer");
+    if (e.key === "Escape" && (!layer || layer.hidden)) {
+      e.stopImmediatePropagation();
+      navigateBackToHub(vpsRoot, "wx-closing");
+    }
+  }, true);
+})();
+</script>
+</body>
+</html>

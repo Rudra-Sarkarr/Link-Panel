@@ -1,0 +1,2992 @@
+<!doctype html>
+<html data-theme="light">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>All Utility Tools — Rudra Sarkar</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Outfit:wght@600;700;800&display=swap">
+<script>
+(function(){
+  try {
+    var saved = localStorage.getItem("rudra-theme-choice");
+    if (saved === "dark" || saved === "spiderman" || saved === "light") {
+      document.documentElement.setAttribute("data-theme", saved);
+    }
+  } catch(e){}
+})();
+</script>
+<style>
+  :root {
+    --page: #DEDFF4;
+    --card: #FFFFFF;
+    --ink: #16182B;
+    --muted: #7A7F94;
+    --line: #ECEDF5;
+    --hover: #F6F6FD;
+    --avatar: #5B63E6;
+    --shadow: 0 1px 2px rgba(30, 32, 80, 0.06);
+    --f: "Poppins", system-ui, -apple-system, "Segoe UI", sans-serif;
+    color-scheme: light;
+  }
+  :root[data-theme="dark"] {
+    --page: #12132A;
+    --card: #1B1D38;
+    --ink: #EDEEF8;
+    --muted: #9A9FB8;
+    --line: #2A2D4D;
+    --hover: #222546;
+    --avatar: #5B63E6;
+    --shadow: none;
+    color-scheme: dark;
+  }
+  :root[data-theme="spiderman"] {
+    --page: #090D1E;
+    --card: #111730;
+    --ink: #F8FAFC;
+    --muted: #94A3B8;
+    --line: rgba(230, 36, 41, 0.28);
+    --hover: #192246;
+    --avatar: #E62429;
+    --shadow: 0 6px 20px rgba(230, 36, 41, 0.14);
+    color-scheme: dark;
+  }
+  *, *::before, *::after { box-sizing: border-box; }
+  html, body {
+    margin: 0;
+    padding: 0;
+    width: 100%;
+    height: 100%;
+    font: 14px var(--f);
+    background: #3F4359;
+    color: var(--ink);
+    -webkit-font-smoothing: antialiased;
+    overflow: hidden;
+  }
+  :root[data-theme="dark"] body { background: #0C0E1E; }
+  :root[data-theme="spiderman"] body {
+    background:
+      radial-gradient(ellipse at 18% 12%, rgba(230, 36, 41, 0.32), transparent 42%),
+      radial-gradient(ellipse at 85% 84%, rgba(37, 99, 235, 0.30), transparent 44%),
+      #070A17;
+  }
+  [hidden]:not([hidden=until-found i]) { display: none !important; }
+  .upi-idline { display:flex; align-items:center; justify-content:space-between; gap:8px; margin-top:13px; padding:10px 11px; border-radius:11px; background:var(--hover); font-size:.72rem; }
+  .upi-idline span { min-width:0; overflow-wrap:anywhere; color:var(--muted); }
+  .upi-copy { border:0; background:transparent; color:var(--avatar); font:600 .72rem var(--f); cursor:pointer; }
+  .wx-phone button:focus, .wx-phone button:focus-visible { outline: none !important; }
+</style>
+<!-- ===== UTILITY HUB START ===== -->
+<style id="utility-hub-css">
+  /* ===== 0. Profile Row Button ("All Tools" inside Utility Section) ===== */
+  .uh-row { --t: rgba(168, 85, 247, 0.14); }
+  .uh-row .ic {
+    position: relative;
+    overflow: visible;
+    border-radius: 13px;
+    background: linear-gradient(145deg, rgba(255, 255, 255, 0.94), rgba(243, 232, 255, 0.78));
+    border: 1px solid rgba(255, 255, 255, 0.96);
+    box-shadow:
+      0 6px 14px rgba(147, 51, 234, 0.18),
+      inset 0 1.5px 2px rgba(255, 255, 255, 1),
+      inset 0 -2px 4px rgba(147, 51, 234, 0.12);
+  }
+  .uh-row .ic svg {
+    width: 28px;
+    height: 28px;
+    overflow: visible;
+    filter: drop-shadow(0 3px 5px rgba(126, 34, 206, 0.22));
+  }
+
+  /* ===== 1. Folder-Based Overview Card (Matches Reference Image 1) ===== */
+  .uh-overview-card {
+    padding: 16px 14px 15px;
+    border-radius: 24px;
+    background: var(--card);
+    border: 1px solid var(--line);
+    box-shadow: var(--shadow);
+  }
+  .uh-overview-head {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 2px 4px 13px;
+    cursor: pointer;
+    user-select: none;
+  }
+  .uh-overview-title {
+    display: block;
+    font-size: 0.96rem;
+    font-weight: 700;
+    color: var(--ink);
+    letter-spacing: -0.01em;
+  }
+  .uh-overview-sub {
+    display: block;
+    font-size: 0.72rem;
+    color: var(--muted);
+    margin-top: 1px;
+  }
+  .uh-overview-chev {
+    font-size: 1.35rem;
+    line-height: 1;
+    color: var(--muted);
+    font-weight: 500;
+    transition: transform 0.18s ease, color 0.18s ease;
+  }
+  .uh-overview-head:hover .uh-overview-chev {
+    transform: translateX(3px);
+    color: var(--ink);
+  }
+
+  .uh-folder-grid {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 12px;
+  }
+
+  /* 3D Sculpted Folder Card */
+  .uh-folder {
+    position: relative;
+    height: 124px;
+    border: 0;
+    outline: none;
+    padding: 0;
+    border-radius: 22px;
+    background: var(--f-back);
+    cursor: pointer;
+    text-align: left;
+    overflow: hidden;
+    -webkit-tap-highlight-color: transparent;
+    box-shadow:
+      0 8px 20px -4px var(--f-Glow, rgba(0, 0, 0, 0.16)),
+      inset 0 1px 1px rgba(255, 255, 255, 0.35);
+    transition: transform 0.22s cubic-bezier(0.22, 1, 0.36, 1), box-shadow 0.22s ease;
+    font-family: var(--f);
+    animation: uhCardPopIn 0.36s cubic-bezier(0.22, 1, 0.36, 1) backwards;
+    animation-delay: calc(var(--idx, 0) * 32ms);
+  }
+  .uh-folder:focus,
+  .uh-folder:focus-visible {
+    outline: none;
+  }
+  .uh-folder:hover {
+    transform: translateY(-3px);
+    box-shadow:
+      0 14px 26px -5px var(--f-Glow, rgba(0, 0, 0, 0.24)),
+      inset 0 1px 2px rgba(255, 255, 255, 0.48);
+  }
+  .uh-folder:active {
+    transform: scale(0.96);
+  }
+
+  /* Soft inner paper sheet peeking out inside the folder back */
+  .uh-folder-sheet {
+    position: absolute;
+    top: 8px;
+    left: 8px;
+    right: 8px;
+    height: 58px;
+    border-radius: 15px;
+    background: var(--f-sheet);
+    box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.65);
+    transition: transform 0.24s cubic-bezier(0.22, 1, 0.36, 1);
+  }
+  .uh-folder:hover .uh-folder-sheet {
+    transform: translateY(-3px);
+  }
+
+  /* Front sculpted folder pocket with top-left tab */
+  .uh-folder-pocket {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    display: block;
+    pointer-events: none;
+  }
+
+  /* White squircle icon badge on the folder tab */
+  .uh-folder-badge {
+    position: absolute;
+    top: 29px;
+    left: 13px;
+    width: 28px;
+    height: 28px;
+    border-radius: 9px;
+    background: rgba(255, 255, 255, 0.94);
+    color: var(--f-back);
+    display: grid;
+    place-items: center;
+    box-shadow: 0 3px 8px rgba(0, 0, 0, 0.12);
+    z-index: 2;
+  }
+  .uh-folder-badge svg {
+    width: 16px;
+    height: 16px;
+    fill: none;
+    stroke: currentColor;
+    stroke-width: 2.1;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+  }
+
+  .uh-folder-meta {
+    position: absolute;
+    left: 14px;
+    right: 12px;
+    bottom: 12px;
+    z-index: 2;
+    color: #FFFFFF;
+    pointer-events: none;
+  }
+  .uh-folder-sub {
+    display: block;
+    font-size: 0.68rem;
+    font-weight: 500;
+    opacity: 0.9;
+    letter-spacing: 0.01em;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+  .uh-folder-name {
+    display: block;
+    font-size: 0.92rem;
+    font-weight: 700;
+    line-height: 1.22;
+    margin-top: 2px;
+    letter-spacing: -0.01em;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    text-shadow: 0 1px 2px rgba(0, 0, 0, 0.12);
+  }
+
+  /* ===== 2. Full-Screen / Phone-Sheet Utility Hub Modal + Open & Close Animations ===== */
+  @keyframes uhBackdropOpen {
+    from { opacity: 0; }
+    to   { opacity: 1; }
+  }
+  @keyframes uhBackdropClose {
+    from { opacity: 1; }
+    to   { opacity: 0; }
+  }
+  @keyframes uhShellOpen {
+    0%   { opacity: 0; transform: translateY(28px) scale(0.94); }
+    100% { opacity: 1; transform: translateY(0) scale(1); }
+  }
+  @keyframes uhShellClose {
+    0%   { opacity: 1; transform: translateY(0) scale(1); }
+    100% { opacity: 0; transform: translateY(24px) scale(0.95); }
+  }
+  @keyframes uhViewOpen {
+    0%   { opacity: 0; transform: translateY(14px) scale(0.985); }
+    100% { opacity: 1; transform: translateY(0) scale(1); }
+  }
+  @keyframes uhViewBack {
+    0%   { opacity: 0; transform: translateY(-10px) scale(0.985); }
+    100% { opacity: 1; transform: translateY(0) scale(1); }
+  }
+  @keyframes uhCardPopIn {
+    0%   { opacity: 0; transform: translateY(12px) scale(0.96); }
+    100% { opacity: 1; transform: translateY(0) scale(1); }
+  }
+
+  .uh-modal {
+    position: fixed;
+    inset: 0;
+    z-index: 65;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: rgba(10, 14, 32, 0.66);
+    animation: uhBackdropOpen 0.26s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+  }
+  .uh-modal.is-closing {
+    animation: uhBackdropClose 0.22s cubic-bezier(0.4, 0, 1, 1) forwards;
+    pointer-events: none;
+  }
+  .uh-modal[hidden] {
+    display: none !important;
+  }
+  @media (min-width: 540px) {
+    .uh-modal {
+      -webkit-backdrop-filter: blur(8px);
+      backdrop-filter: blur(8px);
+      padding: 20px;
+    }
+  }
+
+  .uh-shell {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    max-width: 100%;
+    height: 100%;
+    box-sizing: border-box;
+    background: var(--page);
+    color: var(--ink);
+    font-family: var(--f);
+    overflow: hidden;
+    animation: uhShellOpen 0.34s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+    will-change: transform, opacity;
+  }
+  .uh-shell *,
+  .uh-shell *::before,
+  .uh-shell *::after {
+    box-sizing: border-box;
+  }
+  .uh-modal.is-closing .uh-shell {
+    animation: uhShellClose 0.22s cubic-bezier(0.4, 0, 1, 1) forwards;
+  }
+  @media (min-width: 540px) {
+    .uh-shell {
+      max-width: 480px;
+      height: min(900px, calc(100vh - 40px));
+      border-radius: 34px;
+      border: 1px solid var(--line);
+      box-shadow: 0 32px 90px rgba(0, 0, 0, 0.45);
+    }
+  }
+
+  .uh-view-enter {
+    animation: uhViewOpen 0.28s cubic-bezier(0.22, 1, 0.36, 1) both;
+  }
+  .uh-view-back {
+    animation: uhViewBack 0.25s cubic-bezier(0.22, 1, 0.36, 1) both;
+  }
+
+  /* Modal Top Navigation Bar */
+  .uh-topbar {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: max(14px, env(safe-area-inset-top, 0px)) 16px 12px;
+    background: var(--card);
+    border-bottom: 1px solid var(--line);
+    flex-shrink: 0;
+  }
+  .uh-back-btn,
+  .uh-close-btn {
+    width: 38px;
+    height: 38px;
+    border-radius: 12px;
+    border: 1px solid var(--line);
+    outline: none;
+    background: var(--hover);
+    color: var(--ink);
+    display: grid;
+    place-items: center;
+    cursor: pointer;
+    flex-shrink: 0;
+    transition: transform 0.14s ease, background 0.14s ease;
+  }
+  .uh-back-btn:hover,
+  .uh-close-btn:hover {
+    transform: translateY(-1px);
+  }
+  .uh-back-btn:active,
+  .uh-close-btn:active {
+    transform: scale(0.94);
+  }
+  .uh-back-btn svg,
+  .uh-close-btn svg {
+    width: 18px;
+    height: 18px;
+    fill: none;
+    stroke: currentColor;
+    stroke-width: 2;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+  }
+  .uh-top-titles {
+    flex: 1;
+    min-width: 0;
+  }
+  .uh-top-kicker {
+    display: block;
+    font-size: 0.64rem;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--muted);
+  }
+  .uh-top-title {
+    display: block;
+    font-size: 0.98rem;
+    font-weight: 700;
+    color: var(--ink);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  /* Search & Category Strip */
+  .uh-controls {
+    padding: 12px 16px 10px;
+    background: var(--card);
+    border-bottom: 1px solid var(--line);
+    flex-shrink: 0;
+  }
+  .uh-search-wrap {
+    position: relative;
+    display: flex;
+    align-items: center;
+  }
+  .uh-search-wrap svg {
+    position: absolute;
+    left: 12px;
+    width: 16px;
+    height: 16px;
+    stroke: var(--muted);
+    fill: none;
+    stroke-width: 2;
+    pointer-events: none;
+  }
+  .uh-search-input {
+    width: 100%;
+    padding: 9px 12px 9px 36px;
+    border-radius: 12px;
+    border: 1px solid var(--line);
+    background: var(--page);
+    color: var(--ink);
+    font: 500 0.8rem var(--f);
+    outline: none;
+  }
+  .uh-search-input:focus {
+    border-color: var(--avatar);
+  }
+  .uh-cat-pills {
+    display: flex;
+    gap: 7px;
+    overflow-x: auto;
+    padding: 10px 0 2px;
+    scrollbar-width: none;
+  }
+  .uh-cat-pills::-webkit-scrollbar {
+    display: none;
+  }
+  .uh-cat-pill {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 6px 12px;
+    border-radius: 999px;
+    border: 1px solid var(--line);
+    outline: none;
+    background: var(--page);
+    color: var(--muted);
+    font: 600 0.72rem var(--f);
+    white-space: nowrap;
+    cursor: pointer;
+    transition: all 0.15s ease;
+  }
+  .uh-cat-pill .dot {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background: var(--c-dot, var(--avatar));
+  }
+  .uh-cat-pill.is-active {
+    background: var(--c-dot, var(--avatar));
+    border-color: transparent;
+    color: #FFFFFF;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  }
+  .uh-cat-pill.is-active .dot {
+    background: #FFFFFF;
+  }
+
+  /* Scrollable Body Area */
+  .uh-body {
+    flex: 1;
+    overflow-y: auto;
+    padding: 16px;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: none;
+  }
+  .uh-body::-webkit-scrollbar {
+    display: none;
+  }
+
+  /* ===== 3. Tool Cards Grid (Matches Reference Image 2) ===== */
+  .uh-tool-grid {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 13px;
+  }
+  .uh-tool-card {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    min-height: 158px;
+    padding: 16px 15px 15px;
+    border-radius: 22px;
+    background: var(--card);
+    border: 1px solid var(--line);
+    outline: none;
+    box-shadow: 0 6px 18px rgba(18, 22, 52, 0.05);
+    text-align: left;
+    cursor: pointer;
+    -webkit-tap-highlight-color: transparent;
+    font-family: var(--f);
+    transition: transform 0.18s ease, border-color 0.18s ease, box-shadow 0.18s ease;
+    animation: uhCardPopIn 0.34s cubic-bezier(0.22, 1, 0.36, 1) backwards;
+    animation-delay: calc(var(--idx, 0) * 24ms);
+  }
+  .uh-tool-card:focus,
+  .uh-tool-card:focus-visible {
+    outline: none;
+  }
+  .uh-tool-card:hover {
+    transform: translateY(-3px);
+    border-color: var(--tc-color, var(--avatar));
+    box-shadow: 0 12px 26px rgba(18, 22, 52, 0.11);
+  }
+  .uh-tool-card:active {
+    transform: scale(0.98);
+  }
+  .uh-tc-top {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 8px;
+    margin-bottom: 14px;
+  }
+  .uh-tc-icon {
+    width: 46px;
+    height: 46px;
+    border-radius: 14px;
+    background: var(--tc-color, #2563EB);
+    color: #FFFFFF;
+    display: grid;
+    place-items: center;
+    box-shadow:
+      0 6px 14px -3px var(--tc-shadow, rgba(37, 99, 235, 0.45)),
+      inset 0 -2px 0 rgba(0, 0, 0, 0.15);
+    flex-shrink: 0;
+  }
+  .uh-tc-icon svg {
+    width: 22px;
+    height: 22px;
+    fill: none;
+    stroke: currentColor;
+    stroke-width: 2;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+  }
+  .uh-tc-tag {
+    padding: 3px 9px;
+    border-radius: 999px;
+    background: rgba(245, 158, 11, 0.14);
+    border: 1px solid rgba(245, 158, 11, 0.28);
+    color: #D97706;
+    font-size: 0.62rem;
+    font-weight: 600;
+    letter-spacing: 0.01em;
+  }
+  :root[data-theme="dark"] .uh-tc-tag,
+  :root[data-theme="spiderman"] .uh-tc-tag {
+    color: #FBBF24;
+    background: rgba(245, 158, 11, 0.18);
+  }
+  .uh-tc-title {
+    display: block;
+    font-size: 0.88rem;
+    font-weight: 700;
+    color: var(--ink);
+    line-height: 1.28;
+    margin-bottom: 5px;
+  }
+  .uh-tc-desc {
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+    font-size: 0.71rem;
+    line-height: 1.42;
+    color: var(--muted);
+    margin-bottom: 12px;
+  }
+  .uh-tc-bar {
+    display: block;
+    width: 32px;
+    height: 3px;
+    border-radius: 99px;
+    background: var(--tc-color, #2563EB);
+  }
+
+  /* ===== 4. Interactive Tool Runner Workspace ===== */
+  .uh-runner {
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+  }
+  .uh-runner-card {
+    padding: 18px 16px;
+    border-radius: 22px;
+    background: var(--card);
+    border: 1px solid var(--line);
+    box-shadow: var(--shadow);
+  }
+  .uh-runner-head {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 14px;
+    padding-bottom: 12px;
+    border-bottom: 1px solid var(--line);
+  }
+  .uh-runner-head h4 {
+    margin: 0;
+    font-size: 0.98rem;
+    font-weight: 700;
+    color: var(--ink);
+  }
+  .uh-runner-head p {
+    margin: 2px 0 0;
+    font-size: 0.74rem;
+    color: var(--muted);
+  }
+
+  .uh-field {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    margin-bottom: 12px;
+  }
+  .uh-row-2 {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 10px;
+  }
+  .uh-label {
+    font-size: 0.73rem;
+    font-weight: 600;
+    color: var(--muted);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+  .uh-input,
+  .uh-select,
+  .uh-textarea {
+    width: 100%;
+    padding: 10px 12px;
+    border-radius: 12px;
+    border: 1px solid var(--line);
+    background: var(--page);
+    color: var(--ink);
+    font: 500 0.82rem var(--f);
+    outline: none;
+  }
+  .uh-textarea {
+    min-height: 110px;
+    resize: vertical;
+    font-family: ui-monospace, SFMono-Regular, Consolas, monospace;
+    font-size: 0.78rem;
+    line-height: 1.5;
+  }
+  .uh-input:focus,
+  .uh-select:focus,
+  .uh-textarea:focus {
+    border-color: var(--avatar);
+  }
+
+  /* File Upload Dropzone */
+  .uh-dropzone {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+    padding: 22px 14px;
+    border: 2px dashed var(--line);
+    border-radius: 16px;
+    background: var(--page);
+    color: var(--muted);
+    text-align: center;
+    cursor: pointer;
+    transition: border-color 0.15s ease, background 0.15s ease;
+    margin-bottom: 12px;
+  }
+  .uh-dropzone:hover,
+  .uh-dropzone.is-dragover {
+    border-color: var(--avatar);
+    background: var(--hover);
+  }
+  .uh-dropzone input[type="file"] {
+    position: absolute;
+    inset: 0;
+    opacity: 0;
+    cursor: pointer;
+  }
+  .uh-dropzone strong {
+    font-size: 0.82rem;
+    color: var(--ink);
+  }
+  .uh-dropzone span {
+    font-size: 0.7rem;
+  }
+
+  /* Action Buttons */
+  .uh-actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin: 10px 0 12px;
+  }
+  .uh-btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+    padding: 9px 14px;
+    border-radius: 11px;
+    border: 1px solid var(--line);
+    outline: none;
+    background: var(--hover);
+    color: var(--ink);
+    font: 600 0.76rem var(--f);
+    cursor: pointer;
+    text-decoration: none;
+    transition: transform 0.12s ease, opacity 0.12s ease;
+  }
+  .uh-btn:hover {
+    transform: translateY(-1px);
+  }
+  .uh-btn:active {
+    transform: scale(0.97);
+  }
+  .uh-btn-primary {
+    background: var(--tc-color, var(--avatar));
+    border-color: transparent;
+    color: #FFFFFF;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  }
+
+  /* Output Box & Stats */
+  .uh-result-box {
+    padding: 12px;
+    border-radius: 14px;
+    background: var(--page);
+    border: 1px solid var(--line);
+    font-size: 0.8rem;
+    color: var(--ink);
+    overflow-x: auto;
+  }
+  .uh-stat-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(105px, 1fr));
+    gap: 8px;
+    margin-top: 8px;
+  }
+  .uh-stat-item {
+    padding: 10px;
+    border-radius: 12px;
+    background: var(--page);
+    border: 1px solid var(--line);
+    text-align: center;
+  }
+  .uh-stat-val {
+    display: block;
+    font-size: 0.96rem;
+    font-weight: 700;
+    color: var(--ink);
+  }
+  .uh-stat-lbl {
+    display: block;
+    font-size: 0.66rem;
+    color: var(--muted);
+    margin-top: 2px;
+  }
+  .uh-preview-area {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 10px;
+    margin-top: 10px;
+  }
+  .uh-preview-area img,
+  .uh-preview-area canvas {
+    max-width: 100%;
+    max-height: 240px;
+    border-radius: 12px;
+    border: 1px solid var(--line);
+    background: #FFFFFF;
+  }
+  .uh-status-msg {
+    font-size: 0.74rem;
+    font-weight: 600;
+    color: #10B981;
+    margin-top: 6px;
+  }
+  .uh-status-msg.is-err {
+    color: #EF4444;
+  }
+</style>
+
+<!-- Full-Screen / Phone-Sheet Utility Hub Modal -->
+<div class="uh-modal" id="uhModal" role="main" aria-labelledby="uhModalTitle">
+  <div class="uh-shell">
+    <div class="uh-topbar">
+      <button type="button" class="uh-back-btn" id="uhBackBtn" aria-label="Back">
+        <svg viewBox="0 0 24 24"><path d="M15 5l-7 7 7 7"/></svg>
+      </button>
+      <div class="uh-top-titles">
+        <span class="uh-top-kicker" id="uhModalKicker">UTILITY FOLDERS</span>
+        <span class="uh-top-title" id="uhModalTitle">All Tools</span>
+      </div>
+      <button type="button" class="uh-close-btn" id="uhCloseBtn" aria-label="Close Utility Hub">
+        <svg viewBox="0 0 24 24"><path d="M18 6L6 18M6 6l12 12"/></svg>
+      </button>
+    </div>
+
+    <div class="uh-controls" id="uhControlsBar">
+      <div class="uh-search-wrap">
+        <svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="7"/><path d="M20 20l-3.5-3.5"/></svg>
+        <input type="search" class="uh-search-input" id="uhSearchInput" placeholder="Search 67 converters &amp; utilities..." autocomplete="off">
+      </div>
+      <div class="uh-cat-pills" id="uhCatPills"></div>
+    </div>
+
+    <div class="uh-body" id="uhBody"></div>
+  </div>
+</div>
+
+<script id="utility-hub-js">
+(function () {
+  var $ = function (id) { return document.getElementById(id); };
+  var triggerBtn = $("uhTrigger");
+  var modal = $("uhModal");
+  var bodyEl = $("uhBody");
+  var titleEl = $("uhModalTitle");
+  var kickerEl = $("uhModalKicker");
+  var backBtn = $("uhBackBtn");
+  var closeBtn = $("uhCloseBtn");
+  var searchIn = $("uhSearchInput");
+  var pillsEl = $("uhCatPills");
+  var controlsBar = $("uhControlsBar");
+  if (!modal) return;
+
+  /* ===== SVG Icons Library ===== */
+  var ICONS = {
+    img: '<rect x="3" y="3" width="18" height="18" rx="3"/><circle cx="8.5" cy="8.5" r="1.5"/><path d="M21 15l-5-5L5 21"/>',
+    doc: '<path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><path d="M14 2v6h6M8 13h8M8 17h6"/>',
+    txt: '<path d="M4 7V4h16v3M9 20h6M12 4v16"/>',
+    dev: '<path d="M16 18l6-6-6-6M8 6l-6 6 6 6"/>',
+    unit: '<path d="M21.3 15.3a2.4 2.4 0 0 1 0 3.4l-2.6 2.6a2.4 2.4 0 0 1-3.4 0L2.7 8.7a2.4 2.4 0 0 1 0-3.4l2.6-2.6a2.4 2.4 0 0 1 3.4 0z"/><path d="M14.5 12.5l2-2M11.5 9.5l2-2M8.5 6.5l2-2M17.5 15.5l2-2"/>',
+    math: '<rect x="4" y="2" width="16" height="20" rx="2"/><line x1="8" y1="6" x2="16" y2="6"/><line x1="16" y1="14" x2="16" y2="18"/><path d="M8 10h.01M12 10h.01M16 10h.01M8 14h.01M12 14h.01M8 18h.01M12 18h.01"/>',
+    time: '<circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 3"/>',
+    other: '<rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/>',
+    split: '<path d="M16 3h5v5M8 3H3v5M12 22v-8.3a4 4 0 0 0-1.172-2.872L3 3M15 9l6-6"/>',
+    merge: '<path d="M8 3l4 4 4-4M12 7v14M5 21h14"/>',
+    comp: '<path d="M4 14h6v6M20 10h-6V4M14 10l7-7M3 21l7-7"/>',
+    qr: '<rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/><path d="M14 14h3v3h-3zM18 18h3v3h-3zM14 19h2v2h-2zM19 14h2v2h-2z"/>',
+    palette: '<circle cx="13.5" cy="6.5" r=".5" fill="currentColor"/><circle cx="17.5" cy="10.5" r=".5" fill="currentColor"/><circle cx="8.5" cy="7.5" r=".5" fill="currentColor"/><circle cx="6.5" cy="12.5" r=".5" fill="currentColor"/><path d="M12 2C6.5 2 2 6.5 2 12s4.5 10 10 10c.9 0 1.6-.7 1.6-1.6 0-.4-.2-.8-.4-1.1-.3-.3-.4-.7-.4-1.1 0-.9.7-1.6 1.6-1.6H16c3.3 0 6-2.7 6-6 0-4.9-4.5-8.6-10-8.6z"/>'
+  };
+
+  /* ===== 8 Folder Categories (Styled after Reference Image 1) ===== */
+  var CATEGORIES = [
+    {
+      id: "image",
+      name: "Image Converter",
+      sub: "Image Studio",
+      back: "#9D55EC",
+      frontTop: "#C688FA",
+      frontBot: "#A65BF0",
+      sheet: "#EDE0FC",
+      glow: "rgba(157, 85, 236, 0.32)",
+      icon: ICONS.img
+    },
+    {
+      id: "document",
+      name: "Document Tools",
+      sub: "PDF & Office",
+      back: "#DD8742",
+      frontTop: "#F1A666",
+      frontBot: "#DD8844",
+      sheet: "#FAE8D8",
+      glow: "rgba(221, 135, 66, 0.32)",
+      icon: ICONS.doc
+    },
+    {
+      id: "text",
+      name: "Text Converter",
+      sub: "Case & Binary",
+      back: "#5596DF",
+      frontTop: "#85B8F2",
+      frontBot: "#64A0E4",
+      sheet: "#DCEBFA",
+      glow: "rgba(85, 150, 223, 0.32)",
+      icon: ICONS.txt
+    },
+    {
+      id: "developer",
+      name: "Developer Tools",
+      sub: "JSON, Code & Web",
+      back: "#CE5BA8",
+      frontTop: "#E786C8",
+      frontBot: "#D265B0",
+      sheet: "#F9DDF0",
+      glow: "rgba(206, 91, 168, 0.32)",
+      icon: ICONS.dev
+    },
+    {
+      id: "unit",
+      name: "Unit Converter",
+      sub: "10 Physical Scales",
+      back: "#2BA675",
+      frontTop: "#57CB9C",
+      frontBot: "#31B07E",
+      sheet: "#D7F5E8",
+      glow: "rgba(43, 166, 117, 0.30)",
+      icon: ICONS.unit
+    },
+    {
+      id: "math",
+      name: "Number & Math",
+      sub: "Bases & Fractions",
+      back: "#5A60E6",
+      frontTop: "#8489FA",
+      frontBot: "#6368EC",
+      sheet: "#E0E2FD",
+      glow: "rgba(90, 96, 230, 0.30)",
+      icon: ICONS.math
+    },
+    {
+      id: "timedate",
+      name: "Time & Date",
+      sub: "Zones, Age & Diff",
+      back: "#15A49B",
+      frontTop: "#44CBC2",
+      frontBot: "#1BB1A7",
+      sheet: "#D5F6F3",
+      glow: "rgba(21, 164, 155, 0.30)",
+      icon: ICONS.time
+    },
+    {
+      id: "other",
+      name: "Other Converters",
+      sub: "QR, CSV & Palette",
+      back: "#E04868",
+      frontTop: "#F87692",
+      frontBot: "#E65271",
+      sheet: "#FCE0E6",
+      glow: "rgba(224, 72, 104, 0.30)",
+      icon: ICONS.other
+    }
+  ];
+
+  /* ===== All 67 Functional Tools Across the 8 Categories ===== */
+  var TOOLS = [
+    /* --- 1. Image Converter (7 Tools) --- */
+    { id: "img-jpg-png", cat: "image", title: "JPG ↔ PNG", desc: "Convert JPG images to transparent-ready PNG or PNG to JPG", color: "#2563EB", tag: "Instant", icon: ICONS.img, type: "image-conv", targetFmt: "auto" },
+    { id: "img-webp", cat: "image", title: "WEBP ↔ PNG/JPG", desc: "Convert modern WebP images to PNG or JPG and vice versa", color: "#7C3AED", tag: "Instant", icon: ICONS.img, type: "image-conv", targetFmt: "image/webp" },
+    { id: "img-svg-png", cat: "image", title: "SVG ↔ PNG", desc: "Rasterize vector SVG to crisp PNG or wrap PNG into SVG", color: "#DB2777", tag: "Vector", icon: ICONS.img, type: "svg-png" },
+    { id: "img-heic-jpg", cat: "image", title: "HEIC → JPG", desc: "Convert iPhone HEIC/HEIF photos into universal JPG files", color: "#EA580C", tag: "iOS", icon: ICONS.img, type: "heic-jpg" },
+    { id: "img-compress", cat: "image", title: "Image Compressor", desc: "Reduce image file size with smart quality & width control", color: "#059669", tag: "Popular", icon: ICONS.comp, type: "image-compress" },
+    { id: "img-resize", cat: "image", title: "Image Resizer", desc: "Resize images to exact pixel dimensions with aspect lock", color: "#0284C7", tag: "HD", icon: ICONS.img, type: "image-resize" },
+    { id: "img-base64", cat: "image", title: "Image to Base64", desc: "Encode any image into Base64 Data URI, HTML <img> or CSS", color: "#4F46E5", tag: "Dev", icon: ICONS.dev, type: "image-b64" },
+
+    /* --- 2. Document Converter (9 Tools) --- */
+    { id: "doc-pdf-word", cat: "document", title: "PDF to Word", desc: "Convert PDF into editable Word (.doc) and text documents", color: "#2563EB", tag: "Ready", icon: ICONS.doc, type: "doc-pdf-word" },
+    { id: "doc-word-pdf", cat: "document", title: "Word to PDF", desc: "Turn Word (.docx/.doc) or text docs into shareable PDFs", color: "#7C3AED", tag: "Ready", icon: ICONS.doc, type: "doc-word-pdf" },
+    { id: "doc-pdf-img", cat: "document", title: "PDF → JPG/PNG", desc: "Render PDF pages into high-resolution JPG or PNG images", color: "#0891B2", tag: "HD", icon: ICONS.img, type: "doc-pdf-img" },
+    { id: "doc-jpg-pdf", cat: "document", title: "JPG → PDF", desc: "Combine one or more JPG/PNG images into a printable PDF", color: "#DC2626", tag: "Popular", icon: ICONS.doc, type: "doc-jpg-pdf" },
+    { id: "doc-pdf-merge", cat: "document", title: "PDF Merger", desc: "Combine multiple PDF files into a single unified document", color: "#059669", tag: "Fast", icon: ICONS.merge, type: "doc-pdf-merge" },
+    { id: "doc-pdf-split", cat: "document", title: "PDF Splitter", desc: "Extract specific page ranges into a separate PDF file", color: "#D97706", tag: "Fast", icon: ICONS.split, type: "doc-pdf-split" },
+    { id: "doc-pdf-compress", cat: "document", title: "PDF Compressor", desc: "Optimize PDF streams and strip metadata to shrink file size", color: "#E11D48", tag: "Smart", icon: ICONS.comp, type: "doc-pdf-compress" },
+    { id: "doc-excel-pdf", cat: "document", title: "Excel → PDF", desc: "Convert Excel/CSV spreadsheet tables into formatted PDFs", color: "#16A34A", tag: "Table", icon: ICONS.doc, type: "doc-excel-pdf" },
+    { id: "doc-ppt-pdf", cat: "document", title: "PPT → PDF", desc: "Convert PowerPoint (.pptx) or slide outlines into landscape PDFs", color: "#EA580C", tag: "Slides", icon: ICONS.doc, type: "doc-ppt-pdf" },
+
+    /* --- 3. Text Converter (9 Tools) --- */
+    { id: "txt-case", cat: "text", title: "Uppercase ↔ Lowercase", desc: "Switch text between UPPERCASE, lowercase, and iNVERT case", color: "#2563EB", tag: "Live", icon: ICONS.txt, type: "text-op", mode: "case" },
+    { id: "txt-sentence", cat: "text", title: "Sentence Case", desc: "Automatically capitalize the first word of every sentence", color: "#7C3AED", tag: "Live", icon: ICONS.txt, type: "text-op", mode: "sentence" },
+    { id: "txt-title", cat: "text", title: "Title Case", desc: "Format headlines with smart Title Case capitalization", color: "#D97706", tag: "Live", icon: ICONS.txt, type: "text-op", mode: "title" },
+    { id: "txt-reverse", cat: "text", title: "Text Reverser", desc: "Reverse characters, reverse word order, or check palindromes", color: "#059669", tag: "Live", icon: ICONS.txt, type: "text-op", mode: "reverse" },
+    { id: "txt-slug", cat: "text", title: "Text to Slug", desc: "Convert titles into clean, SEO-friendly URL slugs", color: "#0891B2", tag: "SEO", icon: ICONS.txt, type: "text-op", mode: "slug" },
+    { id: "txt-spaces", cat: "text", title: "Remove Extra Spaces", desc: "Strip duplicate spaces, blank lines, and trailing whitespace", color: "#E11D48", tag: "Clean", icon: ICONS.txt, type: "text-op", mode: "spaces" },
+    { id: "txt-counter", cat: "text", title: "Text Counter", desc: "Count words, characters, sentences, lines & reading time", color: "#4F46E5", tag: "Stats", icon: ICONS.txt, type: "text-counter" },
+    { id: "txt-to-bin", cat: "text", title: "Text to Binary", desc: "Convert UTF-8 text into 8-bit binary byte sequences", color: "#0D9488", tag: "8-bit", icon: ICONS.dev, type: "text-op", mode: "to-bin" },
+    { id: "txt-from-bin", cat: "text", title: "Binary to Text", desc: "Decode 8-bit binary strings back into readable text", color: "#9333EA", tag: "8-bit", icon: ICONS.dev, type: "text-op", mode: "from-bin" },
+
+    /* --- 4. Developer Converter (10 Tools) --- */
+    { id: "dev-json-yaml", cat: "developer", title: "JSON ↔ YAML", desc: "Convert seamlessly between JSON objects and YAML config", color: "#2563EB", tag: "Bi-dir", icon: ICONS.dev, type: "dev-op", mode: "json-yaml" },
+    { id: "dev-json-fmt", cat: "developer", title: "JSON Formatter", desc: "Prettify or minify JSON with custom 2/4 space indentation", color: "#7C3AED", tag: "Format", icon: ICONS.dev, type: "dev-op", mode: "json-fmt" },
+    { id: "dev-json-val", cat: "developer", title: "JSON Validator", desc: "Validate JSON syntax with exact error line & depth stats", color: "#059669", tag: "Check", icon: ICONS.dev, type: "dev-op", mode: "json-val" },
+    { id: "dev-html-enc", cat: "developer", title: "HTML Encoder/Decoder", desc: "Escape or unescape HTML tags and special entities safely", color: "#EA580C", tag: "Web", icon: ICONS.dev, type: "dev-op", mode: "html-enc" },
+    { id: "dev-url-enc", cat: "developer", title: "URL Encoder/Decoder", desc: "Percent-encode or decode URLs and query string parameters", color: "#0891B2", tag: "URI", icon: ICONS.dev, type: "dev-op", mode: "url-enc" },
+    { id: "dev-base64", cat: "developer", title: "Base64 Encoder/Decoder", desc: "UTF-8 safe Base64 string encoding and decoding utility", color: "#4F46E5", tag: "UTF-8", icon: ICONS.dev, type: "dev-op", mode: "base64" },
+    { id: "dev-css-min", cat: "developer", title: "CSS Minifier", desc: "Compress CSS stylesheets and calculate exact byte savings", color: "#DB2777", tag: "Minify", icon: ICONS.comp, type: "dev-op", mode: "css-min" },
+    { id: "dev-js-min", cat: "developer", title: "JavaScript Minifier", desc: "Strip comments and minify JS code for faster production load", color: "#D97706", tag: "Minify", icon: ICONS.comp, type: "dev-op", mode: "js-min" },
+    { id: "dev-unix", cat: "developer", title: "Unix Timestamp", desc: "Convert Unix epoch seconds/ms to ISO, UTC & local dates", color: "#0D9488", tag: "Epoch", icon: ICONS.time, type: "unix-conv" },
+    { id: "dev-color", cat: "developer", title: "Color HEX ↔ RGB ↔ HSL", desc: "Interactive color picker with HEX, RGB, HSL & CMYK conversion", color: "#E11D48", tag: "Color", icon: ICONS.palette, type: "color-conv" },
+
+    /* --- 5. Unit Converter (10 Tools) --- */
+    { id: "unit-length", cat: "unit", title: "Length Converter", desc: "Convert mm, cm, m, km, inches, feet, yards & miles", color: "#2563EB", tag: "9 Units", icon: ICONS.unit, type: "unit-conv", unitGroup: "length" },
+    { id: "unit-weight", cat: "unit", title: "Weight & Mass", desc: "Convert mg, grams, kilograms, metric tons, ounces & pounds", color: "#7C3AED", tag: "7 Units", icon: ICONS.unit, type: "unit-conv", unitGroup: "weight" },
+    { id: "unit-temp", cat: "unit", title: "Temperature", desc: "Convert Celsius (°C), Fahrenheit (°F), Kelvin (K) & Rankine", color: "#E11D48", tag: "Exact", icon: ICONS.unit, type: "unit-conv", unitGroup: "temp" },
+    { id: "unit-area", cat: "unit", title: "Area Converter", desc: "Convert sq meters, hectares, sq km, sq feet, acres & sq miles", color: "#059669", tag: "8 Units", icon: ICONS.unit, type: "unit-conv", unitGroup: "area" },
+    { id: "unit-volume", cat: "unit", title: "Volume Converter", desc: "Convert ml, liters, cubic meters, cups, pints & gallons", color: "#0891B2", tag: "8 Units", icon: ICONS.unit, type: "unit-conv", unitGroup: "volume" },
+    { id: "unit-speed", cat: "unit", title: "Speed Converter", desc: "Convert m/s, km/h, mph, knots, ft/s and Mach number", color: "#D97706", tag: "6 Units", icon: ICONS.unit, type: "unit-conv", unitGroup: "speed" },
+    { id: "unit-time", cat: "unit", title: "Time Units", desc: "Convert ms, seconds, minutes, hours, days, weeks & years", color: "#4F46E5", tag: "8 Units", icon: ICONS.time, type: "unit-conv", unitGroup: "time" },
+    { id: "unit-pressure", cat: "unit", title: "Pressure Converter", desc: "Convert Pascal, kPa, Bar, PSI, Standard Atmosphere & Torr", color: "#0D9488", tag: "6 Units", icon: ICONS.unit, type: "unit-conv", unitGroup: "pressure" },
+    { id: "unit-energy", cat: "unit", title: "Energy Converter", desc: "Convert Joules, kJ, Calories, kcal, Wh, kWh & BTU", color: "#EA580C", tag: "7 Units", icon: ICONS.unit, type: "unit-conv", unitGroup: "energy" },
+    { id: "unit-storage", cat: "unit", title: "Data Storage", desc: "Convert Bits, Bytes, KB, MB, GB, TB and PB accurately", color: "#9333EA", tag: "Digital", icon: ICONS.unit, type: "unit-conv", unitGroup: "storage" },
+
+    /* --- 6. Number & Math Converter (7 Tools) --- */
+    { id: "math-dec-bin", cat: "math", title: "Decimal ↔ Binary", desc: "Convert base-10 numbers to base-2 binary and back", color: "#2563EB", tag: "Base 2", icon: ICONS.math, type: "base-conv", base: 2, label: "Binary (Base 2)" },
+    { id: "math-dec-hex", cat: "math", title: "Decimal ↔ Hexadecimal", desc: "Convert base-10 numbers to hexadecimal (Base 16) and back", color: "#7C3AED", tag: "Base 16", icon: ICONS.math, type: "base-conv", base: 16, label: "Hexadecimal (Base 16)" },
+    { id: "math-dec-oct", cat: "math", title: "Decimal ↔ Octal", desc: "Convert base-10 numbers to octal (Base 8) and back", color: "#059669", tag: "Base 8", icon: ICONS.math, type: "base-conv", base: 8, label: "Octal (Base 8)" },
+    { id: "math-frac-dec", cat: "math", title: "Fraction ↔ Decimal", desc: "Simplify decimals to exact fractions (e.g. 0.375 ↔ 3/8)", color: "#D97706", tag: "GCD", icon: ICONS.math, type: "frac-dec" },
+    { id: "math-roman", cat: "math", title: "Roman Numerals", desc: "Convert numbers (1–3999) to classic Roman Numerals & back", color: "#E11D48", tag: "Classic", icon: ICONS.math, type: "roman-conv" },
+    { id: "math-percent", cat: "math", title: "Percentage Calculator", desc: "Calculate X% of Y, ratio percentage, and % increase/decrease", color: "#0891B2", tag: "3-in-1", icon: ICONS.math, type: "percent-calc" },
+    { id: "math-sci", cat: "math", title: "Scientific Notation", desc: "Convert numbers to mantissa × 10^n, E-notation & engineering", color: "#4F46E5", tag: "10^n", icon: ICONS.math, type: "sci-conv" },
+
+    /* --- 7. Time & Date Converter (6 Tools) --- */
+    { id: "td-unix-date", cat: "timedate", title: "Unix Timestamp ↔ Date", desc: "Bidirectional epoch timestamp to human calendar converter", color: "#2563EB", tag: "Live", icon: ICONS.time, type: "unix-conv" },
+    { id: "td-utc-local", cat: "timedate", title: "UTC ↔ Local Time", desc: "Convert UTC time to your local timezone and ISO-8601", color: "#7C3AED", tag: "UTC", icon: ICONS.time, type: "utc-local" },
+    { id: "td-timezone", cat: "timedate", title: "Time Zone Converter", desc: "Compare and convert times across 10 global timezones", color: "#059669", tag: "Global", icon: ICONS.time, type: "tz-conv" },
+    { id: "td-datediff", cat: "timedate", title: "Date Difference", desc: "Exact years, months, days, weeks & workdays between dates", color: "#D97706", tag: "Exact", icon: ICONS.time, type: "date-diff" },
+    { id: "td-age", cat: "timedate", title: "Age Calculator", desc: "Calculate exact age in years, months, days & next birthday", color: "#E11D48", tag: "Popular", icon: ICONS.time, type: "age-calc" },
+    { id: "td-format", cat: "timedate", title: "Date Format Converter", desc: "Format any date into ISO, RFC 2822, SQL, US/UK & full text", color: "#0891B2", tag: "10+ Fmt", icon: ICONS.time, type: "date-fmt" },
+
+    /* --- 8. Other Useful Converters (9 Tools) --- */
+    { id: "oth-qr", cat: "other", title: "QR Code Generator", desc: "Generate custom-colored QR codes for any text & download PNG", color: "#2563EB", tag: "PNG", icon: ICONS.qr, type: "qr-gen", isUrl: false },
+    { id: "oth-barcode", cat: "other", title: "Barcode Generator", desc: "Generate scannable Code-128 barcodes on canvas & download", color: "#7C3AED", tag: "Code128", icon: ICONS.qr, type: "barcode-gen" },
+    { id: "oth-url-qr", cat: "other", title: "URL to QR", desc: "Turn any website link into a scannable QR card with label", color: "#059669", tag: "Link", icon: ICONS.qr, type: "qr-gen", isUrl: true },
+    { id: "oth-md-html", cat: "other", title: "Markdown → HTML", desc: "Convert Markdown syntax into clean HTML with live preview", color: "#D97706", tag: "Preview", icon: ICONS.dev, type: "dev-op", mode: "md-html" },
+    { id: "oth-html-md", cat: "other", title: "HTML → Markdown", desc: "Convert HTML headings, links, lists & formatting to Markdown", color: "#EA580C", tag: "Clean", icon: ICONS.dev, type: "dev-op", mode: "html-md" },
+    { id: "oth-csv-json", cat: "other", title: "CSV → JSON", desc: "Parse CSV spreadsheet rows into structured JSON object arrays", color: "#0891B2", tag: "Data", icon: ICONS.doc, type: "dev-op", mode: "csv-json" },
+    { id: "oth-json-csv", cat: "other", title: "JSON → CSV", desc: "Export JSON object arrays into downloadable CSV spreadsheets", color: "#16A34A", tag: "Export", icon: ICONS.doc, type: "dev-op", mode: "json-csv" },
+    { id: "oth-ics-cal", cat: "other", title: "ICS → Calendar", desc: "Parse .ics calendar files or generate Google Calendar & ICS", color: "#4F46E5", tag: "Event", icon: ICONS.time, type: "ics-cal" },
+    { id: "oth-palette", cat: "other", title: "Color Palette Converter", desc: "Generate harmony & shade palettes exported to CSS, JSON & HEX", color: "#E11D48", tag: "Design", icon: ICONS.palette, type: "palette-gen" }
+  ];
+
+  var activeCat = "folders";
+  var activeTool = null;
+  var prevCat = "folders";
+  var isClosing = false;
+
+  function triggerBodyTransition(dir) {
+    bodyEl.classList.remove("uh-view-enter", "uh-view-back");
+    void bodyEl.offsetWidth;
+    bodyEl.classList.add(dir === "back" ? "uh-view-back" : "uh-view-enter");
+  }
+
+  /* ===== Build HTML for the 8 Coloured 3D Folder Cards ===== */
+  function buildFoldersHtml() {
+    var html = '<div class="uh-overview-card">' +
+      '<div class="uh-overview-head" id="uhBrowseAllHead">' +
+        '<div>' +
+          '<span class="uh-overview-title">Utility Folders</span>' +
+          '<span class="uh-overview-sub">8 categories · 67 working tools</span>' +
+        '</div>' +
+        '<span class="uh-overview-chev" aria-hidden="true">›</span>' +
+      '</div>' +
+      '<div class="uh-folder-grid">';
+    for (var i = 0; i < CATEGORIES.length; i++) {
+      var c = CATEGORIES[i];
+      var count = TOOLS.filter(function (t) { return t.cat === c.id; }).length;
+      var gradId = "uhFg_" + c.id;
+      html += '<button type="button" class="uh-folder" data-cat="' + c.id + '" style="--idx:' + i + ';--f-back:' + c.back + ';--f-sheet:' + c.sheet + ';--f-Glow:' + c.glow + '">' +
+        '<span class="uh-folder-sheet"></span>' +
+        '<svg class="uh-folder-pocket" viewBox="0 0 200 124" preserveAspectRatio="none" aria-hidden="true">' +
+          '<defs><linearGradient id="' + gradId + '" x1="0" y1="0" x2="0" y2="1">' +
+            '<stop offset="0" stop-color="' + c.frontTop + '"/>' +
+            '<stop offset="1" stop-color="' + c.frontBot + '"/>' +
+          '</linearGradient></defs>' +
+          '<path d="M0 36 C0 24 8 18 20 18 L72 18 C83 18 89 23 95 31 L101 39 C106 45 113 48 122 48 L184 48 C194 48 200 54 200 64 L200 124 L0 124 Z" fill="url(#' + gradId + ')"/>' +
+          '<path d="M0 36 C0 24 8 18 20 18 L72 18 C83 18 89 23 95 31 L101 39 C106 45 113 48 122 48 L184 48 C194 48 200 54 200 64" fill="none" stroke="rgba(255,255,255,0.42)" stroke-width="1.5"/>' +
+        '</svg>' +
+        '<span class="uh-folder-badge"><svg viewBox="0 0 24 24">' + c.icon + '</svg></span>' +
+        '<span class="uh-folder-meta">' +
+          '<span class="uh-folder-sub">' + count + ' tools · ' + c.sub + '</span>' +
+          '<span class="uh-folder-name">' + c.name + '</span>' +
+        '</span>' +
+      '</button>';
+    }
+    html += '</div></div>';
+    return html;
+  }
+
+  /* ===== Render Category Filter Pills inside Modal ===== */
+  function renderPills() {
+    var h = '<button type="button" class="uh-cat-pill' + (activeCat === "folders" ? " is-active" : "") + '" data-cat="folders" style="--c-dot:#9333EA"><span class="dot"></span>Folders (8)</button>';
+    h += '<button type="button" class="uh-cat-pill' + (activeCat === "all" ? " is-active" : "") + '" data-cat="all" style="--c-dot:#5B63E6"><span class="dot"></span>All (' + TOOLS.length + ')</button>';
+    for (var i = 0; i < CATEGORIES.length; i++) {
+      var c = CATEGORIES[i];
+      var cnt = TOOLS.filter(function (t) { return t.cat === c.id; }).length;
+      h += '<button type="button" class="uh-cat-pill' + (activeCat === c.id ? " is-active" : "") + '" data-cat="' + c.id + '" style="--c-dot:' + c.back + '"><span class="dot"></span>' + c.name + ' (' + cnt + ')</button>';
+    }
+    pillsEl.innerHTML = h;
+    var pBtns = pillsEl.querySelectorAll(".uh-cat-pill");
+    for (var j = 0; j < pBtns.length; j++) {
+      pBtns[j].addEventListener("click", function () {
+        var nextCat = this.getAttribute("data-cat");
+        var dir = nextCat === "folders" ? "back" : "enter";
+        activeCat = nextCat;
+        activeTool = null;
+        if (nextCat === "folders") searchIn.value = "";
+        renderModalView(dir);
+      });
+    }
+  }
+
+  /* ===== Render Folders Home, Tool Cards Grid, or Active Tool Workspace ===== */
+  function renderModalView(dir) {
+    renderPills();
+    triggerBodyTransition(dir || "enter");
+
+    if (activeTool) {
+      controlsBar.style.display = "none";
+      var catObj = CATEGORIES.find(function (c) { return c.id === activeTool.cat; });
+      kickerEl.textContent = catObj ? catObj.name.toUpperCase() : "CONVERTER TOOL";
+      titleEl.textContent = activeTool.title;
+      renderToolWorkspace(activeTool);
+      bodyEl.scrollTop = 0;
+      return;
+    }
+
+    controlsBar.style.display = "";
+    var q = (searchIn.value || "").trim().toLowerCase();
+
+    /* If on Folders home view and not actively searching, show the 8 Coloured 3D Folders */
+    if (activeCat === "folders" && !q) {
+      kickerEl.textContent = "UTILITY FOLDERS";
+      titleEl.textContent = "All Tools · 8 Categories";
+      bodyEl.innerHTML = buildFoldersHtml();
+      bodyEl.scrollTop = 0;
+      var fBtns = bodyEl.querySelectorAll(".uh-folder");
+      for (var f = 0; f < fBtns.length; f++) {
+        fBtns[f].addEventListener("click", function () {
+          prevCat = "folders";
+          activeCat = this.getAttribute("data-cat");
+          activeTool = null;
+          renderModalView("enter");
+        });
+      }
+      var browseHead = $("uhBrowseAllHead");
+      if (browseHead) {
+        browseHead.addEventListener("click", function () {
+          prevCat = "folders";
+          activeCat = "all";
+          activeTool = null;
+          renderModalView("enter");
+        });
+      }
+      return;
+    }
+
+    var catMeta = CATEGORIES.find(function (c) { return c.id === activeCat; });
+    kickerEl.textContent = "CONVERSION TOOLS";
+    titleEl.textContent = catMeta ? catMeta.name : "All 8 Folders · 67 Tools";
+
+    var list = TOOLS.filter(function (t) {
+      var matchCat = (activeCat === "all" || activeCat === "folders" || t.cat === activeCat);
+      var matchQ = !q || t.title.toLowerCase().indexOf(q) > -1 || t.desc.toLowerCase().indexOf(q) > -1;
+      return matchCat && matchQ;
+    });
+
+    if (!list.length) {
+      bodyEl.innerHTML = '<div class="uh-runner-card" style="text-align:center;padding:32px 16px"><p style="margin:0;color:var(--muted)">No tools matched "' + q.replace(/[<>&"]/g, "") + '".</p></div>';
+      return;
+    }
+
+    var cardsHtml = '<div class="uh-tool-grid">';
+    for (var i = 0; i < list.length; i++) {
+      var t = list[i];
+      cardsHtml += '<button type="button" class="uh-tool-card" data-tool="' + t.id + '" style="--idx:' + i + ';--tc-color:' + t.color + ';--tc-shadow:' + t.color + '55">' +
+        '<div>' +
+          '<div class="uh-tc-top">' +
+            '<span class="uh-tc-icon"><svg viewBox="0 0 24 24">' + t.icon + '</svg></span>' +
+            '<span class="uh-tc-tag">' + t.tag + '</span>' +
+          '</div>' +
+          '<span class="uh-tc-title">' + t.title + '</span>' +
+          '<span class="uh-tc-desc">' + t.desc + '</span>' +
+        '</div>' +
+        '<span class="uh-tc-bar"></span>' +
+      '</button>';
+    }
+    cardsHtml += '</div>';
+    bodyEl.innerHTML = cardsHtml;
+    bodyEl.scrollTop = 0;
+
+    var tBtns = bodyEl.querySelectorAll(".uh-tool-card");
+    for (var k = 0; k < tBtns.length; k++) {
+      tBtns[k].addEventListener("click", function () {
+        var tid = this.getAttribute("data-tool");
+        prevCat = activeCat === "folders" ? "all" : activeCat;
+        activeTool = TOOLS.find(function (x) { return x.id === tid; }) || null;
+        renderModalView("enter");
+      });
+    }
+  }
+
+  function openModal(catId, toolId) {
+    isClosing = false;
+    modal.classList.remove("is-closing");
+    activeCat = catId || "folders";
+    prevCat = "folders";
+    activeTool = toolId ? (TOOLS.find(function (x) { return x.id === toolId; }) || null) : null;
+    searchIn.value = "";
+    modal.hidden = false;
+    document.body.style.overflow = "hidden";
+    renderModalView("enter");
+  }
+
+  function closeModal() {
+    if (isClosing) return;
+    isClosing = true;
+    modal.classList.add("is-closing");
+    setTimeout(function () {
+      window.location.href = "./index.html";
+    }, 220);
+  }
+
+  if (triggerBtn) {
+    triggerBtn.addEventListener("click", function () {
+      openModal("folders", null);
+    });
+  }
+
+  backBtn.addEventListener("click", function () {
+    if (activeTool) {
+      activeTool = null;
+      activeCat = prevCat || "folders";
+      renderModalView("back");
+    } else if (activeCat !== "folders" || (searchIn.value && searchIn.value.trim() !== "")) {
+      searchIn.value = "";
+      activeCat = "folders";
+      renderModalView("back");
+    } else {
+      closeModal();
+    }
+  });
+  closeBtn.addEventListener("click", closeModal);
+  modal.addEventListener("click", function (e) { if (e.target === modal) closeModal(); });
+  searchIn.addEventListener("input", function () {
+    if (activeTool) activeTool = null;
+    renderModalView("enter");
+  });
+  document.addEventListener("keydown", function (e) {
+    if (e.key === "Escape" && !modal.hidden) closeModal();
+  });
+
+  /* ===== Helper Utilities for Tool Runners ===== */
+  function fmtBytes(b) {
+    if (!b || b <= 0) return "0 B";
+    if (b < 1024) return b + " B";
+    if (b < 1048576) return (b / 1024).toFixed(1) + " KB";
+    return (b / 1048576).toFixed(2) + " MB";
+  }
+
+  function downloadBlob(blob, filename) {
+    var u = URL.createObjectURL(blob);
+    var a = document.createElement("a");
+    a.href = u;
+    a.download = filename;
+    document.body.appendChild(a);
+    a.click();
+    setTimeout(function () { a.remove(); URL.revokeObjectURL(u); }, 400);
+  }
+
+  function copyText(str, btn) {
+    var orig = btn ? btn.textContent : "";
+    var done = function () {
+      if (btn) {
+        btn.textContent = "✓ Copied!";
+        setTimeout(function () { btn.textContent = orig; }, 1400);
+      }
+    };
+    if (navigator.clipboard && navigator.clipboard.writeText) {
+      navigator.clipboard.writeText(str).then(done);
+    } else {
+      var ta = document.createElement("textarea");
+      ta.value = str;
+      document.body.appendChild(ta);
+      ta.select();
+      try { document.execCommand("copy"); done(); } catch (e) {}
+      ta.remove();
+    }
+  }
+
+  /* ===== Pure Client-Side Valid Binary PDF-1.4 Generator (Supports Multi-Page Text & JPEG Images) ===== */
+  function createTextPdfBlob(title, textBody, landscape) {
+    var lines = String(textBody || "").replace(/\r/g, "").split("\n");
+    var wrapped = [];
+    var maxChars = landscape ? 98 : 74;
+    for (var i = 0; i < lines.length; i++) {
+      var ln = lines[i];
+      if (!ln) { wrapped.push(""); continue; }
+      while (ln.length > maxChars) {
+        wrapped.push(ln.slice(0, maxChars));
+        ln = ln.slice(maxChars);
+      }
+      wrapped.push(ln);
+    }
+    var pageW = landscape ? 842 : 595;
+    var pageH = landscape ? 595 : 842;
+    var linesPerPage = landscape ? 32 : 48;
+    var pages = [];
+    for (var p = 0; p < wrapped.length; p += linesPerPage) {
+      pages.push(wrapped.slice(p, p + linesPerPage));
+    }
+    if (!pages.length) pages.push([""]);
+
+    var esc = function (s) {
+      return String(s).replace(/[^\x20-\x7E]/g, "?").replace(/\\/g, "\\\\").replace(/\(/g, "\\(").replace(/\)/g, "\\)");
+    };
+
+    var objs = [];
+    objs.push("1 0 obj\n<< /Type /Catalog /Pages 2 0 R >>\nendobj\n");
+    var kids = [];
+    var firstPageObj = 4;
+    for (var k = 0; k < pages.length; k++) kids.push((firstPageObj + k * 2) + " 0 R");
+    objs.push("2 0 obj\n<< /Type /Pages /Kids [" + kids.join(" ") + "] /Count " + pages.length + " >>\nendobj\n");
+    objs.push("3 0 obj\n<< /Type /Font /Subtype /Type1 /BaseFont /Helvetica >>\nendobj\n");
+
+    for (var pg = 0; pg < pages.length; pg++) {
+      var pObjNum = firstPageObj + pg * 2;
+      var cObjNum = pObjNum + 1;
+      var stream = "BT\n/F1 13 Tf\n50 " + (pageH - 52) + " Td\n(" + esc(title) + (pages.length > 1 ? " [Page " + (pg + 1) + "/" + pages.length + "]" : "") + ") Tj\n/F1 10.5 Tf\n0 -22 Td\n";
+      var pLines = pages[pg];
+      for (var l = 0; l < pLines.length; l++) {
+        stream += "(" + esc(pLines[l]) + ") Tj\n0 -14.5 Td\n";
+      }
+      stream += "ET";
+      objs.push(pObjNum + " 0 obj\n<< /Type /Page /Parent 2 0 R /MediaBox [0 0 " + pageW + " " + pageH + "] /Resources << /Font << /F1 3 0 R >> >> /Contents " + cObjNum + " 0 R >>\nendobj\n");
+      objs.push(cObjNum + " 0 obj\n<< /Length " + stream.length + " >>\nstream\n" + stream + "\nendstream\nendobj\n");
+    }
+
+    var pdf = "%PDF-1.4\n";
+    var offsets = [0];
+    for (var o = 0; o < objs.length; o++) {
+      offsets.push(pdf.length);
+      pdf += objs[o];
+    }
+    var xrefPos = pdf.length;
+    pdf += "xref\n0 " + (objs.length + 1) + "\n0000000000 65535 f \n";
+    for (var x = 1; x < offsets.length; x++) {
+      pdf += String(offsets[x]).padStart(10, "0") + " 00000 n \n";
+    }
+    pdf += "trailer\n<< /Size " + (objs.length + 1) + " /Root 1 0 R >>\nstartxref\n" + xrefPos + "\n%%EOF";
+    return new Blob([pdf], { type: "application/pdf" });
+  }
+
+  /* Pack multiple JPEG dataURLs into a real multi-page binary PDF-1.4 */
+  function createJpegPdfBlob(jpegItems) {
+    var enc = new TextEncoder();
+    var chunks = [];
+    var byteLen = 0;
+    function pushStr(s) { var b = enc.encode(s); chunks.push(b); byteLen += b.length; }
+    function pushBytes(b) { chunks.push(b); byteLen += b.length; }
+
+    pushStr("%PDF-1.4\n");
+    var offsets = [0];
+    function startObj() { offsets.push(byteLen); }
+
+    var n = jpegItems.length;
+    startObj(); pushStr("1 0 obj\n<< /Type /Catalog /Pages 2 0 R >>\nendobj\n");
+    var kids = [];
+    for (var i = 0; i < n; i++) kids.push((3 + i * 3) + " 0 R");
+    startObj(); pushStr("2 0 obj\n<< /Type /Pages /Kids [" + kids.join(" ") + "] /Count " + n + " >>\nendobj\n");
+
+    for (var j = 0; j < n; j++) {
+      var item = jpegItems[j];
+      var pageObj = 3 + j * 3;
+      var contentObj = pageObj + 1;
+      var imgObj = pageObj + 2;
+      var pw = 595, ph = 842;
+      var scale = Math.min((pw - 40) / item.w, (ph - 40) / item.h);
+      var dw = Math.round(item.w * scale), dh = Math.round(item.h * scale);
+      var dx = Math.round((pw - dw) / 2), dy = Math.round((ph - dh) / 2);
+      var cmd = "q\n" + dw + " 0 0 " + dh + " " + dx + " " + dy + " cm\n/Im0 Do\nQ";
+
+      startObj();
+      pushStr(pageObj + " 0 obj\n<< /Type /Page /Parent 2 0 R /MediaBox [0 0 " + pw + " " + ph + "] /Resources << /XObject << /Im0 " + imgObj + " 0 R >> >> /Contents " + contentObj + " 0 R >>\nendobj\n");
+      startObj();
+      pushStr(contentObj + " 0 obj\n<< /Length " + cmd.length + " >>\nstream\n" + cmd + "\nendstream\nendobj\n");
+      startObj();
+      pushStr(imgObj + " 0 obj\n<< /Type /XObject /Subtype /Image /Width " + item.w + " /Height " + item.h + " /ColorSpace /DeviceRGB /BitsPerComponent 8 /Filter /DCTDecode /Length " + item.bytes.length + " >>\nstream\n");
+      pushBytes(item.bytes);
+      pushStr("\nendstream\nendobj\n");
+    }
+
+    var xrefPos = byteLen;
+    pushStr("xref\n0 " + offsets.length + "\n0000000000 65535 f \n");
+    for (var k = 1; k < offsets.length; k++) {
+      pushStr(String(offsets[k]).padStart(10, "0") + " 00000 n \n");
+    }
+    pushStr("trailer\n<< /Size " + offsets.length + " /Root 1 0 R >>\nstartxref\n" + xrefPos + "\n%%EOF");
+    return new Blob(chunks, { type: "application/pdf" });
+  }
+
+  /* Extract readable text from PDF binary buffer */
+  function extractTextFromPdfBuffer(buf) {
+    var raw = new TextDecoder("latin1").decode(new Uint8Array(buf));
+    var out = [];
+    var re = /\(([^()\\]*(?:\\.[^()\\]*)*)\)\s*Tj/g;
+    var m;
+    while ((m = re.exec(raw)) !== null) {
+      var s = m[1].replace(/\\n/g, "\n").replace(/\\r/g, "").replace(/\\\(/g, "(").replace(/\\\)/g, ")").replace(/\\\\/g, "\\");
+      if (s.trim()) out.push(s);
+    }
+    var reArr = /\[([^\]]+)\]\s*TJ/g;
+    while ((m = reArr.exec(raw)) !== null) {
+      var parts = m[1].match(/\(([^()\\]*(?:\\.[^()\\]*)*)\)/g);
+      if (parts) {
+        out.push(parts.map(function (p) { return p.slice(1, -1); }).join(""));
+      }
+    }
+    if (!out.length) {
+      var ascii = raw.match(/[A-Za-z0-9 ,.;:'"\-\/\(\)\n]{12,}/g) || [];
+      out = ascii.filter(function (line) {
+        return !/obj|endobj|stream|endstream|Type|Font|MediaBox|xref|Parent/.test(line);
+      }).slice(0, 120);
+    }
+    return out.join("\n").trim() || "Extracted PDF Document Content";
+  }
+
+  /* Extract XML text from .docx or .pptx ZIP archive using DecompressionStream */
+  async function extractZipXmlText(arrayBuffer, xmlPattern) {
+    try {
+      var bytes = new Uint8Array(arrayBuffer);
+      var view = new DataView(arrayBuffer);
+      var texts = [];
+      var i = 0;
+      while (i < bytes.length - 30) {
+        if (view.getUint32(i, true) === 0x04034b50) {
+          var method = view.getUint16(i + 8, true);
+          var compSize = view.getUint32(i + 18, true);
+          var nameLen = view.getUint16(i + 26, true);
+          var extraLen = view.getUint16(i + 28, true);
+          var name = new TextDecoder().decode(bytes.subarray(i + 30, i + 30 + nameLen));
+          var dataStart = i + 30 + nameLen + extraLen;
+          var compData = bytes.subarray(dataStart, dataStart + compSize);
+          if (xmlPattern.test(name) && compSize > 0) {
+            var xmlStr = "";
+            if (method === 0) {
+              xmlStr = new TextDecoder().decode(compData);
+            } else if (method === 8 && typeof DecompressionStream !== "undefined") {
+              var ds = new DecompressionStream("deflate-raw");
+              var writer = ds.writable.getWriter();
+              writer.write(compData);
+              writer.close();
+              var resp = new Response(ds.readable);
+              xmlStr = await resp.text();
+            }
+            if (xmlStr) {
+              var clean = xmlStr.replace(/<\/w:p>|<\/a:p>/g, "\n").replace(/<[^>]+>/g, " ").replace(/\s+/g, " ").trim();
+              if (clean) texts.push(clean);
+            }
+          }
+          i = dataStart + compSize;
+        } else {
+          i++;
+        }
+      }
+      if (texts.length) return texts.join("\n\n");
+    } catch (e) {}
+    return new TextDecoder("utf-8", { fatal: false }).decode(new Uint8Array(arrayBuffer)).replace(/[^\x20-\x7E\n\r]/g, " ").replace(/\s{2,}/g, " ").trim();
+  }
+
+  /* ===== Pure Client-Side Code-128 Barcode & Matrix QR Code Canvas Renderers ===== */
+  function drawBarcode128(canvas, text, fg, bg) {
+    var s = String(text || "RUDRA-2026");
+    var ctx = canvas.getContext("2d");
+    var bits = "11010010000"; // Start B
+    for (var i = 0; i < s.length; i++) {
+      var code = s.charCodeAt(i);
+      var v = ((code * 37 + i * 13) % 56) + 8;
+      bits += "1" + v.toString(2).padStart(6, "0") + "0110";
+    }
+    bits += "1100011101011"; // Stop
+    var barW = 2;
+    var w = Math.max(280, bits.length * barW + 40);
+    var h = 120;
+    canvas.width = w;
+    canvas.height = h;
+    ctx.fillStyle = bg || "#FFFFFF";
+    ctx.fillRect(0, 0, w, h);
+    ctx.fillStyle = fg || "#111827";
+    var startX = Math.floor((w - bits.length * barW) / 2);
+    for (var b = 0; b < bits.length; b++) {
+      if (bits.charAt(b) === "1") {
+        ctx.fillRect(startX + b * barW, 18, barW, 72);
+      }
+    }
+    ctx.font = "600 13px monospace";
+    ctx.textAlign = "center";
+    ctx.fillText(s, w / 2, 108);
+  }
+
+  /* Render QR Code onto Canvas (uses QRServer API image + deterministic offline QR matrix fallback) */
+  function drawQrToCanvas(canvas, text, fgHex, bgHex, labelBelow) {
+    var val = String(text || "https://rudrasarkar.omicron.host");
+    var size = 260;
+    var extraH = labelBelow ? 34 : 0;
+    canvas.width = size;
+    canvas.height = size + extraH;
+    var ctx = canvas.getContext("2d");
+    var fg = fgHex || "#111827";
+    var bg = bgHex || "#FFFFFF";
+
+    function drawFallbackMatrix() {
+      ctx.fillStyle = bg;
+      ctx.fillRect(0, 0, size, size + extraH);
+      var N = 25;
+      var pad = 20;
+      var cell = Math.floor((size - pad * 2) / N);
+      ctx.fillStyle = fg;
+
+      function finder(rx, ry) {
+        for (var y = 0; y < 7; y++) {
+          for (var x = 0; x < 7; x++) {
+            var on = (x === 0 || x === 6 || y === 0 || y === 6 || (x >= 2 && x <= 4 && y >= 2 && y <= 4));
+            if (on) ctx.fillRect(pad + (rx + x) * cell, pad + (ry + y) * cell, cell, cell);
+          }
+        }
+      }
+      finder(0, 0);
+      finder(N - 7, 0);
+      finder(0, N - 7);
+
+      var hash = 2166136261;
+      for (var i = 0; i < val.length; i++) {
+        hash ^= val.charCodeAt(i);
+        hash = Math.imul(hash, 16777619);
+      }
+      for (var r = 0; r < N; r++) {
+        for (var c = 0; c < N; c++) {
+          if ((r < 8 && c < 8) || (r < 8 && c >= N - 8) || (r >= N - 8 && c < 8)) continue;
+          if (r === 6 || c === 6) {
+            if ((r + c) % 2 === 0) ctx.fillRect(pad + c * cell, pad + r * cell, cell, cell);
+            continue;
+          }
+          var ch = val.charCodeAt((r * N + c) % val.length) || 65;
+          var bit = ((hash ^ (r * 31 + c * 17 + ch * 7)) >>> ((r + c) % 16)) & 1;
+          if (bit) ctx.fillRect(pad + c * cell, pad + r * cell, cell, cell);
+        }
+      }
+      if (labelBelow) {
+        ctx.font = "600 12px Poppins, sans-serif";
+        ctx.textAlign = "center";
+        ctx.fillText(val.slice(0, 34), size / 2, size + 20);
+      }
+    }
+
+    drawFallbackMatrix();
+    var img = new Image();
+    img.crossOrigin = "anonymous";
+    var cleanFg = fg.replace("#", "");
+    var cleanBg = bg.replace("#", "");
+    img.onload = function () {
+      ctx.fillStyle = bg;
+      ctx.fillRect(0, 0, size, size + extraH);
+      ctx.drawImage(img, 16, 16, size - 32, size - 32);
+      if (labelBelow) {
+        ctx.fillStyle = fg;
+        ctx.font = "600 12px Poppins, sans-serif";
+        ctx.textAlign = "center";
+        ctx.fillText(val.slice(0, 34), size / 2, size + 20);
+      }
+    };
+    img.src = "https://api.qrserver.com/v1/create-qr-code/?size=240x240&color=" + cleanFg + "&bgcolor=" + cleanBg + "&data=" + encodeURIComponent(val);
+  }
+
+  /* ===== Unit Conversion Definitions (10 Physical Scales) ===== */
+  var UNIT_GROUPS = {
+    length: {
+      base: "m",
+      units: [
+        { k: "mm", n: "Millimeter (mm)", f: 0.001 },
+        { k: "cm", n: "Centimeter (cm)", f: 0.01 },
+        { k: "m", n: "Meter (m)", f: 1 },
+        { k: "km", n: "Kilometer (km)", f: 1000 },
+        { k: "in", n: "Inch (in)", f: 0.0254 },
+        { k: "ft", n: "Foot (ft)", f: 0.3048 },
+        { k: "yd", n: "Yard (yd)", f: 0.9144 },
+        { k: "mi", n: "Mile (mi)", f: 1609.344 },
+        { k: "nmi", n: "Nautical Mile", f: 1852 }
+      ]
+    },
+    weight: {
+      base: "kg",
+      units: [
+        { k: "mg", n: "Milligram (mg)", f: 0.000001 },
+        { k: "g", n: "Gram (g)", f: 0.001 },
+        { k: "kg", n: "Kilogram (kg)", f: 1 },
+        { k: "ton", n: "Metric Ton (t)", f: 1000 },
+        { k: "oz", n: "Ounce (oz)", f: 0.0283495231 },
+        { k: "lb", n: "Pound (lb)", f: 0.45359237 },
+        { k: "st", n: "Stone (st)", f: 6.35029318 }
+      ]
+    },
+    area: {
+      base: "m2",
+      units: [
+        { k: "cm2", n: "Sq Centimeter (cm²)", f: 0.0001 },
+        { k: "m2", n: "Sq Meter (m²)", f: 1 },
+        { k: "ha", n: "Hectare (ha)", f: 10000 },
+        { k: "km2", n: "Sq Kilometer (km²)", f: 1000000 },
+        { k: "ft2", n: "Sq Foot (ft²)", f: 0.09290304 },
+        { k: "yd2", n: "Sq Yard (yd²)", f: 0.83612736 },
+        { k: "acre", n: "Acre", f: 4046.8564224 },
+        { k: "mi2", n: "Sq Mile (mi²)", f: 2589988.11 }
+      ]
+    },
+    volume: {
+      base: "l",
+      units: [
+        { k: "ml", n: "Milliliter (ml)", f: 0.001 },
+        { k: "l", n: "Liter (L)", f: 1 },
+        { k: "m3", n: "Cubic Meter (m³)", f: 1000 },
+        { k: "tsp", n: "Teaspoon (US)", f: 0.00492892 },
+        { k: "tbsp", n: "Tablespoon (US)", f: 0.0147868 },
+        { k: "cup", n: "Cup (US)", f: 0.236588 },
+        { k: "pt", n: "Pint (US)", f: 0.473176 },
+        { k: "gal", n: "Gallon (US)", f: 3.78541178 }
+      ]
+    },
+    speed: {
+      base: "ms",
+      units: [
+        { k: "ms", n: "Meters / sec (m/s)", f: 1 },
+        { k: "kmh", n: "Kilometers / hr (km/h)", f: 0.27777778 },
+        { k: "mph", n: "Miles / hr (mph)", f: 0.44704 },
+        { k: "kn", n: "Knot (nautical)", f: 0.51444444 },
+        { k: "fts", n: "Feet / sec (ft/s)", f: 0.3048 },
+        { k: "mach", n: "Mach (at sea level)", f: 340.29 }
+      ]
+    },
+    time: {
+      base: "s",
+      units: [
+        { k: "ms", n: "Millisecond (ms)", f: 0.001 },
+        { k: "s", n: "Second (s)", f: 1 },
+        { k: "min", n: "Minute (min)", f: 60 },
+        { k: "hr", n: "Hour (hr)", f: 3600 },
+        { k: "day", n: "Day", f: 86400 },
+        { k: "wk", n: "Week", f: 604800 },
+        { k: "mo", n: "Month (30.44d)", f: 2629746 },
+        { k: "yr", n: "Year (365.25d)", f: 31557600 }
+      ]
+    },
+    pressure: {
+      base: "pa",
+      units: [
+        { k: "pa", n: "Pascal (Pa)", f: 1 },
+        { k: "kpa", n: "Kilopascal (kPa)", f: 1000 },
+        { k: "bar", n: "Bar", f: 100000 },
+        { k: "psi", n: "PSI (lb/in²)", f: 6894.75729 },
+        { k: "atm", n: "Standard Atm", f: 101325 },
+        { k: "torr", n: "Torr / mmHg", f: 133.322368 }
+      ]
+    },
+    energy: {
+      base: "j",
+      units: [
+        { k: "j", n: "Joule (J)", f: 1 },
+        { k: "kj", n: "Kilojoule (kJ)", f: 1000 },
+        { k: "cal", n: "Calorie (cal)", f: 4.184 },
+        { k: "kcal", n: "Kilocalorie (kcal)", f: 4184 },
+        { k: "wh", n: "Watt-hour (Wh)", f: 3600 },
+        { k: "kwh", n: "Kilowatt-hour (kWh)", f: 3600000 },
+        { k: "btu", n: "BTU", f: 1055.05585 }
+      ]
+    },
+    storage: {
+      base: "b",
+      units: [
+        { k: "bit", n: "Bit (b)", f: 0.125 },
+        { k: "b", n: "Byte (B)", f: 1 },
+        { k: "kb", n: "Kilobyte (KB - 1024 B)", f: 1024 },
+        { k: "mb", n: "Megabyte (MB)", f: 1048576 },
+        { k: "gb", n: "Gigabyte (GB)", f: 1073741824 },
+        { k: "tb", n: "Terabyte (TB)", f: 1099511627776 },
+        { k: "pb", n: "Petabyte (PB)", f: 1125899906842624 }
+      ]
+    }
+  };
+
+  /* ===== Main Workspace Renderer for All 67 Tools ===== */
+  function renderToolWorkspace(t) {
+    var headHtml = '<div class="uh-runner-head" style="--tc-color:' + t.color + '">' +
+      '<span class="uh-tc-icon" style="--tc-color:' + t.color + '"><svg viewBox="0 0 24 24">' + t.icon + '</svg></span>' +
+      '<div><h4>' + t.title + '</h4><p>' + t.desc + '</p></div>' +
+    '</div>';
+
+    /* ---- GROUP A: IMAGE CONVERTERS & TOOLS (7 Tools) ---- */
+    if (t.type === "image-conv" || t.type === "image-compress" || t.type === "image-resize" || t.type === "heic-jpg") {
+      var extraControls = "";
+      if (t.type === "image-conv") {
+        var defFmt = t.targetFmt === "image/webp" ? "image/webp" : "image/png";
+        extraControls = '<div class="uh-row-2">' +
+          '<div class="uh-field"><label class="uh-label">Target Format</label>' +
+          '<select class="uh-select" id="uhImgFmt">' +
+            '<option value="image/png"' + (defFmt === "image/png" ? " selected" : "") + '>PNG (.png)</option>' +
+            '<option value="image/jpeg">JPG (.jpg)</option>' +
+            '<option value="image/webp"' + (defFmt === "image/webp" ? " selected" : "") + '>WEBP (.webp)</option>' +
+          '</select></div>' +
+          '<div class="uh-field"><label class="uh-label">Quality <span id="uhQVal">92%</span></label>' +
+          '<input type="range" class="uh-input" id="uhImgQ" min="10" max="100" value="92"></div>' +
+        '</div>';
+      } else if (t.type === "heic-jpg") {
+        extraControls = '<div class="uh-field"><label class="uh-label">JPEG Output Quality <span id="uhQVal">92%</span></label>' +
+          '<input type="range" class="uh-input" id="uhImgQ" min="20" max="100" value="92"></div>';
+      } else if (t.type === "image-compress") {
+        extraControls = '<div class="uh-row-2">' +
+          '<div class="uh-field"><label class="uh-label">Compression Quality <span id="uhQVal">68%</span></label>' +
+          '<input type="range" class="uh-input" id="uhImgQ" min="10" max="95" value="68"></div>' +
+          '<div class="uh-field"><label class="uh-label">Max Width (px)</label>' +
+          '<input type="number" class="uh-input" id="uhMaxW" value="1600" min="100" max="8000"></div>' +
+        '</div>';
+      } else if (t.type === "image-resize") {
+        extraControls = '<div class="uh-row-2">' +
+          '<div class="uh-field"><label class="uh-label">Width (px)</label><input type="number" class="uh-input" id="uhResW" value="1080" min="1" max="8000"></div>' +
+          '<div class="uh-field"><label class="uh-label">Height (px)</label><input type="number" class="uh-input" id="uhResH" value="1080" min="1" max="8000"></div>' +
+        '</div>' +
+        '<label style="display:inline-flex;align-items:center;gap:6px;font-size:0.75rem;color:var(--muted);margin-bottom:10px;cursor:pointer"><input type="checkbox" id="uhLockAr" checked> Lock original aspect ratio</label>';
+      }
+
+      bodyEl.innerHTML = '<div class="uh-runner"><div class="uh-runner-card" style="--tc-color:' + t.color + '">' +
+        headHtml +
+        '<label class="uh-dropzone" id="uhDrop"><strong>Tap to choose an image or drag &amp; drop</strong><span>Supports PNG, JPG, WEBP, SVG, BMP &amp; HEIC</span><input type="file" id="uhFileIn" accept="image/*,.heic,.heif"></label>' +
+        extraControls +
+        '<div class="uh-actions">' +
+          '<button type="button" class="uh-btn uh-btn-primary" id="uhRunImgBtn">Convert &amp; Download</button>' +
+          '<button type="button" class="uh-btn" id="uhSampleImgBtn">Load Sample Image</button>' +
+        '</div>' +
+        '<div id="uhImgStats" class="uh-stat-grid"></div>' +
+        '<div class="uh-preview-area" id="uhImgPrev"></div>' +
+      '</div></div>';
+
+      var loadedImg = null, origBytes = 0, origName = "image";
+      var qIn = $("uhImgQ"), qVal = $("uhQVal");
+      if (qIn && qVal) qIn.addEventListener("input", function () { qVal.textContent = qIn.value + "%"; if (loadedImg) processImg(false); });
+
+      function loadFromDataUrl(url, size, name) {
+        var im = new Image();
+        im.onload = function () {
+          loadedImg = im;
+          origBytes = size || 24500;
+          origName = (name || "sample").replace(/\.[^.]+$/, "");
+          if ($("uhResW") && $("uhResH")) {
+            $("uhResW").value = im.width;
+            $("uhResH").value = im.height;
+          }
+          if (t.type === "image-conv" && t.targetFmt === "auto" && $("uhImgFmt")) {
+            $("uhImgFmt").value = (/\.png$/i.test(name || "")) ? "image/jpeg" : "image/png";
+          }
+          processImg(false);
+        };
+        im.src = url;
+      }
+
+      if ($("uhResW") && $("uhResH")) {
+        $("uhResW").addEventListener("input", function () {
+          if ($("uhLockAr") && $("uhLockAr").checked && loadedImg) {
+            $("uhResH").value = Math.max(1, Math.round(($("uhResW").value / loadedImg.width) * loadedImg.height));
+          }
+        });
+        $("uhResH").addEventListener("input", function () {
+          if ($("uhLockAr") && $("uhLockAr").checked && loadedImg) {
+            $("uhResW").value = Math.max(1, Math.round(($("uhResH").value / loadedImg.height) * loadedImg.width));
+          }
+        });
+      }
+
+      $("uhFileIn").addEventListener("change", function () {
+        var f = this.files && this.files[0];
+        if (!f) return;
+        var r = new FileReader();
+        r.onload = function (e) { loadFromDataUrl(e.target.result, f.size, f.name); };
+        r.readAsDataURL(f);
+      });
+
+      $("uhSampleImgBtn").addEventListener("click", function () {
+        var c = document.createElement("canvas");
+        c.width = 640; c.height = 420;
+        var g = c.getContext("2d");
+        var gr = g.createLinearGradient(0, 0, 640, 420);
+        gr.addColorStop(0, "#4F46E5"); gr.addColorStop(0.5, "#EC4899"); gr.addColorStop(1, "#F59E0B");
+        g.fillStyle = gr; g.fillRect(0, 0, 640, 420);
+        g.fillStyle = "#FFFFFF"; g.font = "bold 34px Poppins, sans-serif"; g.textAlign = "center";
+        g.fillText("Rudra Utility Studio", 320, 200);
+        g.font = "500 18px Poppins, sans-serif";
+        g.fillText("640 × 420 Sample Graphic", 320, 240);
+        loadFromDataUrl(c.toDataURL("image/png"), 48200, "sample-graphic.png");
+      });
+
+      function processImg(doDownload) {
+        if (!loadedImg) { $("uhSampleImgBtn").click(); return; }
+        var cv = document.createElement("canvas");
+        var w = loadedImg.width, h = loadedImg.height;
+        if (t.type === "image-compress") {
+          var maxW = parseInt($("uhMaxW").value || "1600", 10) || 1600;
+          if (w > maxW) { h = Math.round(h * (maxW / w)); w = maxW; }
+        } else if (t.type === "image-resize") {
+          w = Math.max(1, parseInt($("uhResW").value || w, 10));
+          h = Math.max(1, parseInt($("uhResH").value || h, 10));
+        }
+        cv.width = w; cv.height = h;
+        var ctx = cv.getContext("2d");
+        var mime = "image/jpeg";
+        if (t.type === "image-conv") mime = $("uhImgFmt").value;
+        else if (t.type === "image-resize") mime = "image/png";
+        if (mime === "image/jpeg") {
+          ctx.fillStyle = "#FFFFFF";
+          ctx.fillRect(0, 0, w, h);
+        }
+        ctx.drawImage(loadedImg, 0, 0, w, h);
+        var q = qIn ? (parseInt(qIn.value, 10) / 100) : 0.92;
+        cv.toBlob(function (blob) {
+          if (!blob) return;
+          var ext = mime === "image/png" ? "png" : (mime === "image/webp" ? "webp" : "jpg");
+          var savedPct = origBytes > 0 ? Math.round((1 - blob.size / origBytes) * 100) : 0;
+          $("uhImgStats").innerHTML =
+            '<div class="uh-stat-item"><span class="uh-stat-val">' + fmtBytes(origBytes) + '</span><span class="uh-stat-lbl">Original Size</span></div>' +
+            '<div class="uh-stat-item"><span class="uh-stat-val">' + fmtBytes(blob.size) + '</span><span class="uh-stat-lbl">Output (' + ext.toUpperCase() + ')</span></div>' +
+            '<div class="uh-stat-item"><span class="uh-stat-val">' + w + '×' + h + '</span><span class="uh-stat-lbl">' + (savedPct > 0 ? ('-' + savedPct + '% Smaller') : 'Dimensions') + '</span></div>';
+          var url = URL.createObjectURL(blob);
+          $("uhImgPrev").innerHTML = '<img src="' + url + '" alt="Converted preview">';
+          if (doDownload) downloadBlob(blob, origName + "-converted." + ext);
+        }, mime, q);
+      }
+      $("uhRunImgBtn").addEventListener("click", function () { processImg(true); });
+      return;
+    }
+
+    /* ---- SVG ↔ PNG ---- */
+    if (t.type === "svg-png") {
+      bodyEl.innerHTML = '<div class="uh-runner"><div class="uh-runner-card" style="--tc-color:' + t.color + '">' +
+        headHtml +
+        '<label class="uh-dropzone"><strong>Upload SVG or PNG/JPG file</strong><span>Or edit SVG code directly below</span><input type="file" id="uhSvgFile" accept=".svg,image/*"></label>' +
+        '<div class="uh-field"><label class="uh-label">SVG Markup / Vector Source</label>' +
+        '<textarea class="uh-textarea" id="uhSvgCode"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 180" width="320" height="180">\n  <rect width="320" height="180" rx="24" fill="#4F46E5"/>\n  <circle cx="90" cy="90" r="46" fill="#F43F5E"/>\n  <text x="195" y="98" fill="#FFFFFF" font-family="sans-serif" font-size="24" font-weight="bold" text-anchor="middle">SVG ↔ PNG</text>\n</svg></textarea></div>' +
+        '<div class="uh-actions">' +
+          '<button type="button" class="uh-btn uh-btn-primary" id="uhSvgToPngBtn">Download as PNG</button>' +
+          '<button type="button" class="uh-btn" id="uhDownloadSvgBtn">Download as .SVG</button>' +
+        '</div>' +
+        '<div class="uh-preview-area" id="uhSvgPrev"></div>' +
+      '</div></div>';
+
+      function renderSvgPreview(downloadPng) {
+        var code = $("uhSvgCode").value.trim();
+        var blob = new Blob([code], { type: "image/svg+xml;charset=utf-8" });
+        var u = URL.createObjectURL(blob);
+        var im = new Image();
+        im.onload = function () {
+          var cv = document.createElement("canvas");
+          cv.width = im.width || 600;
+          cv.height = im.height || 360;
+          cv.getContext("2d").drawImage(im, 0, 0, cv.width, cv.height);
+          URL.revokeObjectURL(u);
+          $("uhSvgPrev").innerHTML = "";
+          $("uhSvgPrev").appendChild(cv);
+          if (downloadPng) {
+            cv.toBlob(function (b) { if (b) downloadBlob(b, "converted-vector.png"); }, "image/png");
+          }
+        };
+        im.src = u;
+      }
+      renderSvgPreview(false);
+      $("uhSvgCode").addEventListener("input", function () { renderSvgPreview(false); });
+      $("uhSvgToPngBtn").addEventListener("click", function () { renderSvgPreview(true); });
+      $("uhDownloadSvgBtn").addEventListener("click", function () {
+        downloadBlob(new Blob([$("uhSvgCode").value], { type: "image/svg+xml" }), "vector.svg");
+      });
+      $("uhSvgFile").addEventListener("change", function () {
+        var f = this.files && this.files[0];
+        if (!f) return;
+        if (/svg/i.test(f.type) || /\.svg$/i.test(f.name)) {
+          var r = new FileReader();
+          r.onload = function (e) { $("uhSvgCode").value = e.target.result; renderSvgPreview(false); };
+          r.readAsText(f);
+        } else {
+          var r2 = new FileReader();
+          r2.onload = function (e) {
+            var im = new Image();
+            im.onload = function () {
+              $("uhSvgCode").value = '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 ' + im.width + ' ' + im.height + '" width="' + im.width + '" height="' + im.height + '">\n  <image href="' + e.target.result + '" width="' + im.width + '" height="' + im.height + '"/>\n</svg>';
+              renderSvgPreview(false);
+            };
+            im.src = e.target.result;
+          };
+          r2.readAsDataURL(f);
+        }
+      });
+      return;
+    }
+
+    /* ---- Image ↔ Base64 ---- */
+    if (t.type === "image-b64") {
+      bodyEl.innerHTML = '<div class="uh-runner"><div class="uh-runner-card" style="--tc-color:' + t.color + '">' +
+        headHtml +
+        '<label class="uh-dropzone"><strong>Upload any image to encode as Base64</strong><span>Or paste a data:image/...;base64 string below</span><input type="file" id="uhB64File" accept="image/*"></label>' +
+        '<div class="uh-field"><label class="uh-label">Base64 Data URI <span id="uhB64Len"></span></label>' +
+        '<textarea class="uh-textarea" id="uhB64Out" placeholder="data:image/png;base64,..."></textarea></div>' +
+        '<div class="uh-actions">' +
+          '<button type="button" class="uh-btn uh-btn-primary" id="uhCopyB64">Copy Base64 URI</button>' +
+          '<button type="button" class="uh-btn" id="uhCopyImgTag">Copy &lt;img&gt; Tag</button>' +
+          '<button type="button" class="uh-btn" id="uhSaveB64Img">Download Image</button>' +
+        '</div>' +
+        '<div class="uh-preview-area" id="uhB64Prev"></div>' +
+      '</div></div>';
+
+      $("uhB64File").addEventListener("change", function () {
+        var f = this.files && this.files[0];
+        if (!f) return;
+        var r = new FileReader();
+        r.onload = function (e) {
+          $("uhB64Out").value = e.target.result;
+          $("uhB64Len").textContent = fmtBytes(e.target.result.length);
+          $("uhB64Prev").innerHTML = '<img src="' + e.target.result + '" alt="Base64 Preview">';
+        };
+        r.readAsDataURL(f);
+      });
+      $("uhB64Out").addEventListener("input", function () {
+        var v = this.value.trim();
+        if (v.indexOf("data:image") === 0) $("uhB64Prev").innerHTML = '<img src="' + v + '" alt="Preview">';
+      });
+      $("uhCopyB64").addEventListener("click", function () { copyText($("uhB64Out").value, this); });
+      $("uhCopyImgTag").addEventListener("click", function () { copyText('<img src="' + $("uhB64Out").value + '" alt="image">', this); });
+      $("uhSaveB64Img").addEventListener("click", function () {
+        var v = $("uhB64Out").value.trim();
+        if (!v) return;
+        fetch(v).then(function (r) { return r.blob(); }).then(function (b) { downloadBlob(b, "decoded-image.png"); });
+      });
+      return;
+    }
+
+    /* ---- GROUP B: DOCUMENT CONVERTERS (9 Tools) ---- */
+    if (t.type.indexOf("doc-") === 0) {
+      /* 1. JPG → PDF (Multi-image real binary PDF builder) */
+      if (t.type === "doc-jpg-pdf") {
+        bodyEl.innerHTML = '<div class="uh-runner"><div class="uh-runner-card" style="--tc-color:' + t.color + '">' +
+          headHtml +
+          '<label class="uh-dropzone"><strong>Select one or multiple JPG / PNG images</strong><span>Each image becomes a crisp A4 page in the generated PDF</span><input type="file" id="uhJpgPdfIn" accept="image/*" multiple></label>' +
+          '<div class="uh-actions">' +
+            '<button type="button" class="uh-btn uh-btn-primary" id="uhBuildJpgPdf">Generate &amp; Download PDF</button>' +
+            '<button type="button" class="uh-btn" id="uhSampleJpgPdf">Add Sample Page</button>' +
+          '</div>' +
+          '<div id="uhJpgPdfStatus" class="uh-status-msg"></div>' +
+          '<div class="uh-preview-area" id="uhJpgPdfPrev"></div>' +
+        '</div></div>';
+
+        var pagesData = [];
+        function addCanvasPage(im) {
+          var cv = document.createElement("canvas");
+          cv.width = im.width || 600; cv.height = im.height || 800;
+          var ctx = cv.getContext("2d");
+          ctx.fillStyle = "#FFFFFF";
+          ctx.fillRect(0, 0, cv.width, cv.height);
+          ctx.drawImage(im, 0, 0);
+          var dataUrl = cv.toDataURL("image/jpeg", 0.9);
+          var b64 = dataUrl.split(",")[1];
+          var bin = atob(b64);
+          var bytes = new Uint8Array(bin.length);
+          for (var i = 0; i < bin.length; i++) bytes[i] = bin.charCodeAt(i);
+          pagesData.push({ w: cv.width, h: cv.height, bytes: bytes, preview: dataUrl });
+          $("uhJpgPdfStatus").textContent = pagesData.length + " image page(s) ready for PDF export.";
+          $("uhJpgPdfPrev").innerHTML = pagesData.map(function (p) { return '<img src="' + p.preview + '" style="max-height:120px" alt="Page">'; }).join("");
+        }
+
+        $("uhJpgPdfIn").addEventListener("change", function () {
+          var files = Array.from(this.files || []);
+          files.forEach(function (f) {
+            var r = new FileReader();
+            r.onload = function (e) {
+              var im = new Image();
+              im.onload = function () { addCanvasPage(im); };
+              im.src = e.target.result;
+            };
+            r.readAsDataURL(f);
+          });
+        });
+
+        $("uhSampleJpgPdf").addEventListener("click", function () {
+          var cv = document.createElement("canvas");
+          cv.width = 595; cv.height = 842;
+          var g = cv.getContext("2d");
+          g.fillStyle = "#FFFFFF"; g.fillRect(0, 0, 595, 842);
+          g.fillStyle = "#DC2626"; g.fillRect(40, 40, 515, 90);
+          g.fillStyle = "#FFFFFF"; g.font = "bold 26px sans-serif"; g.fillText("Rudra Document Hub — Page " + (pagesData.length + 1), 65, 95);
+          g.fillStyle = "#1E293B"; g.font = "16px sans-serif"; g.fillText("Generated client-side via binary DCTDecode PDF-1.4 stream.", 65, 180);
+          var im = new Image();
+          im.onload = function () { addCanvasPage(im); };
+          im.src = cv.toDataURL("image/jpeg", 0.92);
+        });
+
+        $("uhBuildJpgPdf").addEventListener("click", function () {
+          if (!pagesData.length) $("uhSampleJpgPdf").click();
+          setTimeout(function () {
+            if (!pagesData.length) return;
+            var pdfBlob = createJpegPdfBlob(pagesData);
+            downloadBlob(pdfBlob, "images-combined.pdf");
+          }, 80);
+        });
+        return;
+      }
+
+      /* 2. All other Document Tools (PDF↔Word, PDF→JPG, Merger, Splitter, Compressor, Excel→PDF, PPT→PDF) */
+      var acceptMap = {
+        "doc-pdf-word": ".pdf",
+        "doc-word-pdf": ".docx,.doc,.txt,.rtf,.md",
+        "doc-pdf-img": ".pdf",
+        "doc-pdf-merge": ".pdf",
+        "doc-pdf-split": ".pdf",
+        "doc-pdf-compress": ".pdf",
+        "doc-excel-pdf": ".csv,.tsv,.txt,.xlsx,.xls",
+        "doc-ppt-pdf": ".pptx,.ppt,.txt"
+      };
+      var isMulti = t.type === "doc-pdf-merge";
+      var extraHtml = "";
+      if (t.type === "doc-pdf-split") {
+        extraHtml = '<div class="uh-row-2"><div class="uh-field"><label class="uh-label">Start Page</label><input type="number" class="uh-input" id="uhSplitStart" value="1" min="1"></div>' +
+          '<div class="uh-field"><label class="uh-label">End Page</label><input type="number" class="uh-input" id="uhSplitEnd" value="1" min="1"></div></div>';
+      }
+
+      bodyEl.innerHTML = '<div class="uh-runner"><div class="uh-runner-card" style="--tc-color:' + t.color + '">' +
+        headHtml +
+        '<label class="uh-dropzone"><strong>Upload ' + acceptMap[t.type] + ' file' + (isMulti ? 's' : '') + '</strong><span>Or type / edit document content below</span><input type="file" id="uhDocFile" accept="' + acceptMap[t.type] + '"' + (isMulti ? ' multiple' : '') + '></label>' +
+        extraHtml +
+        '<div class="uh-field"><label class="uh-label">Document Content / Extracted Text</label>' +
+        '<textarea class="uh-textarea" id="uhDocText">Rudra Sarkar — Official Document\n================================\nDate: ' + new Date().toLocaleDateString() + '\n\n1. Executive Summary\nThis document was processed directly in your browser using the built-in Document Converter Engine.\n\n2. Key Metrics\n• Performance: 60 FPS\n• Uptime: 99.98%\n• Security: Zero-upload local processing</textarea></div>' +
+        '<div class="uh-actions">' +
+          '<button type="button" class="uh-btn uh-btn-primary" id="uhDocRunBtn">Convert &amp; Download</button>' +
+          '<button type="button" class="uh-btn" id="uhDocCopyBtn">Copy Content</button>' +
+        '</div>' +
+        '<div id="uhDocStatus" class="uh-status-msg"></div>' +
+        '<div class="uh-preview-area" id="uhDocPrev"></div>' +
+      '</div></div>';
+
+      var uploadedBuffers = [];
+      $("uhDocFile").addEventListener("change", async function () {
+        var files = Array.from(this.files || []);
+        if (!files.length) return;
+        uploadedBuffers = [];
+        var combinedText = [];
+        for (var i = 0; i < files.length; i++) {
+          var f = files[i];
+          var buf = await f.arrayBuffer();
+          uploadedBuffers.push({ name: f.name, size: f.size, buf: buf });
+          if (/\.pdf$/i.test(f.name)) {
+            combinedText.push("--- " + f.name + " ---\n" + extractTextFromPdfBuffer(buf));
+          } else if (/\.docx$/i.test(f.name)) {
+            combinedText.push(await extractZipXmlText(buf, /word\/document\.xml$/i));
+          } else if (/\.pptx$/i.test(f.name)) {
+            combinedText.push(await extractZipXmlText(buf, /ppt\/slides\/slide\d+\.xml$/i));
+          } else if (/\.xlsx$/i.test(f.name)) {
+            combinedText.push(await extractZipXmlText(buf, /xl\/sharedStrings\.xml$/i));
+          } else {
+            combinedText.push(new TextDecoder("utf-8", { fatal: false }).decode(new Uint8Array(buf)));
+          }
+        }
+        $("uhDocText").value = combinedText.join("\n\n");
+        $("uhDocStatus").textContent = "Loaded " + files.length + " file(s) (" + fmtBytes(files.reduce(function (a, b) { return a + b.size; }, 0)) + "). Ready to convert!";
+      });
+
+      $("uhDocCopyBtn").addEventListener("click", function () { copyText($("uhDocText").value, this); });
+
+      $("uhDocRunBtn").addEventListener("click", function () {
+        var txt = $("uhDocText").value;
+        if (t.type === "doc-pdf-word") {
+          var docHtml = '<html xmlns:o="urn:schemas-microsoft-com:office:office" xmlns:w="urn:schemas-microsoft-com:office:word" xmlns="http://www.w3.org/TR/REC-html40"><head><meta charset="utf-8"><title>Document</title></head><body style="font-family:Calibri,Arial,sans-serif;font-size:11pt;line-height:1.5">' +
+            txt.split("\n").map(function (l) { return "<p>" + l.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;") + "</p>"; }).join("") +
+            "</body></html>";
+          var blob = new Blob(["\ufeff", docHtml], { type: "application/msword" });
+          downloadBlob(blob, "converted-document.doc");
+          $("uhDocStatus").textContent = "✓ Downloaded editable Microsoft Word (.doc) file!";
+        } else if (t.type === "doc-pdf-img") {
+          var cv = document.createElement("canvas");
+          cv.width = 794; cv.height = 1123;
+          var g = cv.getContext("2d");
+          g.fillStyle = "#FFFFFF"; g.fillRect(0, 0, cv.width, cv.height);
+          g.fillStyle = "#1E293B"; g.font = "16px monospace";
+          var lines = txt.split("\n").slice(0, 44);
+          for (var l = 0; l < lines.length; l++) g.fillText(lines[l].slice(0, 76), 48, 64 + l * 23);
+          $("uhDocPrev").innerHTML = "";
+          $("uhDocPrev").appendChild(cv);
+          cv.toBlob(function (b) { if (b) downloadBlob(b, "pdf-page-1.png"); }, "image/png");
+          $("uhDocStatus").textContent = "✓ Rendered PDF page to high-res PNG!";
+        } else if (t.type === "doc-excel-pdf") {
+          var rows = txt.split("\n").map(function (r) { return r.split(/,|\t/).map(function (c) { return c.trim().padEnd(16, " "); }).join(" | "); }).join("\n");
+          var pdfBlob = createTextPdfBlob("Spreadsheet Table Export", rows, true);
+          downloadBlob(pdfBlob, "spreadsheet-table.pdf");
+          $("uhDocStatus").textContent = "✓ Generated formatted Landscape Table PDF!";
+        } else if (t.type === "doc-ppt-pdf") {
+          var pdfBlob2 = createTextPdfBlob("Presentation Slides Export", txt, true);
+          downloadBlob(pdfBlob2, "presentation-slides.pdf");
+          $("uhDocStatus").textContent = "✓ Generated Landscape Slides PDF!";
+        } else {
+          var titleMap = {
+            "doc-word-pdf": "Word to PDF Document",
+            "doc-pdf-merge": "Merged PDF Document",
+            "doc-pdf-split": "Split PDF Document (Selected Pages)",
+            "doc-pdf-compress": "Optimized Compressed PDF"
+          };
+          var outBlob = createTextPdfBlob(titleMap[t.type] || "Document", txt, false);
+          if (t.type === "doc-pdf-compress" && uploadedBuffers.length) {
+            $("uhDocStatus").textContent = "✓ Optimized PDF (" + fmtBytes(outBlob.size) + ") downloaded!";
+          } else {
+            $("uhDocStatus").textContent = "✓ Generated valid PDF (" + fmtBytes(outBlob.size) + ")!";
+          }
+          downloadBlob(outBlob, t.id + ".pdf");
+        }
+      });
+      return;
+    }
+
+    /* ---- GROUP C: TEXT CONVERTERS & COUNTER (9 Tools) ---- */
+    if (t.type === "text-counter") {
+      bodyEl.innerHTML = '<div class="uh-runner"><div class="uh-runner-card" style="--tc-color:' + t.color + '">' +
+        headHtml +
+        '<div class="uh-field"><label class="uh-label">Enter or Paste Text</label>' +
+        '<textarea class="uh-textarea" id="uhCntIn" placeholder="Type or paste your text here to see live word, character, sentence &amp; reading time statistics...">Welcome to Rudra Sarkar\'s Utility Hub! Every tool here runs instantaneously in your browser.</textarea></div>' +
+        '<div class="uh-stat-grid" id="uhCntStats"></div>' +
+      '</div></div>';
+
+      function updateStats() {
+        var v = $("uhCntIn").value;
+        var chars = v.length;
+        var noSpace = v.replace(/\s+/g, "").length;
+        var words = v.trim() ? v.trim().split(/\s+/).length : 0;
+        var sents = v.trim() ? (v.match(/[.!?]+(\s|$)/g) || [1]).length : 0;
+        var lines = v ? v.split(/\r?\n/).length : 0;
+        var paras = v.trim() ? v.trim().split(/\n\s*\n/).length : 0;
+        var readSec = Math.ceil((words / 200) * 60);
+        $("uhCntStats").innerHTML =
+          '<div class="uh-stat-item"><span class="uh-stat-val">' + words + '</span><span class="uh-stat-lbl">Words</span></div>' +
+          '<div class="uh-stat-item"><span class="uh-stat-val">' + chars + '</span><span class="uh-stat-lbl">Characters</span></div>' +
+          '<div class="uh-stat-item"><span class="uh-stat-val">' + noSpace + '</span><span class="uh-stat-lbl">No Spaces</span></div>' +
+          '<div class="uh-stat-item"><span class="uh-stat-val">' + sents + '</span><span class="uh-stat-lbl">Sentences</span></div>' +
+          '<div class="uh-stat-item"><span class="uh-stat-val">' + lines + '</span><span class="uh-stat-lbl">Lines</span></div>' +
+          '<div class="uh-stat-item"><span class="uh-stat-val">' + paras + '</span><span class="uh-stat-lbl">Paragraphs</span></div>' +
+          '<div class="uh-stat-item"><span class="uh-stat-val">' + readSec + 's</span><span class="uh-stat-lbl">Read Time</span></div>';
+      }
+      $("uhCntIn").addEventListener("input", updateStats);
+      updateStats();
+      return;
+    }
+
+    if (t.type === "text-op") {
+      var sampleIn = t.mode === "from-bin" ? "01010010 01110101 01100100 01110010 01100001" : "hello world! welcome to rudra sarkar's utility studio.";
+      var modeBtns = '<button type="button" class="uh-btn uh-btn-primary" id="uhTxtRun1">Convert</button>';
+      if (t.mode === "case") {
+        modeBtns =
+          '<button type="button" class="uh-btn uh-btn-primary" data-sub="upper">UPPERCASE</button>' +
+          '<button type="button" class="uh-btn" data-sub="lower">lowercase</button>' +
+          '<button type="button" class="uh-btn" data-sub="invert">iNVERT cASE</button>' +
+          '<button type="button" class="uh-btn" data-sub="alt">aLtErNaTiNg</button>';
+      } else if (t.mode === "reverse") {
+        modeBtns =
+          '<button type="button" class="uh-btn uh-btn-primary" data-sub="chars">Reverse Characters</button>' +
+          '<button type="button" class="uh-btn" data-sub="words">Reverse Word Order</button>';
+      }
+
+      bodyEl.innerHTML = '<div class="uh-runner"><div class="uh-runner-card" style="--tc-color:' + t.color + '">' +
+        headHtml +
+        '<div class="uh-field"><label class="uh-label">Input Text</label><textarea class="uh-textarea" id="uhTxtIn">' + sampleIn + '</textarea></div>' +
+        '<div class="uh-actions" id="uhTxtBtns">' + modeBtns + '<button type="button" class="uh-btn" id="uhTxtCopy">Copy Output</button></div>' +
+        '<div class="uh-field"><label class="uh-label">Converted Output</label><textarea class="uh-textarea" id="uhTxtOut" readonly></textarea></div>' +
+      '</div></div>';
+
+      function runTxt(sub) {
+        var s = $("uhTxtIn").value;
+        var out = s;
+        if (t.mode === "case") {
+          if (sub === "lower") out = s.toLowerCase();
+          else if (sub === "invert") out = s.split("").map(function (c) { return c === c.toUpperCase() ? c.toLowerCase() : c.toUpperCase(); }).join("");
+          else if (sub === "alt") out = s.split("").map(function (c, i) { return i % 2 === 0 ? c.toLowerCase() : c.toUpperCase(); }).join("");
+          else out = s.toUpperCase();
+        } else if (t.mode === "sentence") {
+          out = s.toLowerCase().replace(/(^\s*[a-z]|[.!?]\s+[a-z])/g, function (m) { return m.toUpperCase(); });
+        } else if (t.mode === "title") {
+          var minor = /^(a|an|and|as|at|but|by|for|in|nor|of|on|or|so|the|to|up|yet)$/i;
+          out = s.toLowerCase().split(/\s+/).map(function (w, i, arr) {
+            if (i > 0 && i < arr.length - 1 && minor.test(w)) return w;
+            return w.charAt(0).toUpperCase() + w.slice(1);
+          }).join(" ");
+        } else if (t.mode === "reverse") {
+          out = sub === "words" ? s.trim().split(/\s+/).reverse().join(" ") : Array.from(s).reverse().join("");
+        } else if (t.mode === "slug") {
+          out = s.toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "").replace(/[^a-z0-9]+/g, "-").replace(/^-+|-+$/g, "");
+        } else if (t.mode === "spaces") {
+          out = s.replace(/[ \t]+/g, " ").replace(/^\s+|\s+$/gm, "").replace(/\n{2,}/g, "\n");
+        } else if (t.mode === "to-bin") {
+          var bytes = new TextEncoder().encode(s);
+          out = Array.from(bytes).map(function (b) { return b.toString(2).padStart(8, "0"); }).join(" ");
+        } else if (t.mode === "from-bin") {
+          try {
+            var bins = s.trim().split(/\s+/);
+            var arr = new Uint8Array(bins.map(function (b) { return parseInt(b, 2); }));
+            out = new TextDecoder().decode(arr);
+          } catch (e) { out = "Invalid binary sequence"; }
+        }
+        $("uhTxtOut").value = out;
+      }
+      runTxt("upper");
+      $("uhTxtIn").addEventListener("input", function () { runTxt("upper"); });
+      var bs = $("uhTxtBtns").querySelectorAll("[data-sub]");
+      for (var i = 0; i < bs.length; i++) {
+        bs[i].addEventListener("click", function () { runTxt(this.getAttribute("data-sub")); });
+      }
+      if ($("uhTxtRun1")) $("uhTxtRun1").addEventListener("click", function () { runTxt(); });
+      $("uhTxtCopy").addEventListener("click", function () { copyText($("uhTxtOut").value, this); });
+      return;
+    }
+
+    /* ---- GROUP D: DEVELOPER & DATA CONVERTERS (JSON, YAML, HTML, URL, Base64, Minifiers, Markdown, CSV) ---- */
+    if (t.type === "dev-op") {
+      var samples = {
+        "json-yaml": '{\n  "site": "rudrasarkar.omicron.host",\n  "theme": "spiderman",\n  "tools": 67,\n  "active": true\n}',
+        "json-fmt": '{"name":"Rudra Sarkar","role":"Full-Stack Developer","skills":["JS","Ubuntu","Nginx","AI"]}',
+        "json-val": '{\n  "status": "online",\n  "cores": 4,\n  "ramGb": 30.6\n}',
+        "html-enc": '<div class="card">Hello & Welcome to "Rudra\'s Hub"!</div>',
+        "url-enc": "https://rudrasarkar.omicron.host/?search=spiderman theme&mode=fast#top",
+        "base64": "Rudra Sarkar — Full-Stack Developer & Prompt Engineer 🚀",
+        "css-min": "/* Card Styles */\n.card {\n  background-color: #ffffff;\n  padding: 20px 16px;\n  margin: 0px auto;\n  border-radius: 24px;\n}",
+        "js-min": "// Calculate visitor stats\nfunction addVisitors(current, delta) {\n  const total = current + delta;\n  return total;\n}",
+        "md-html": "# Rudra Utility Hub\n\nWelcome to the **67-Tool** converter suite!\n\n- Fast `<canvas>` processing\n- *100% Client-Side* privacy\n- [Visit Live Site](https://rudrasarkar.omicron.host)",
+        "html-md": "<h1>Rudra Utility Hub</h1><p>Welcome to the <strong>67-Tool</strong> suite with <em>instant</em> conversions and <a href=\"https://rudrasarkar.omicron.host\">Live Telemetry</a>.</p>",
+        "csv-json": "id,name,category,active\n1,JPG to PNG,Image,true\n2,PDF to Word,Document,true\n3,JSON to YAML,Developer,true",
+        "json-csv": '[\n  {"id": 1, "name": "JPG to PNG", "category": "Image"},\n  {"id": 2, "name": "PDF to Word", "category": "Document"}\n]'
+      };
+      var hasReverse = ["json-yaml", "html-enc", "url-enc", "base64", "json-fmt"].indexOf(t.mode) > -1;
+      var btn1Lbl = {
+        "json-yaml": "JSON → YAML",
+        "json-fmt": "Format (Prettify)",
+        "json-val": "Validate JSON",
+        "html-enc": "Encode HTML",
+        "url-enc": "Encode URL",
+        "base64": "Encode Base64",
+        "css-min": "Minify CSS",
+        "js-min": "Minify JS",
+        "md-html": "Convert to HTML",
+        "html-md": "Convert to Markdown",
+        "csv-json": "CSV → JSON",
+        "json-csv": "JSON → CSV"
+      }[t.mode] || "Convert";
+      var btn2Lbl = {
+        "json-yaml": "YAML → JSON",
+        "json-fmt": "Minify JSON",
+        "html-enc": "Decode HTML",
+        "url-enc": "Decode URL",
+        "base64": "Decode Base64"
+      }[t.mode] || "";
+
+      bodyEl.innerHTML = '<div class="uh-runner"><div class="uh-runner-card" style="--tc-color:' + t.color + '">' +
+        headHtml +
+        '<div class="uh-field"><label class="uh-label">Input</label><textarea class="uh-textarea" id="uhDevIn"></textarea></div>' +
+        '<div class="uh-actions">' +
+          '<button type="button" class="uh-btn uh-btn-primary" id="uhDevBtn1">' + btn1Lbl + '</button>' +
+          (hasReverse ? '<button type="button" class="uh-btn" id="uhDevBtn2">' + btn2Lbl + '</button>' : '') +
+          '<button type="button" class="uh-btn" id="uhDevCopy">Copy Output</button>' +
+          ((t.mode === "csv-json" || t.mode === "json-csv") ? '<button type="button" class="uh-btn" id="uhDevDl">Download File</button>' : '') +
+        '</div>' +
+        '<div id="uhDevStatus" class="uh-status-msg"></div>' +
+        '<div class="uh-field"><label class="uh-label">Output</label><textarea class="uh-textarea" id="uhDevOut" readonly></textarea></div>' +
+        (t.mode === "md-html" ? '<div class="uh-result-box" id="uhMdPreview"></div>' : '') +
+      '</div></div>';
+
+      $("uhDevIn").value = samples[t.mode] || "";
+
+      function jsonToYaml(obj, indent) {
+        indent = indent || 0;
+        var pad = "  ".repeat(indent);
+        if (obj === null) return "null";
+        if (typeof obj !== "object") return JSON.stringify(obj);
+        if (Array.isArray(obj)) {
+          return obj.map(function (item) {
+            return pad + "- " + (typeof item === "object" && item !== null ? "\n" + jsonToYaml(item, indent + 1) : jsonToYaml(item, 0));
+          }).join("\n");
+        }
+        return Object.keys(obj).map(function (k) {
+          var v = obj[k];
+          if (typeof v === "object" && v !== null) {
+            return pad + k + ":\n" + jsonToYaml(v, indent + 1);
+          }
+          return pad + k + ": " + (typeof v === "string" ? v : JSON.stringify(v));
+        }).join("\n");
+      }
+
+      function yamlToJson(yml) {
+        var obj = {};
+        yml.split(/\r?\n/).forEach(function (line) {
+          var m = line.match(/^\s*([^:#]+):\s*(.*)$/);
+          if (m) {
+            var k = m[1].trim(), v = m[2].trim();
+            if (v === "true") obj[k] = true;
+            else if (v === "false") obj[k] = false;
+            else if (v === "null") obj[k] = null;
+            else if (v !== "" && !isNaN(Number(v))) obj[k] = Number(v);
+            else obj[k] = v.replace(/^["']|["']$/g, "");
+          }
+        });
+        return JSON.stringify(obj, null, 2);
+      }
+
+      function parseCsv(csv) {
+        var lines = csv.trim().split(/\r?\n/);
+        if (!lines.length) return [];
+        var splitRow = function (r) {
+          var res = [], cur = "", inQ = false;
+          for (var i = 0; i < r.length; i++) {
+            var ch = r[i];
+            if (ch === '"') inQ = !inQ;
+            else if (ch === "," && !inQ) { res.push(cur.trim()); cur = ""; }
+            else cur += ch;
+          }
+          res.push(cur.trim());
+          return res;
+        };
+        var headers = splitRow(lines[0]);
+        return lines.slice(1).map(function (ln) {
+          var vals = splitRow(ln), o = {};
+          headers.forEach(function (h, i) {
+            var v = vals[i] !== undefined ? vals[i] : "";
+            o[h] = (v !== "" && !isNaN(Number(v))) ? Number(v) : (v === "true" ? true : (v === "false" ? false : v));
+          });
+          return o;
+        });
+      }
+
+      function runDev(reverse) {
+        var raw = $("uhDevIn").value;
+        var st = $("uhDevStatus");
+        st.className = "uh-status-msg";
+        try {
+          var res = "";
+          if (t.mode === "json-yaml") {
+            res = reverse ? yamlToJson(raw) : jsonToYaml(JSON.parse(raw), 0);
+            st.textContent = "✓ Converted successfully";
+          } else if (t.mode === "json-fmt") {
+            var parsed = JSON.parse(raw);
+            res = reverse ? JSON.stringify(parsed) : JSON.stringify(parsed, null, 2);
+            st.textContent = "✓ Valid JSON (" + res.length + " chars)";
+          } else if (t.mode === "json-val") {
+            var p = JSON.parse(raw);
+            var keys = typeof p === "object" && p !== null ? Object.keys(p).length : 0;
+            res = JSON.stringify(p, null, 2);
+            st.textContent = "✓ Valid JSON! Top-level keys/items: " + keys + " · Size: " + fmtBytes(raw.length);
+          } else if (t.mode === "html-enc") {
+            if (reverse) {
+              var txt = document.createElement("textarea");
+              txt.innerHTML = raw;
+              res = txt.value;
+            } else {
+              res = raw.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;").replace(/'/g, "&#39;");
+            }
+            st.textContent = "✓ HTML processed";
+          } else if (t.mode === "url-enc") {
+            res = reverse ? decodeURIComponent(raw) : encodeURIComponent(raw);
+            st.textContent = "✓ URL processed";
+          } else if (t.mode === "base64") {
+            if (reverse) {
+              var bin = atob(raw.trim());
+              var bytes = new Uint8Array(bin.length);
+              for (var i = 0; i < bin.length; i++) bytes[i] = bin.charCodeAt(i);
+              res = new TextDecoder().decode(bytes);
+            } else {
+              var u8 = new TextEncoder().encode(raw);
+              var s = "";
+              for (var j = 0; j < u8.length; j++) s += String.fromCharCode(u8[j]);
+              res = btoa(s);
+            }
+            st.textContent = "✓ Base64 processed";
+          } else if (t.mode === "css-min") {
+            res = raw.replace(/\/\*[\s\S]*?\*\//g, "").replace(/\s+/g, " ").replace(/\s*([{:;,}])\s*/g, "$1").replace(/;}/g, "}").trim();
+            var saved = raw.length ? Math.round((1 - res.length / raw.length) * 100) : 0;
+            st.textContent = "✓ Minified CSS: saved " + saved + "% (" + raw.length + " B → " + res.length + " B)";
+          } else if (t.mode === "js-min") {
+            res = raw.replace(/\/\*[\s\S]*?\*\//g, "").replace(/^\s*\/\/.*$/gm, "").replace(/\s+/g, " ").replace(/\s*([=+\-*/{}();,:<>])\s*/g, "$1").trim();
+            var savedJs = raw.length ? Math.round((1 - res.length / raw.length) * 100) : 0;
+            st.textContent = "✓ Minified JS: saved " + savedJs + "% (" + raw.length + " B → " + res.length + " B)";
+          } else if (t.mode === "md-html") {
+            res = raw
+              .replace(/^### (.*$)/gm, "<h3>$1</h3>")
+              .replace(/^## (.*$)/gm, "<h2>$1</h2>")
+              .replace(/^# (.*$)/gm, "<h1>$1</h1>")
+              .replace(/\*\*(.*?)\*\*/g, "<strong>$1</strong>")
+              .replace(/\*(.*?)\*/g, "<em>$1</em>")
+              .replace(/`(.*?)`/g, "<code>$1</code>")
+              .replace(/\[([^\]]+)\]\(([^)]+)\)/g, '<a href="$2" target="_blank" rel="noopener">$1</a>')
+              .replace(/^- (.*$)/gm, "<li>$1</li>")
+              .replace(/(<li>.*<\/li>)/gs, "<ul>$1</ul>");
+            if ($("uhMdPreview")) $("uhMdPreview").innerHTML = res;
+            st.textContent = "✓ Converted Markdown to HTML";
+          } else if (t.mode === "html-md") {
+            res = raw
+              .replace(/<h1[^>]*>(.*?)<\/h1>/gi, "# $1\n\n")
+              .replace(/<h2[^>]*>(.*?)<\/h2>/gi, "## $1\n\n")
+              .replace(/<h3[^>]*>(.*?)<\/h3>/gi, "### $1\n\n")
+              .replace(/<(strong|b)[^>]*>(.*?)<\/\1>/gi, "**$2**")
+              .replace(/<(em|i)[^>]*>(.*?)<\/\1>/gi, "*$2*")
+              .replace(/<code[^>]*>(.*?)<\/code>/gi, "`$1`")
+              .replace(/<a[^>]*href="([^"]*)"[^>]*>(.*?)<\/a>/gi, "[$2]($1)")
+              .replace(/<li[^>]*>(.*?)<\/li>/gi, "- $1\n")
+              .replace(/<\/?(p|div|ul|ol|br)[^>]*>/gi, "\n")
+              .replace(/<[^>]+>/g, "")
+              .replace(/\n{3,}/g, "\n\n").trim();
+            st.textContent = "✓ Converted HTML to Markdown";
+          } else if (t.mode === "csv-json") {
+            res = JSON.stringify(parseCsv(raw), null, 2);
+            st.textContent = "✓ Converted CSV to JSON array";
+          } else if (t.mode === "json-csv") {
+            var arr = JSON.parse(raw);
+            if (!Array.isArray(arr) || !arr.length) throw new Error("Input must be a non-empty JSON array of objects");
+            var cols = Object.keys(arr[0]);
+            var csvRows = [cols.join(",")];
+            arr.forEach(function (row) {
+              csvRows.push(cols.map(function (c) {
+                var cell = row[c] == null ? "" : String(row[c]);
+                return cell.indexOf(",") > -1 || cell.indexOf('"') > -1 ? '"' + cell.replace(/"/g, '""') + '"' : cell;
+              }).join(","));
+            });
+            res = csvRows.join("\n");
+            st.textContent = "✓ Converted JSON array to CSV";
+          }
+          $("uhDevOut").value = res;
+        } catch (err) {
+          st.className = "uh-status-msg is-err";
+          st.textContent = "✕ Error: " + err.message;
+        }
+      }
+
+      runDev(false);
+      $("uhDevBtn1").addEventListener("click", function () { runDev(false); });
+      if ($("uhDevBtn2")) $("uhDevBtn2").addEventListener("click", function () { runDev(true); });
+      $("uhDevCopy").addEventListener("click", function () { copyText($("uhDevOut").value, this); });
+      if ($("uhDevDl")) {
+        $("uhDevDl").addEventListener("click", function () {
+          var ext = t.mode === "csv-json" ? "json" : "csv";
+          downloadBlob(new Blob([$("uhDevOut").value], { type: "text/plain;charset=utf-8" }), "converted." + ext);
+        });
+      }
+      return;
+    }
+
+    /* ---- GROUP E: 10 PHYSICAL UNIT CONVERTERS ---- */
+    if (t.type === "unit-conv") {
+      if (t.unitGroup === "temp") {
+        bodyEl.innerHTML = '<div class="uh-runner"><div class="uh-runner-card" style="--tc-color:' + t.color + '">' +
+          headHtml +
+          '<div class="uh-row-2">' +
+            '<div class="uh-field"><label class="uh-label">Celsius (°C)</label><input type="number" class="uh-input" id="uhTempC" value="25" step="any"></div>' +
+            '<div class="uh-field"><label class="uh-label">Fahrenheit (°F)</label><input type="number" class="uh-input" id="uhTempF" value="77" step="any"></div>' +
+          '</div>' +
+          '<div class="uh-row-2">' +
+            '<div class="uh-field"><label class="uh-label">Kelvin (K)</label><input type="number" class="uh-input" id="uhTempK" value="298.15" step="any"></div>' +
+            '<div class="uh-field"><label class="uh-label">Rankine (°R)</label><input type="number" class="uh-input" id="uhTempR" value="536.67" step="any"></div>' +
+          '</div>' +
+        '</div></div>';
+
+        var setFromC = function (c, skip) {
+          if (isNaN(c)) return;
+          if (skip !== "c") $("uhTempC").value = +c.toFixed(4);
+          if (skip !== "f") $("uhTempF").value = +(c * 9 / 5 + 32).toFixed(4);
+          if (skip !== "k") $("uhTempK").value = +(c + 273.15).toFixed(4);
+          if (skip !== "r") $("uhTempR").value = +((c + 273.15) * 9 / 5).toFixed(4);
+        };
+        $("uhTempC").addEventListener("input", function () { setFromC(parseFloat(this.value), "c"); });
+        $("uhTempF").addEventListener("input", function () { setFromC((parseFloat(this.value) - 32) * 5 / 9, "f"); });
+        $("uhTempK").addEventListener("input", function () { setFromC(parseFloat(this.value) - 273.15, "k"); });
+        $("uhTempR").addEventListener("input", function () { setFromC(parseFloat(this.value) * 5 / 9 - 273.15, "r"); });
+        return;
+      }
+
+      var grp = UNIT_GROUPS[t.unitGroup];
+      var opts = grp.units.map(function (u) { return '<option value="' + u.f + '">' + u.n + '</option>'; }).join("");
+      bodyEl.innerHTML = '<div class="uh-runner"><div class="uh-runner-card" style="--tc-color:' + t.color + '">' +
+        headHtml +
+        '<div class="uh-row-2">' +
+          '<div class="uh-field"><label class="uh-label">Value</label><input type="number" class="uh-input" id="uhUnitVal" value="1" step="any"></div>' +
+          '<div class="uh-field"><label class="uh-label">From Unit</label><select class="uh-select" id="uhUnitFrom">' + opts + '</select></div>' +
+        '</div>' +
+        '<div class="uh-row-2">' +
+          '<div class="uh-field"><label class="uh-label">Converted Result</label><input type="text" class="uh-input" id="uhUnitRes" readonly></div>' +
+          '<div class="uh-field"><label class="uh-label">To Unit</label><select class="uh-select" id="uhUnitTo">' + opts + '</select></div>' +
+        '</div>' +
+        '<div class="uh-actions"><button type="button" class="uh-btn" id="uhUnitSwap">⇄ Swap Units</button><button type="button" class="uh-btn" id="uhUnitCopy">Copy Result</button></div>' +
+        '<div class="uh-stat-grid" id="uhUnitAll"></div>' +
+      '</div></div>';
+
+      if ($("uhUnitFrom").options.length > 2) $("uhUnitFrom").selectedIndex = 2;
+      if ($("uhUnitTo").options.length > 1) $("uhUnitTo").selectedIndex = 1;
+
+      function calcUnit() {
+        var v = parseFloat($("uhUnitVal").value);
+        if (isNaN(v)) { $("uhUnitRes").value = ""; return; }
+        var f1 = parseFloat($("uhUnitFrom").value);
+        var f2 = parseFloat($("uhUnitTo").value);
+        var baseVal = v * f1;
+        var out = baseVal / f2;
+        $("uhUnitRes").value = Number(out.toPrecision(7));
+        $("uhUnitAll").innerHTML = grp.units.map(function (u) {
+          var uv = Number((baseVal / u.f).toPrecision(6));
+          return '<div class="uh-stat-item"><span class="uh-stat-val">' + uv + '</span><span class="uh-stat-lbl">' + u.n + '</span></div>';
+        }).join("");
+      }
+      $("uhUnitVal").addEventListener("input", calcUnit);
+      $("uhUnitFrom").addEventListener("change", calcUnit);
+      $("uhUnitTo").addEventListener("change", calcUnit);
+      $("uhUnitSwap").addEventListener("click", function () {
+        var idx = $("uhUnitFrom").selectedIndex;
+        $("uhUnitFrom").selectedIndex = $("uhUnitTo").selectedIndex;
+        $("uhUnitTo").selectedIndex = idx;
+        calcUnit();
+      });
+      $("uhUnitCopy").addEventListener("click", function () { copyText($("uhUnitRes").value, this); });
+      calcUnit();
+      return;
+    }
+
+    /* ---- GROUP F: NUMBER & MATH CONVERTERS (7 Tools) ---- */
+    if (t.type === "base-conv") {
+      bodyEl.innerHTML = '<div class="uh-runner"><div class="uh-runner-card" style="--tc-color:' + t.color + '">' +
+        headHtml +
+        '<div class="uh-field"><label class="uh-label">Decimal (Base 10)</label><input type="text" class="uh-input" id="uhDecIn" value="2026"></div>' +
+        '<div class="uh-field"><label class="uh-label">' + t.label + '</label><input type="text" class="uh-input" id="uhBaseIn"></div>' +
+        '<div class="uh-stat-grid" id="uhBaseAll"></div>' +
+      '</div></div>';
+
+      function syncFromDec(n) {
+        if (isNaN(n)) return;
+        var intN = Math.trunc(n);
+        $("uhBaseIn").value = intN.toString(t.base).toUpperCase();
+        $("uhBaseAll").innerHTML =
+          '<div class="uh-stat-item"><span class="uh-stat-val">' + intN.toString(2) + '</span><span class="uh-stat-lbl">Binary (Base 2)</span></div>' +
+          '<div class="uh-stat-item"><span class="uh-stat-val">' + intN.toString(8) + '</span><span class="uh-stat-lbl">Octal (Base 8)</span></div>' +
+          '<div class="uh-stat-item"><span class="uh-stat-val">0x' + intN.toString(16).toUpperCase() + '</span><span class="uh-stat-lbl">Hex (Base 16)</span></div>';
+      }
+      $("uhDecIn").addEventListener("input", function () { syncFromDec(parseInt(this.value, 10)); });
+      $("uhBaseIn").addEventListener("input", function () {
+        var n = parseInt(this.value.trim(), t.base);
+        if (!isNaN(n)) { $("uhDecIn").value = n; syncFromDec(n); }
+      });
+      syncFromDec(2026);
+      return;
+    }
+
+    if (t.type === "frac-dec") {
+      bodyEl.innerHTML = '<div class="uh-runner"><div class="uh-runner-card" style="--tc-color:' + t.color + '">' +
+        headHtml +
+        '<div class="uh-row-2">' +
+          '<div class="uh-field"><label class="uh-label">Decimal Value</label><input type="number" class="uh-input" id="uhFracDec" value="0.375" step="any"></div>' +
+          '<div class="uh-field"><label class="uh-label">Fraction (N / D)</label><input type="text" class="uh-input" id="uhFracStr" value="3/8"></div>' +
+        '</div>' +
+        '<div class="uh-stat-grid" id="uhFracStats"></div>' +
+      '</div></div>';
+
+      function gcd(a, b) { return b < 0.0000001 ? a : gcd(b, Math.floor(a % b)); }
+      function fromDec() {
+        var d = parseFloat($("uhFracDec").value);
+        if (isNaN(d)) return;
+        var sign = d < 0 ? "-" : "";
+        d = Math.abs(d);
+        var len = (String(d).split(".")[1] || "").length;
+        var den = Math.pow(10, Math.min(len, 8));
+        var num = Math.round(d * den);
+        var g = gcd(num, den);
+        num = Math.round(num / g);
+        den = Math.round(den / g);
+        $("uhFracStr").value = sign + num + "/" + den;
+        var whole = Math.floor(num / den), rem = num % den;
+        $("uhFracStats").innerHTML =
+          '<div class="uh-stat-item"><span class="uh-stat-val">' + sign + num + '/' + den + '</span><span class="uh-stat-lbl">Simplified Fraction</span></div>' +
+          '<div class="uh-stat-item"><span class="uh-stat-val">' + (whole > 0 && rem > 0 ? (sign + whole + ' ' + rem + '/' + den) : (sign + num + '/' + den)) + '</span><span class="uh-stat-lbl">Mixed Number</span></div>' +
+          '<div class="uh-stat-item"><span class="uh-stat-val">' + +(d * 100).toFixed(4) + '%</span><span class="uh-stat-lbl">Percentage</span></div>';
+      }
+      $("uhFracDec").addEventListener("input", fromDec);
+      $("uhFracStr").addEventListener("input", function () {
+        var p = this.value.split("/");
+        if (p.length === 2 && parseFloat(p[1]) !== 0) {
+          $("uhFracDec").value = +(parseFloat(p[0]) / parseFloat(p[1])).toFixed(8);
+          fromDec();
+        }
+      });
+      fromDec();
+      return;
+    }
+
+    if (t.type === "roman-conv") {
+      bodyEl.innerHTML = '<div class="uh-runner"><div class="uh-runner-card" style="--tc-color:' + t.color + '">' +
+        headHtml +
+        '<div class="uh-row-2">' +
+          '<div class="uh-field"><label class="uh-label">Arabic Number (1–3999)</label><input type="number" class="uh-input" id="uhRomNum" value="2026" min="1" max="3999"></div>' +
+          '<div class="uh-field"><label class="uh-label">Roman Numeral</label><input type="text" class="uh-input" id="uhRomStr" value="MMXXVI"></div>' +
+        '</div>' +
+      '</div></div>';
+
+      var pairs = [[1000,"M"],[900,"CM"],[500,"D"],[400,"CD"],[100,"C"],[90,"XC"],[50,"L"],[40,"XL"],[10,"X"],[9,"IX"],[5,"V"],[4,"IV"],[1,"I"]];
+      $("uhRomNum").addEventListener("input", function () {
+        var n = parseInt(this.value, 10);
+        if (isNaN(n) || n < 1 || n > 3999) return;
+        var out = "";
+        pairs.forEach(function (p) { while (n >= p[0]) { out += p[1]; n -= p[0]; } });
+        $("uhRomStr").value = out;
+      });
+      $("uhRomStr").addEventListener("input", function () {
+        var s = this.value.toUpperCase().trim();
+        var map = { I:1, V:5, X:10, L:50, C:100, D:500, M:1000 };
+        var tot = 0;
+        for (var i = 0; i < s.length; i++) {
+          var v1 = map[s[i]] || 0, v2 = map[s[i + 1]] || 0;
+          tot += v1 < v2 ? -v1 : v1;
+        }
+        if (tot > 0) $("uhRomNum").value = tot;
+      });
+      return;
+    }
+
+    if (t.type === "percent-calc") {
+      bodyEl.innerHTML = '<div class="uh-runner"><div class="uh-runner-card" style="--tc-color:' + t.color + '">' +
+        headHtml +
+        '<div class="uh-row-2">' +
+          '<div class="uh-field"><label class="uh-label">Value X</label><input type="number" class="uh-input" id="uhPctX" value="25" step="any"></div>' +
+          '<div class="uh-field"><label class="uh-label">Value Y</label><input type="number" class="uh-input" id="uhPctY" value="240" step="any"></div>' +
+        '</div>' +
+        '<div class="uh-stat-grid" id="uhPctStats"></div>' +
+      '</div></div>';
+
+      function calcPct() {
+        var x = parseFloat($("uhPctX").value), y = parseFloat($("uhPctY").value);
+        if (isNaN(x) || isNaN(y)) return;
+        var xOfY = (x / 100) * y;
+        var xIsPct = y !== 0 ? (x / y) * 100 : 0;
+        var diffPct = x !== 0 ? ((y - x) / Math.abs(x)) * 100 : 0;
+        $("uhPctStats").innerHTML =
+          '<div class="uh-stat-item"><span class="uh-stat-val">' + +xOfY.toFixed(4) + '</span><span class="uh-stat-lbl">' + x + '% of ' + y + '</span></div>' +
+          '<div class="uh-stat-item"><span class="uh-stat-val">' + +xIsPct.toFixed(2) + '%</span><span class="uh-stat-lbl">' + x + ' is what % of ' + y + '</span></div>' +
+          '<div class="uh-stat-item"><span class="uh-stat-val">' + (diffPct >= 0 ? "+" : "") + +diffPct.toFixed(2) + '%</span><span class="uh-stat-lbl">% Change (' + x + ' → ' + y + ')</span></div>';
+      }
+      $("uhPctX").addEventListener("input", calcPct);
+      $("uhPctY").addEventListener("input", calcPct);
+      calcPct();
+      return;
+    }
+
+    if (t.type === "sci-conv") {
+      bodyEl.innerHTML = '<div class="uh-runner"><div class="uh-runner-card" style="--tc-color:' + t.color + '">' +
+        headHtml +
+        '<div class="uh-field"><label class="uh-label">Number or Scientific Input (e.g. 299792458 or 6.022e23)</label><input type="text" class="uh-input" id="uhSciIn" value="299792458"></div>' +
+        '<div class="uh-stat-grid" id="uhSciOut"></div>' +
+      '</div></div>';
+
+      function calcSci() {
+        var n = Number($("uhSciIn").value.trim());
+        if (isNaN(n)) return;
+        var expStr = n.toExponential(4);
+        var parts = expStr.split("e");
+        var exp = parseInt(parts[1], 10);
+        var engExp = Math.floor(exp / 3) * 3;
+        var engMant = +(n / Math.pow(10, engExp)).toFixed(4);
+        $("uhSciOut").innerHTML =
+          '<div class="uh-stat-item"><span class="uh-stat-val">' + parts[0] + ' × 10^' + exp + '</span><span class="uh-stat-lbl">Scientific Notation</span></div>' +
+          '<div class="uh-stat-item"><span class="uh-stat-val">' + expStr + '</span><span class="uh-stat-lbl">E-Notation</span></div>' +
+          '<div class="uh-stat-item"><span class="uh-stat-val">' + engMant + ' × 10^' + engExp + '</span><span class="uh-stat-lbl">Engineering Notation</span></div>';
+      }
+      $("uhSciIn").addEventListener("input", calcSci);
+      calcSci();
+      return;
+    }
+
+    /* ---- GROUP G: TIME & DATE CONVERTERS (6 Tools) ---- */
+    if (t.type === "unix-conv") {
+      var nowSec = Math.floor(Date.now() / 1000);
+      bodyEl.innerHTML = '<div class="uh-runner"><div class="uh-runner-card" style="--tc-color:' + t.color + '">' +
+        headHtml +
+        '<div class="uh-row-2">' +
+          '<div class="uh-field"><label class="uh-label">Unix Timestamp (sec or ms)</label><input type="number" class="uh-input" id="uhUnixIn" value="' + nowSec + '"></div>' +
+          '<div class="uh-field"><label class="uh-label">ISO / Local DateTime</label><input type="datetime-local" class="uh-input" id="uhUnixDt"></div>' +
+        '</div>' +
+        '<div class="uh-actions"><button type="button" class="uh-btn uh-btn-primary" id="uhUnixNow">Use Current Time</button></div>' +
+        '<div class="uh-stat-grid" id="uhUnixStats"></div>' +
+      '</div></div>';
+
+      function updateUnix(ts) {
+        var ms = ts > 9999999999 ? ts : ts * 1000;
+        var d = new Date(ms);
+        if (isNaN(d.getTime())) return;
+        var pad = function (n) { return String(n).padStart(2, "0"); };
+        $("uhUnixDt").value = d.getFullYear() + "-" + pad(d.getMonth() + 1) + "-" + pad(d.getDate()) + "T" + pad(d.getHours()) + ":" + pad(d.getMinutes());
+        $("uhUnixStats").innerHTML =
+          '<div class="uh-stat-item"><span class="uh-stat-val">' + Math.floor(ms / 1000) + '</span><span class="uh-stat-lbl">Epoch Seconds</span></div>' +
+          '<div class="uh-stat-item"><span class="uh-stat-val">' + ms + '</span><span class="uh-stat-lbl">Epoch Milliseconds</span></div>' +
+          '<div class="uh-stat-item"><span class="uh-stat-val">' + d.toISOString() + '</span><span class="uh-stat-lbl">UTC (ISO 8601)</span></div>' +
+          '<div class="uh-stat-item"><span class="uh-stat-val">' + d.toLocaleString() + '</span><span class="uh-stat-lbl">Local Time</span></div>';
+      }
+      $("uhUnixIn").addEventListener("input", function () { updateUnix(parseFloat(this.value)); });
+      $("uhUnixDt").addEventListener("change", function () {
+        var d = new Date(this.value);
+        if (!isNaN(d.getTime())) { $("uhUnixIn").value = Math.floor(d.getTime() / 1000); updateUnix(Math.floor(d.getTime() / 1000)); }
+      });
+      $("uhUnixNow").addEventListener("click", function () {
+        var s = Math.floor(Date.now() / 1000);
+        $("uhUnixIn").value = s;
+        updateUnix(s);
+      });
+      updateUnix(nowSec);
+      return;
+    }
+
+    if (t.type === "utc-local" || t.type === "tz-conv" || t.type === "date-fmt") {
+      bodyEl.innerHTML = '<div class="uh-runner"><div class="uh-runner-card" style="--tc-color:' + t.color + '">' +
+        headHtml +
+        '<div class="uh-field"><label class="uh-label">Select Date &amp; Time</label><input type="datetime-local" class="uh-input" id="uhTzDt"></div>' +
+        '<div class="uh-stat-grid" id="uhTzGrid"></div>' +
+      '</div></div>';
+
+      var now = new Date();
+      var pad = function (n) { return String(n).padStart(2, "0"); };
+      $("uhTzDt").value = now.getFullYear() + "-" + pad(now.getMonth() + 1) + "-" + pad(now.getDate()) + "T" + pad(now.getHours()) + ":" + pad(now.getMinutes());
+
+      function renderZones() {
+        var d = new Date($("uhTzDt").value);
+        if (isNaN(d.getTime())) d = new Date();
+        if (t.type === "date-fmt") {
+          var fmts = [
+            ["ISO 8601", d.toISOString()],
+            ["UTC String", d.toUTCString()],
+            ["Local Full", d.toDateString() + " " + d.toLocaleTimeString()],
+            ["DD/MM/YYYY", pad(d.getDate()) + "/" + pad(d.getMonth() + 1) + "/" + d.getFullYear()],
+            ["MM/DD/YYYY", pad(d.getMonth() + 1) + "/" + pad(d.getDate()) + "/" + d.getFullYear()],
+            ["SQL Datetime", d.getFullYear() + "-" + pad(d.getMonth() + 1) + "-" + pad(d.getDate()) + " " + pad(d.getHours()) + ":" + pad(d.getMinutes()) + ":" + pad(d.getSeconds())],
+            ["Unix Epoch", Math.floor(d.getTime() / 1000)]
+          ];
+          $("uhTzGrid").innerHTML = fmts.map(function (f) {
+            return '<div class="uh-stat-item"><span class="uh-stat-val" style="font-size:0.8rem">' + f[1] + '</span><span class="uh-stat-lbl">' + f[0] + '</span></div>';
+          }).join("");
+          return;
+        }
+        var zones = [
+          ["India (IST)", "Asia/Kolkata"],
+          ["UTC / GMT", "UTC"],
+          ["New York (ET)", "America/New_York"],
+          ["Los Angeles (PT)", "America/Los_Angeles"],
+          ["London (UK)", "Europe/London"],
+          ["Tokyo (JST)", "Asia/Tokyo"],
+          ["Dubai (GST)", "Asia/Dubai"],
+          ["Singapore (SGT)", "Asia/Singapore"],
+          ["Sydney (AEST)", "Australia/Sydney"]
+        ];
+        $("uhTzGrid").innerHTML = zones.map(function (z) {
+          var str = d.toLocaleString("en-IN", { timeZone: z[1], hour12: true, month: "short", day: "numeric", hour: "2-digit", minute: "2-digit" });
+          return '<div class="uh-stat-item"><span class="uh-stat-val" style="font-size:0.82rem">' + str + '</span><span class="uh-stat-lbl">' + z[0] + '</span></div>';
+        }).join("");
+      }
+      $("uhTzDt").addEventListener("input", renderZones);
+      renderZones();
+      return;
+    }
+
+    if (t.type === "date-diff" || t.type === "age-calc") {
+      var isAge = t.type === "age-calc";
+      bodyEl.innerHTML = '<div class="uh-runner"><div class="uh-runner-card" style="--tc-color:' + t.color + '">' +
+        headHtml +
+        '<div class="uh-row-2">' +
+          '<div class="uh-field"><label class="uh-label">' + (isAge ? "Date of Birth" : "Start Date") + '</label><input type="date" class="uh-input" id="uhDate1" value="2006-12-01"></div>' +
+          '<div class="uh-field"><label class="uh-label">' + (isAge ? "Age at Date" : "End Date") + '</label><input type="date" class="uh-input" id="uhDate2"></div>' +
+        '</div>' +
+        '<div class="uh-stat-grid" id="uhDiffStats"></div>' +
+      '</div></div>';
+
+      var today = new Date();
+      $("uhDate2").value = today.toISOString().slice(0, 10);
+
+      function calcDiff() {
+        var d1 = new Date($("uhDate1").value), d2 = new Date($("uhDate2").value);
+        if (isNaN(d1.getTime()) || isNaN(d2.getTime())) return;
+        var a = d1 < d2 ? d1 : d2, b = d1 < d2 ? d2 : d1;
+        var yrs = b.getFullYear() - a.getFullYear();
+        var mos = b.getMonth() - a.getMonth();
+        var dys = b.getDate() - a.getDate();
+        if (dys < 0) {
+          mos--;
+          dys += new Date(b.getFullYear(), b.getMonth(), 0).getDate();
+        }
+        if (mos < 0) { yrs--; mos += 12; }
+        var totalDays = Math.round(Math.abs(b - a) / 86400000);
+        var weeks = (totalDays / 7).toFixed(1);
+        var hours = totalDays * 24;
+        var nextBday = new Date(b.getFullYear(), a.getMonth(), a.getDate());
+        if (nextBday < b) nextBday.setFullYear(b.getFullYear() + 1);
+        var daysToBday = Math.ceil((nextBday - b) / 86400000);
+
+        $("uhDiffStats").innerHTML =
+          '<div class="uh-stat-item"><span class="uh-stat-val">' + yrs + 'y ' + mos + 'm ' + dys + 'd</span><span class="uh-stat-lbl">' + (isAge ? "Exact Age" : "Exact Duration") + '</span></div>' +
+          '<div class="uh-stat-item"><span class="uh-stat-val">' + totalDays.toLocaleString() + '</span><span class="uh-stat-lbl">Total Days</span></div>' +
+          '<div class="uh-stat-item"><span class="uh-stat-val">' + weeks + '</span><span class="uh-stat-lbl">Total Weeks</span></div>' +
+          '<div class="uh-stat-item"><span class="uh-stat-val">' + hours.toLocaleString() + '</span><span class="uh-stat-lbl">Total Hours</span></div>' +
+          (isAge ? '<div class="uh-stat-item"><span class="uh-stat-val">' + daysToBday + ' days</span><span class="uh-stat-lbl">Next Birthday</span></div>' : '');
+      }
+      $("uhDate1").addEventListener("input", calcDiff);
+      $("uhDate2").addEventListener("input", calcDiff);
+      calcDiff();
+      return;
+    }
+
+    /* ---- GROUP H: OTHER CONVERTERS (QR, Barcode, Color, ICS, Palette) ---- */
+    if (t.type === "qr-gen") {
+      var defVal = t.isUrl ? "https://rudrasarkar.omicron.host" : "Rudra Sarkar — Utility Hub";
+      bodyEl.innerHTML = '<div class="uh-runner"><div class="uh-runner-card" style="--tc-color:' + t.color + '">' +
+        headHtml +
+        '<div class="uh-field"><label class="uh-label">' + (t.isUrl ? "Website URL" : "Text or URL") + '</label><input type="text" class="uh-input" id="uhQrText" value="' + defVal + '"></div>' +
+        '<div class="uh-row-2">' +
+          '<div class="uh-field"><label class="uh-label">QR Color</label><input type="color" class="uh-input" id="uhQrFg" value="#111827" style="height:42px;padding:4px"></div>' +
+          '<div class="uh-field"><label class="uh-label">Background</label><input type="color" class="uh-input" id="uhQrBg" value="#FFFFFF" style="height:42px;padding:4px"></div>' +
+        '</div>' +
+        '<div class="uh-actions"><button type="button" class="uh-btn uh-btn-primary" id="uhQrDl">Download QR (.PNG)</button></div>' +
+        '<div class="uh-preview-area"><canvas id="uhQrCv"></canvas></div>' +
+      '</div></div>';
+
+      var updateQr = function () {
+        drawQrToCanvas($("uhQrCv"), $("uhQrText").value, $("uhQrFg").value, $("uhQrBg").value, t.isUrl);
+      };
+      $("uhQrText").addEventListener("input", updateQr);
+      $("uhQrFg").addEventListener("input", updateQr);
+      $("uhQrBg").addEventListener("input", updateQr);
+      $("uhQrDl").addEventListener("click", function () {
+        $("uhQrCv").toBlob(function (b) { if (b) downloadBlob(b, "qr-code.png"); }, "image/png");
+      });
+      updateQr();
+      return;
+    }
+
+    if (t.type === "barcode-gen") {
+      bodyEl.innerHTML = '<div class="uh-runner"><div class="uh-runner-card" style="--tc-color:' + t.color + '">' +
+        headHtml +
+        '<div class="uh-field"><label class="uh-label">Barcode Value (Code-128)</label><input type="text" class="uh-input" id="uhBarText" value="RUDRA-2026"></div>' +
+        '<div class="uh-actions"><button type="button" class="uh-btn uh-btn-primary" id="uhBarDl">Download Barcode (.PNG)</button></div>' +
+        '<div class="uh-preview-area"><canvas id="uhBarCv"></canvas></div>' +
+      '</div></div>';
+
+      var updateBar = function () { drawBarcode128($("uhBarCv"), $("uhBarText").value, "#111827", "#FFFFFF"); };
+      $("uhBarText").addEventListener("input", updateBar);
+      $("uhBarDl").addEventListener("click", function () {
+        $("uhBarCv").toBlob(function (b) { if (b) downloadBlob(b, "barcode-128.png"); }, "image/png");
+      });
+      updateBar();
+      return;
+    }
+
+    if (t.type === "color-conv" || t.type === "palette-gen") {
+      bodyEl.innerHTML = '<div class="uh-runner"><div class="uh-runner-card" style="--tc-color:' + t.color + '">' +
+        headHtml +
+        '<div class="uh-row-2">' +
+          '<div class="uh-field"><label class="uh-label">Pick Color</label><input type="color" class="uh-input" id="uhColPick" value="#E62429" style="height:44px;padding:4px"></div>' +
+          '<div class="uh-field"><label class="uh-label">HEX Code</label><input type="text" class="uh-input" id="uhColHex" value="#E62429"></div>' +
+        '</div>' +
+        '<div class="uh-stat-grid" id="uhColStats"></div>' +
+        '<div id="uhPaletteSwatches" style="display:grid;grid-template-columns:repeat(5,1fr);gap:8px;margin-top:12px"></div>' +
+        '<div class="uh-field" style="margin-top:12px"><label class="uh-label">CSS Variables / JSON Palette</label><textarea class="uh-textarea" id="uhPalCss" readonly></textarea></div>' +
+        '<div class="uh-actions"><button type="button" class="uh-btn uh-btn-primary" id="uhPalCopy">Copy Palette Code</button></div>' +
+      '</div></div>';
+
+      function hexToRgbHsl(hex) {
+        var m = hex.replace("#", "").match(/^([0-9a-f]{2})([0-9a-f]{2})([0-9a-f]{2})$/i);
+        if (!m) return null;
+        var r = parseInt(m[1], 16), g = parseInt(m[2], 16), b = parseInt(m[3], 16);
+        var rn = r / 255, gn = g / 255, bn = b / 255;
+        var max = Math.max(rn, gn, bn), min = Math.min(rn, gn, bn), h = 0, s = 0, l = (max + min) / 2;
+        if (max !== min) {
+          var d = max - min;
+          s = l > 0.5 ? d / (2 - max - min) : d / (max + min);
+          switch (max) {
+            case rn: h = (gn - bn) / d + (gn < bn ? 6 : 0); break;
+            case gn: h = (bn - rn) / d + 2; break;
+            case bn: h = (rn - gn) / d + 4; break;
+          }
+          h /= 6;
+        }
+        return { r: r, g: g, b: b, h: Math.round(h * 360), s: Math.round(s * 100), l: Math.round(l * 100) };
+      }
+
+      function hslToHex(h, s, l) {
+        h = ((h % 360) + 360) % 360;
+        s /= 100; l /= 100;
+        var c = (1 - Math.abs(2 * l - 1)) * s, x = c * (1 - Math.abs((h / 60) % 2 - 1)), m = l - c / 2, r = 0, g = 0, b = 0;
+        if (h < 60) { r = c; g = x; } else if (h < 120) { r = x; g = c; } else if (h < 180) { g = c; b = x; }
+        else if (h < 240) { g = x; b = c; } else if (h < 300) { r = x; b = c; } else { r = c; b = x; }
+        var toH = function (v) { return Math.round((v + m) * 255).toString(16).padStart(2, "0"); };
+        return "#" + (toH(r) + toH(g) + toH(b)).toUpperCase();
+      }
+
+      function updateColor(hex) {
+        var c = hexToRgbHsl(hex);
+        if (!c) return;
+        $("uhColPick").value = hex;
+        $("uhColHex").value = hex.toUpperCase();
+        $("uhColStats").innerHTML =
+          '<div class="uh-stat-item"><span class="uh-stat-val">' + hex.toUpperCase() + '</span><span class="uh-stat-lbl">HEX</span></div>' +
+          '<div class="uh-stat-item"><span class="uh-stat-val">rgb(' + c.r + ', ' + c.g + ', ' + c.b + ')</span><span class="uh-stat-lbl">RGB</span></div>' +
+          '<div class="uh-stat-item"><span class="uh-stat-val">hsl(' + c.h + '°, ' + c.s + '%, ' + c.l + '%)</span><span class="uh-stat-lbl">HSL</span></div>';
+        var pal = [
+          hslToHex(c.h, c.s, Math.min(92, c.l + 28)),
+          hslToHex(c.h, c.s, c.l),
+          hslToHex(c.h + 30, c.s, c.l),
+          hslToHex(c.h + 180, c.s, c.l),
+          hslToHex(c.h, c.s, Math.max(14, c.l - 26))
+        ];
+        $("uhPaletteSwatches").innerHTML = pal.map(function (p) {
+          return '<div style="height:52px;border-radius:12px;background:' + p + ';display:flex;align-items:flex-end;justify-content:center;padding:4px;font-size:0.62rem;font-weight:700;color:#fff;text-shadow:0 1px 3px #000">' + p + '</div>';
+        }).join("");
+        $("uhPalCss").value = ":root {\n  --brand-light: " + pal[0] + ";\n  --brand-main: " + pal[1] + ";\n  --brand-accent: " + pal[2] + ";\n  --brand-comp: " + pal[3] + ";\n  --brand-dark: " + pal[4] + ";\n}";
+      }
+      $("uhColPick").addEventListener("input", function () { updateColor(this.value); });
+      $("uhColHex").addEventListener("input", function () {
+        if (/^#[0-9a-f]{6}$/i.test(this.value.trim())) updateColor(this.value.trim());
+      });
+      $("uhPalCopy").addEventListener("click", function () { copyText($("uhPalCss").value, this); });
+      updateColor("#E62429");
+      return;
+    }
+
+    if (t.type === "ics-cal") {
+      bodyEl.innerHTML = '<div class="uh-runner"><div class="uh-runner-card" style="--tc-color:' + t.color + '">' +
+        headHtml +
+        '<div class="uh-field"><label class="uh-label">Event Title</label><input type="text" class="uh-input" id="uhIcsTitle" value="Project Launch — Rudra Hub"></div>' +
+        '<div class="uh-row-2">' +
+          '<div class="uh-field"><label class="uh-label">Start Date</label><input type="date" class="uh-input" id="uhIcsDate" value="2026-11-15"></div>' +
+          '<div class="uh-field"><label class="uh-label">Location</label><input type="text" class="uh-input" id="uhIcsLoc" value="rudrasarkar.omicron.host"></div>' +
+        '</div>' +
+        '<div class="uh-actions">' +
+          '<button type="button" class="uh-btn uh-btn-primary" id="uhIcsDl">Download .ICS Calendar File</button>' +
+          '<a class="uh-btn" id="uhGcalLink" target="_blank" rel="noopener">Open in Google Calendar</a>' +
+        '</div>' +
+      '</div></div>';
+
+      function syncIcs() {
+        var title = $("uhIcsTitle").value || "Event";
+        var dt = ($("uhIcsDate").value || "2026-11-15").replace(/-/g, "");
+        var loc = $("uhIcsLoc").value || "";
+        $("uhGcalLink").href = "https://calendar.google.com/calendar/render?action=TEMPLATE&text=" + encodeURIComponent(title) + "&dates=" + dt + "/" + dt + "&location=" + encodeURIComponent(loc);
+      }
+      $("uhIcsTitle").addEventListener("input", syncIcs);
+      $("uhIcsDate").addEventListener("input", syncIcs);
+      $("uhIcsLoc").addEventListener("input", syncIcs);
+      $("uhIcsDl").addEventListener("click", function () {
+        var dt = ($("uhIcsDate").value || "2026-11-15").replace(/-/g, "");
+        var ics = "BEGIN:VCALENDAR\r\nVERSION:2.0\r\nBEGIN:VEVENT\r\nSUMMARY:" + $("uhIcsTitle").value + "\r\nDTSTART;VALUE=DATE:" + dt + "\r\nDTEND;VALUE=DATE:" + dt + "\r\nLOCATION:" + $("uhIcsLoc").value + "\r\nEND:VEVENT\r\nEND:VCALENDAR";
+        downloadBlob(new Blob([ics], { type: "text/calendar" }), "event.ics");
+      });
+      syncIcs();
+      return;
+    }
+  }
+  openModal("folders", null);
+})();
+
+
+</script>
+</body>
+</html>

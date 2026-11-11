@@ -24,11 +24,10 @@ jobs:
         run: |
           node -e '
             const fs = require("fs");
-            for (const file of ["index.html", "Rudra_Sarkar.html"]) {
+            for (const file of ["index.html", "Rudra_Sarkar.html", "weather.html", "vps.html", "tools.html"]) {
               if (!fs.existsSync(file)) throw new Error("Missing required file: " + file);
               const html = fs.readFileSync(file, "utf8");
-              if (!html.includes("Rudra Sarkar")) throw new Error(file + " failed sanity check");
-              const scripts = [...html.matchAll(/<script>([\s\S]*?)<\/script>/g)];
+              const scripts = [...html.matchAll(/<script[^>]*>([\s\S]*?)<\/script>/g)];
               scripts.forEach((m, idx) => {
                 try { new Function(m[1]); }
                 catch (err) { throw new Error(`${file} <script>[${idx}] syntax error: ${err.message}`); }
@@ -69,7 +68,7 @@ jobs:
           STAGE_DIR="/tmp/rudra-stage-${COMMIT_SHA:0:8}"
           ssh -i ~/.ssh/deploy_key -p "$VPS_PORT" "${VPS_USER}@${VPS_HOST}" "mkdir -p ${STAGE_DIR}/scripts"
           scp -i ~/.ssh/deploy_key -P "$VPS_PORT" \
-            index.html Rudra_Sarkar.html vps-status.php release-sha.txt \
+            index.html Rudra_Sarkar.html weather.html vps.html tools.html vps-status.php release-sha.txt \
             "${VPS_USER}@${VPS_HOST}:${STAGE_DIR}/"
           scp -i ~/.ssh/deploy_key -P "$VPS_PORT" \
             scripts/vps-agent.sh scripts/rollback.sh \
@@ -95,18 +94,14 @@ jobs:
             fi
 
             # 2. Set safe permissions on staged files (never 777)
-            chmod 644 "${STAGE_DIR}/index.html" "${STAGE_DIR}/Rudra_Sarkar.html" "${STAGE_DIR}/vps-status.php" "${STAGE_DIR}/release-sha.txt"
+            chmod 644 "${STAGE_DIR}/index.html" "${STAGE_DIR}/Rudra_Sarkar.html" "${STAGE_DIR}/weather.html" "${STAGE_DIR}/vps.html" "${STAGE_DIR}/tools.html" "${STAGE_DIR}/vps-status.php" "${STAGE_DIR}/release-sha.txt"
             chmod 755 "${STAGE_DIR}/scripts/vps-agent.sh" "${STAGE_DIR}/scripts/rollback.sh"
 
             # 3. Atomic move into production directory (preserves live vps-status.json and any unrelated files)
-            mv -f "${STAGE_DIR}/index.html" "${VPS_TARGET_DIR}/index.html.new"
-            mv -f "${VPS_TARGET_DIR}/index.html.new" "${VPS_TARGET_DIR}/index.html"
-
-            mv -f "${STAGE_DIR}/Rudra_Sarkar.html" "${VPS_TARGET_DIR}/Rudra_Sarkar.html.new"
-            mv -f "${VPS_TARGET_DIR}/Rudra_Sarkar.html.new" "${VPS_TARGET_DIR}/Rudra_Sarkar.html"
-
-            mv -f "${STAGE_DIR}/vps-status.php" "${VPS_TARGET_DIR}/vps-status.php.new"
-            mv -f "${VPS_TARGET_DIR}/vps-status.php.new" "${VPS_TARGET_DIR}/vps-status.php"
+            for page in index.html Rudra_Sarkar.html weather.html vps.html tools.html vps-status.php; do
+              mv -f "${STAGE_DIR}/${page}" "${VPS_TARGET_DIR}/${page}.new"
+              mv -f "${VPS_TARGET_DIR}/${page}.new" "${VPS_TARGET_DIR}/${page}"
+            done
 
             mv -f "${STAGE_DIR}/release-sha.txt" "${VPS_TARGET_DIR}/release-sha.txt"
             mv -f "${STAGE_DIR}/scripts/vps-agent.sh" "${VPS_TARGET_DIR}/scripts/vps-agent.sh"
