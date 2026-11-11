@@ -170,6 +170,9 @@
   :root[data-theme="spiderman"] .banner {
     background: linear-gradient(135deg, #B91C1C 0%, #E62429 48%, #1D4ED8 100%);
   }
+  :root[data-theme="spiderman"] .banner canvas {
+    filter: hue-rotate(92deg) saturate(1.45) contrast(1.12);
+  }
   :root[data-theme="spiderman"] .banner::after {
     background: #111730;
   }
@@ -177,6 +180,52 @@
     background: radial-gradient(circle at 35% 30%, #FF3B3F, #C8102E 70%, #7F1D1D);
     border-color: #111730;
     box-shadow: 0 8px 26px rgba(230, 36, 41, 0.5), inset 0 1px 2px rgba(255, 255, 255, 0.45);
+  }
+  .avatar .sp-avatar-emblem {
+    display: none;
+    width: 48px;
+    height: 66px;
+    fill: #07090F;
+    filter: drop-shadow(0 0 6px rgba(255, 255, 255, 0.35));
+  }
+  :root[data-theme="spiderman"] .avatar .r-monogram {
+    display: none;
+  }
+  :root[data-theme="spiderman"] .avatar .sp-avatar-emblem {
+    display: block;
+  }
+  :root[data-theme="spiderman"] .bento-wrap {
+    background: rgba(17, 23, 48, 0.92);
+    border-color: rgba(230, 36, 41, 0.38);
+    box-shadow: 0 14px 36px rgba(0, 0, 0, 0.45), inset 0 1px 0 rgba(255, 255, 255, 0.08);
+  }
+  :root[data-theme="spiderman"] .bento-left {
+    background: linear-gradient(180deg, rgba(230, 36, 41, 0.24), rgba(153, 27, 27, 0.18));
+    border-color: rgba(230, 36, 41, 0.32);
+  }
+  :root[data-theme="spiderman"] .bento-fest-val,
+  :root[data-theme="spiderman"] .bento-wx-val,
+  :root[data-theme="spiderman"] .bento-vis-val,
+  :root[data-theme="spiderman"] .bento-w-day {
+    color: #F8FAFC;
+  }
+  :root[data-theme="spiderman"] .bento-fest-lbl,
+  :root[data-theme="spiderman"] .bento-wx-lbl,
+  :root[data-theme="spiderman"] .bento-vis-lbl,
+  :root[data-theme="spiderman"] .bento-w-hdr {
+    color: #94A3B8;
+  }
+  :root[data-theme="spiderman"] .bento-week {
+    background: rgba(25, 34, 70, 0.85);
+    border-color: rgba(230, 36, 41, 0.25);
+  }
+  :root[data-theme="spiderman"] .bento-wx {
+    background: rgba(30, 58, 138, 0.38);
+    border-color: rgba(59, 130, 246, 0.32);
+  }
+  :root[data-theme="spiderman"] .bento-vis {
+    background: rgba(20, 83, 45, 0.35);
+    border-color: rgba(74, 222, 128, 0.28);
   }
   :root[data-theme="spiderman"] .row {
     background: linear-gradient(135deg, rgba(25, 34, 70, 0.88), rgba(18, 25, 52, 0.92));
@@ -200,6 +249,175 @@
   }
   :root[data-theme="spiderman"] .scene {
     background: linear-gradient(180deg, #991B1B 0%, #1E3A8A 55%, #090D1E 100%);
+  }
+
+  /* ===== Spider-Man Mode Full-Screen Transition & Cinematic Menu Assembly ===== */
+  .sp-transition {
+    position: fixed;
+    inset: 0;
+    z-index: 99999;
+    pointer-events: none;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+    opacity: 0;
+    visibility: hidden;
+  }
+  .sp-transition.is-active {
+    opacity: 1;
+    visibility: visible;
+    pointer-events: auto;
+  }
+  .sp-transition-bg {
+    position: absolute;
+    inset: 0;
+    background:
+      radial-gradient(circle at 50% 50%, #E62429 0%, #991B1B 34%, #2A060B 66%, #050711 100%);
+    opacity: 0;
+    transform: scale(1.08);
+  }
+  .sp-transition.is-active .sp-transition-bg {
+    animation: spBgIn 1000ms cubic-bezier(0.16, 1, 0.3, 1) forwards;
+  }
+  .sp-transition-web {
+    position: absolute;
+    width: min(88vw, 620px);
+    height: min(88vw, 620px);
+    opacity: 0;
+    transform: scale(0.4) rotate(-12deg);
+  }
+  .sp-transition.is-active .sp-transition-web {
+    animation: spWebExpand 900ms cubic-bezier(0.16, 1, 0.3, 1) forwards;
+  }
+  .sp-shockwave {
+    position: absolute;
+    width: 160px;
+    height: 160px;
+    border-radius: 50%;
+    border: 3px solid rgba(255, 255, 255, 0.85);
+    box-shadow: 0 0 40px rgba(255, 59, 63, 0.9), inset 0 0 25px rgba(255, 255, 255, 0.6);
+    opacity: 0;
+    transform: scale(0.2);
+  }
+  .sp-transition.is-active .sp-shockwave {
+    animation: spShockwaveOut 560ms cubic-bezier(0.16, 1, 0.3, 1) 50ms forwards;
+  }
+  .sp-logo-wrap {
+    position: relative;
+    z-index: 2;
+    width: min(46vw, 220px);
+    height: min(68vw, 330px);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    opacity: 0;
+    transform: scale(0.12);
+    filter: drop-shadow(0 0 28px rgba(255, 255, 255, 0.55)) drop-shadow(0 14px 36px rgba(0, 0, 0, 0.85));
+  }
+  .sp-logo-wrap svg {
+    width: 100%;
+    height: 100%;
+    display: block;
+    fill: #07090F;
+    stroke: rgba(255, 255, 255, 0.28);
+    stroke-width: 1.4px;
+  }
+  .sp-transition.is-active .sp-logo-wrap {
+    animation: spLogoDramaticPop 900ms cubic-bezier(0.2, 1.18, 0.32, 1) forwards;
+  }
+  .sp-white-flash {
+    position: absolute;
+    inset: 0;
+    z-index: 5;
+    background: #FFFFFF;
+    opacity: 0;
+  }
+  .sp-transition.is-active .sp-white-flash {
+    animation: spBrightWhiteFlash 1850ms cubic-bezier(0.22, 1, 0.36, 1) forwards;
+  }
+
+  @keyframes spBgIn {
+    0%        { opacity: 1; transform: scale(1.06); }
+    16%       { opacity: 1; transform: scale(1); }
+    85%       { opacity: 1; transform: scale(1); }
+    86%, 100% { opacity: 0; transform: scale(1); }
+  }
+  @keyframes spWebExpand {
+    0%        { opacity: 0; transform: scale(0.35) rotate(-14deg); }
+    28%       { opacity: 0.38; transform: scale(1) rotate(0deg); }
+    62%       { opacity: 0.48; transform: scale(1.08) rotate(3deg); }
+    75%, 100% { opacity: 0; transform: scale(1.25) rotate(5deg); }
+  }
+  @keyframes spShockwaveOut {
+    0%   { opacity: 0.95; transform: scale(0.25); }
+    70%  { opacity: 0.65; transform: scale(3.4); }
+    100% { opacity: 0; transform: scale(4.5); }
+  }
+  @keyframes spLogoDramaticPop {
+    0%        { opacity: 0; transform: scale(0.08) translateY(14px); }
+    32%       { opacity: 1; transform: scale(1.12) translateY(0); }
+    48%       { opacity: 1; transform: scale(0.98) translateY(0); filter: brightness(1) drop-shadow(0 0 36px rgba(255,255,255,0.85)); }
+    62%       { opacity: 1; transform: scale(2.6) translateY(0); filter: brightness(12) drop-shadow(0 0 80px #FFFFFF); }
+    70%, 100% { opacity: 0; transform: scale(3.1) translateY(0); filter: brightness(14); }
+  }
+  @keyframes spBrightWhiteFlash {
+    0%, 24% { opacity: 0; }
+    27%     { opacity: 1; }
+    64%     { opacity: 1; }
+    100%    { opacity: 0; }
+  }
+
+  /* Cinematic Main Menu Assembly after White Flash */
+  html.sp-assembling .card {
+    animation: spMenuCardAssemble 720ms cubic-bezier(0.16, 1, 0.3, 1) both;
+  }
+  html.sp-assembling .banner {
+    animation: spMenuBannerAssemble 680ms cubic-bezier(0.16, 1, 0.3, 1) 40ms both;
+  }
+  html.sp-assembling .avatar {
+    animation: spMenuAvatarAssemble 680ms cubic-bezier(0.22, 1.35, 0.36, 1) 110ms both;
+  }
+  html.sp-assembling .profile h1,
+  html.sp-assembling .profile .bio {
+    animation: spMenuItemAssemble 580ms cubic-bezier(0.16, 1, 0.3, 1) 160ms both;
+  }
+  html.sp-assembling .socials a {
+    animation: spMenuItemAssemble 540ms cubic-bezier(0.22, 1.25, 0.36, 1) calc(190ms + var(--sp-i, 0) * 45ms) both;
+  }
+  html.sp-assembling .sec-title {
+    animation: spMenuItemAssemble 560ms cubic-bezier(0.16, 1, 0.3, 1) calc(220ms + var(--sp-i, 0) * 55ms) both;
+  }
+  html.sp-assembling .row {
+    animation: spMenuRowAssemble 620ms cubic-bezier(0.16, 1, 0.3, 1) calc(240ms + var(--sp-i, 0) * 60ms) both;
+  }
+  html.sp-assembling .bento-wrap {
+    animation: spMenuRowAssemble 680ms cubic-bezier(0.16, 1, 0.3, 1) 620ms both;
+  }
+  html.sp-assembling .scene {
+    animation: spMenuBannerAssemble 760ms cubic-bezier(0.16, 1, 0.3, 1) 680ms both;
+  }
+
+  @keyframes spMenuCardAssemble {
+    0%   { opacity: 0; transform: scale(0.92) translateY(28px); box-shadow: 0 0 90px rgba(230, 36, 41, 0.85); }
+    100% { opacity: 1; transform: scale(1) translateY(0); }
+  }
+  @keyframes spMenuBannerAssemble {
+    0%   { opacity: 0; transform: scaleY(0.65) translateY(-18px); filter: brightness(2.2); }
+    100% { opacity: 1; transform: scaleY(1) translateY(0); filter: brightness(1); }
+  }
+  @keyframes spMenuAvatarAssemble {
+    0%   { opacity: 0; transform: scale(0.3) rotate(-18deg); }
+    100% { opacity: 1; transform: scale(1) rotate(0deg); }
+  }
+  @keyframes spMenuItemAssemble {
+    0%   { opacity: 0; transform: translateY(18px) scale(0.94); }
+    100% { opacity: 1; transform: translateY(0) scale(1); }
+  }
+  @keyframes spMenuRowAssemble {
+    0%   { opacity: 0; transform: translateX(-26px) translateY(14px) scale(0.94); border-color: rgba(255, 255, 255, 0.85); }
+    65%  { opacity: 1; transform: translateX(3px) translateY(0) scale(1.01); }
+    100% { opacity: 1; transform: translateX(0) translateY(0) scale(1); }
   }
   @supports not ((backdrop-filter: blur(1px)) or (-webkit-backdrop-filter: blur(1px))) {
     .card, .row, .theme-toggle, .upi-dialog, .upi-app, .upi-idline { background-color: var(--card); }
@@ -459,8 +677,8 @@
   .upi-apps { display:grid; grid-template-columns:1fr 1fr; gap:9px; }
   .upi-app { display:flex; align-items:center; gap:9px; min-height:54px; padding:9px; border:1px solid var(--line); border-radius:13px; background:var(--card); color:var(--ink); text-decoration:none; font:500 .78rem var(--f); cursor:pointer; }
   .upi-app:hover { background:var(--hover); border-color:var(--avatar); }
-  .upi-app-mark { display:grid; place-items:center; width:32px; height:32px; flex:0 0 32px; border-radius:10px; background:var(--hover); color:var(--avatar); font-size:.72rem; font-weight:700; }
-  .upi-app-mark svg { width:19px; height:19px; fill:none; stroke:currentColor; stroke-width:1.8; stroke-linecap:round; stroke-linejoin:round; }
+  .upi-app-mark { display:grid; place-items:center; width:36px; height:36px; flex:0 0 36px; border-radius:10px; background:var(--hover); color:var(--avatar); font-size:.72rem; font-weight:700; overflow:hidden; box-shadow:0 2px 6px rgba(0,0,0,.08); }
+  .upi-app-mark svg { width:100%; height:100%; display:block; }
   .upi-idline { display:flex; align-items:center; justify-content:space-between; gap:8px; margin-top:13px; padding:10px 11px; border-radius:11px; background:var(--hover); font-size:.72rem; }
   .upi-idline span { min-width:0; overflow-wrap:anywhere; color:var(--muted); }
   .upi-copy { border:0; background:transparent; color:var(--avatar); font:600 .72rem var(--f); cursor:pointer; }
@@ -1350,9 +1568,100 @@
 </div>
 <div class="sr" role="status" aria-live="polite" id="live"></div>
 
+<!-- Full-Screen Spider-Man Mode Transition Overlay -->
+<div class="sp-transition" id="spTransitionOverlay" aria-hidden="true">
+  <div class="sp-transition-bg"></div>
+  <svg class="sp-transition-web" viewBox="0 0 200 200" fill="none" stroke="rgba(255,255,255,0.28)" stroke-width="0.9">
+    <line x1="100" y1="0" x2="100" y2="200"/>
+    <line x1="0" y1="100" x2="200" y2="100"/>
+    <line x1="15" y1="15" x2="185" y2="185"/>
+    <line x1="185" y1="15" x2="15" y2="185"/>
+    <line x1="58" y1="0" x2="142" y2="200"/>
+    <line x1="142" y1="0" x2="58" y2="200"/>
+    <line x1="0" y1="58" x2="200" y2="142"/>
+    <line x1="0" y1="142" x2="200" y2="58"/>
+    <circle cx="100" cy="100" r="24"/>
+    <circle cx="100" cy="100" r="48"/>
+    <circle cx="100" cy="100" r="74"/>
+    <circle cx="100" cy="100" r="98"/>
+  </svg>
+  <div class="sp-shockwave"></div>
+  <div class="sp-logo-wrap">
+    <svg viewBox="0 0 240 360" xmlns="http://www.w3.org/2000/svg">
+      <path d="M68 21L59 31L52 45L48 71L48 85L50 87L64 85L72 82L78 82L95 88L100 88L90 77L85 75L73 74L70 72L70 66L81 43L90 34L82 46L77 63L77 68L81 70L91 71L105 84L111 76L109 80L109 84L111 86L114 84L116 84L119 87L121 87L123 84L129 86L131 83L129 77L134 81L133 83L135 84L148 71L158 70L163 67L157 45L149 34L158 42L170 67L170 70L169 73L149 77L140 86L140 88L141 89L162 82L190 87L191 65L188 47L183 35L172 21L181 28L190 40L199 73L201 89L192 96L178 91L167 89L152 89L140 95L145 97L168 98L191 113L207 120L213 128L213 131L191 151L184 167L178 193L161 292L165 243L177 150L179 145L187 142L196 135L198 129L192 123L164 105L153 102L139 103L144 109L150 113L162 118L166 124L166 127L149 189L142 229L133 338L133 295L137 228L147 155L148 150L153 142L156 128L145 116L137 111L134 113L138 123L142 127L142 131L136 157L125 181L124 176L115 176L114 181L102 152L98 134L98 127L105 116L105 112L103 111L92 118L85 125L83 130L87 143L92 151L103 233L106 287L106 338L104 296L97 227L90 187L74 129L74 123L77 118L91 112L101 104L99 102L86 102L78 104L56 117L41 129L42 133L46 137L54 143L61 145L62 147L75 247L79 291L76 281L71 246L56 169L52 157L47 149L26 130L33 120L45 115L72 98L94 97L99 95L98 93L87 89L72 89L47 96L38 88L43 62L50 39L56 31L67 22Z"/>
+    </svg>
+  </div>
+  <div class="sp-white-flash"></div>
+</div>
+
+<div class="upi-overlay" id="upiDialog" role="dialog" aria-modal="true" aria-labelledby="upiTitle">
+  <div class="upi-dialog">
+    <div class="upi-dialog-head">
+      <h3 id="upiTitle">Pay using UPI</h3>
+      <button class="upi-close" type="button" id="upiClose" aria-label="Close">×</button>
+    </div>
+    <p class="upi-note">Choose your preferred payment app.</p>
+    <div class="upi-apps">
+      <a class="upi-app" data-upi-app="gpay" href="tez://upi/pay?pa=rudraasarkarr%40ptyes&amp;pn=Rudra%20Sarkar&amp;cu=INR">
+        <span class="upi-app-mark" style="background:#FFFFFF;border:1px solid rgba(0,0,0,0.08)">
+          <svg viewBox="0 0 48 48" aria-hidden="true">
+            <path fill="#EA4335" d="M24 11.5c3.3 0 6.3 1.2 8.6 3.4l6.4-6.4C35.1 4.8 29.9 2.5 24 2.5 15.6 2.5 8.3 7.3 4.8 14.3l7.5 5.8c1.8-5.1 6.6-8.6 11.7-8.6z"/>
+            <path fill="#4285F4" d="M44.6 24.5c0-1.5-.1-2.9-.4-4.3H24v8.2h11.6c-.5 2.7-2 5-4.3 6.5l7.1 5.5c4.1-3.8 6.2-9.4 6.2-15.9z"/>
+            <path fill="#FBBC05" d="M12.3 28.6c-.5-1.4-.8-3-.8-4.6s.3-3.2.8-4.6l-7.5-5.8C3.2 16.8 2.3 20.3 2.3 24s.9 7.2 2.5 10.4l7.5-5.8z"/>
+            <path fill="#34A853" d="M24 45.5c5.9 0 10.8-1.9 14.4-5.2l-7.1-5.5c-2 1.3-4.5 2.1-7.3 2.1-5.1 0-9.9-3.5-11.7-8.6l-7.5 5.8C8.3 40.7 15.6 45.5 24 45.5z"/>
+          </svg>
+        </span>
+        <span>Google Pay</span>
+      </a>
+      <a class="upi-app" data-upi-app="phonepe" href="phonepe://pay?pa=rudraasarkarr%40ptyes&amp;pn=Rudra%20Sarkar&amp;cu=INR">
+        <span class="upi-app-mark" style="background:#5F259F">
+          <svg viewBox="0 0 48 48" aria-hidden="true">
+            <rect width="48" height="48" rx="10" fill="#5F259F"/>
+            <path d="M35.5 16.5h-4.2l-5.8-7.2c-.6-.7-1.6-.9-2.3-.3-.6.5-.7 1.4-.2 2.1l4.4 5.4H13.5c-1.1 0-2 .9-2 2s.9 2 2 2h4.2v8.2c0 4.6 3.1 7.8 7.5 7.8 1.5 0 2.9-.4 4-1.1v3.1c0 1.2 1 2.2 2.2 2.2s2.2-1 2.2-2.2V20.5h1.9c1.1 0 2-.9 2-2s-.9-2-2-2zm-6.3 14.3c-.9.7-2.1 1.1-3.4 1.1-2.4 0-3.8-1.5-3.8-4.1v-7.3h7.2v10.3z" fill="#FFFFFF"/>
+          </svg>
+        </span>
+        <span>PhonePe</span>
+      </a>
+      <a class="upi-app" data-upi-app="paytm" href="paytmmp://pay?pa=rudraasarkarr%40ptyes&amp;pn=Rudra%20Sarkar&amp;cu=INR">
+        <span class="upi-app-mark" style="background:#FFFFFF;border:1px solid rgba(0,0,0,0.08)">
+          <svg viewBox="0 0 48 48" aria-hidden="true">
+            <rect width="48" height="48" rx="10" fill="#FFFFFF"/>
+            <text x="6" y="29" font-family="Poppins, Arial, sans-serif" font-weight="800" font-size="13.5" letter-spacing="-0.5" fill="#002970">Pay</text>
+            <text x="29.5" y="29" font-family="Poppins, Arial, sans-serif" font-weight="800" font-size="12.5" letter-spacing="-0.5" fill="#00BAF2">tm</text>
+          </svg>
+        </span>
+        <span>Paytm</span>
+      </a>
+      <a class="upi-app" data-upi-app="bhim" href="bhim://pay?pa=rudraasarkarr%40ptyes&amp;pn=Rudra%20Sarkar&amp;cu=INR">
+        <span class="upi-app-mark" style="background:#FFFFFF;border:1px solid rgba(0,0,0,0.08)">
+          <svg viewBox="0 0 48 48" aria-hidden="true">
+            <rect width="48" height="48" rx="10" fill="#FFFFFF"/>
+            <path d="M13 11l11 13-11 13h6.5l11-13-11-13z" fill="#FF6B00"/>
+            <path d="M21.5 11l11 13-11 13H28l11-13-11-13z" fill="#1C9C4B"/>
+          </svg>
+        </span>
+        <span>BHIM</span>
+      </a>
+      <a class="upi-app" data-upi-app="other" id="upiOtherApp" href="upi://pay?pa=rudraasarkarr%40ptyes&amp;pn=Rudra%20Sarkar&amp;cu=INR" style="grid-column:1/-1">
+        <span class="upi-app-mark" style="background:#FFFFFF;border:1px solid rgba(0,0,0,0.08)">
+          <svg viewBox="0 0 48 48" aria-hidden="true">
+            <rect width="48" height="48" rx="10" fill="#FFFFFF"/>
+            <text x="20" y="29" text-anchor="middle" font-family="Poppins, Arial, sans-serif" font-weight="800" font-style="italic" font-size="13" fill="#333333">UPI</text>
+            <path d="M32 15l5.5 9-5.5 9h3.5l5.5-9-5.5-9z" fill="#FF6B00"/>
+            <path d="M36 15l5.5 9-5.5 9h3.5l5.5-9-5.5-9z" fill="#1C9C4B"/>
+          </svg>
+        </span>
+        <span>Other UPI apps</span>
+      </a>
+    </div>
+    <div class="upi-idline"><span>rudraasarkarr@ptyes</span><button class="upi-copy" type="button" id="upiCopy">Copy ID</button></div>
+    <p class="upi-foot">Payment apps available on your device may vary. If an app does not open, choose “Other UPI apps” to show compatible apps, or copy the UPI ID.</p>
+  </div>
+</div>
+
 <script>
   (function () {
-    // Pixel "R" for the avatar.
+    // Pixel "R" for the avatar + Spider-Man Emblem for Spider-Man Mode.
     var R = ["######.", "##...##", "##...##", "##...##", "######.", "##.##..", "##..##.", "##...##", "##...##"];
     var rects = "";
     R.forEach(function (row, y) {
@@ -1360,7 +1669,8 @@
         if (row.charAt(x) === "#") rects += '<rect x="' + x + '" y="' + y + '" width="1" height="1"/>';
       }
     });
-    document.getElementById("avatar").innerHTML = '<svg viewBox="0 0 7 9" aria-hidden="true">' + rects + "</svg>";
+    var spPath = "M68 21L59 31L52 45L48 71L48 85L50 87L64 85L72 82L78 82L95 88L100 88L90 77L85 75L73 74L70 72L70 66L81 43L90 34L82 46L77 63L77 68L81 70L91 71L105 84L111 76L109 80L109 84L111 86L114 84L116 84L119 87L121 87L123 84L129 86L131 83L129 77L134 81L133 83L135 84L148 71L158 70L163 67L157 45L149 34L158 42L170 67L170 70L169 73L149 77L140 86L140 88L141 89L162 82L190 87L191 65L188 47L183 35L172 21L181 28L190 40L199 73L201 89L192 96L178 91L167 89L152 89L140 95L145 97L168 98L191 113L207 120L213 128L213 131L191 151L184 167L178 193L161 292L165 243L177 150L179 145L187 142L196 135L198 129L192 123L164 105L153 102L139 103L144 109L150 113L162 118L166 124L166 127L149 189L142 229L133 338L133 295L137 228L147 155L148 150L153 142L156 128L145 116L137 111L134 113L138 123L142 127L142 131L136 157L125 181L124 176L115 176L114 181L102 152L98 134L98 127L105 116L105 112L103 111L92 118L85 125L83 130L87 143L92 151L103 233L106 287L106 338L104 296L97 227L90 187L74 129L74 123L77 118L91 112L101 104L99 102L86 102L78 104L56 117L41 129L42 133L46 137L54 143L61 145L62 147L75 247L79 291L76 281L71 246L56 169L52 157L47 149L26 130L33 120L45 115L72 98L94 97L99 95L98 93L87 89L72 89L47 96L38 88L43 62L50 39L56 31L67 22Z";
+    document.getElementById("avatar").innerHTML = '<svg class="r-monogram" viewBox="0 0 7 9" aria-hidden="true">' + rects + '</svg><svg class="sp-avatar-emblem" viewBox="0 0 240 360" aria-hidden="true"><path d="' + spPath + '"/></svg>';
 
     // Pixel grass block icon for the Minecraft row.
     var block = ["GGGGGGGG", "GgGGGgGG", "DDGDDDGD", "DdDDDdDD", "DDDdDDDD", "DdDDDDdD", "DDDdDDDD", "DDdDDDdD"];
@@ -1803,14 +2113,25 @@
     var dialog = document.getElementById("upiDialog");
     var close = document.getElementById("upiClose");
     var copy = document.getElementById("upiCopy");
+    var otherApp = document.getElementById("upiOtherApp");
     var upi = "rudraasarkarr@ptyes";
+    var paytmUrl = "paytmmp://pay?pa=rudraasarkarr%40ptyes&pn=Rudra%20Sarkar&cu=INR";
+    var isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent || "") ||
+      (navigator.platform === "MacIntel" && navigator.maxTouchPoints > 1);
+    if (isIOS && otherApp) {
+      otherApp.setAttribute("href", paytmUrl);
+    }
     if (!trigger || !dialog) return;
     var closeTimer = 0;
     function openDialog() {
       clearTimeout(closeTimer);
       dialog.classList.remove("closing");
       dialog.classList.add("open");
-      close.focus();
+      if (close) close.focus();
+      /* On iOS, automatically redirect to Paytm when UPI is clicked */
+      if (isIOS) {
+        window.location.href = paytmUrl;
+      }
     }
     function closeDialog() {
       if (!dialog.classList.contains("open") || dialog.classList.contains("closing")) return;
@@ -1869,9 +2190,86 @@
     var saved = null;
     try { saved = localStorage.getItem("rudra-theme-choice"); } catch (e) {}
     var initial = THEMES.indexOf(saved) > -1 ? saved : "light";
+    var spTimer1 = 0, spTimer2 = 0, spTimer3 = 0;
+    var audioCtx = null;
 
-    function applyTheme(theme, remember) {
-      root.setAttribute("data-theme", theme);
+    /* Synthesize cinematic Whoosh + Sub-Bass Impact + White-Flash Shimmer via Web Audio API */
+    function playSpiderManTransitionSound() {
+      try {
+        var Ctx = window.AudioContext || window.webkitAudioContext;
+        if (!Ctx) return;
+        if (!audioCtx) audioCtx = new Ctx();
+        if (audioCtx.state === "suspended") audioCtx.resume();
+        var now = audioCtx.currentTime;
+
+        /* 1. Dramatic Whoosh Noise Sweep (0.00s -> 0.48s) + Extended White Flash Burst (0.56s -> 1.60s) */
+        var dur = 1.65;
+        var bufSize = Math.floor(audioCtx.sampleRate * dur);
+        var noiseBuf = audioCtx.createBuffer(1, bufSize, audioCtx.sampleRate);
+        var data = noiseBuf.getChannelData(0);
+        for (var i = 0; i < bufSize; i++) data[i] = Math.random() * 2 - 1;
+
+        var noise = audioCtx.createBufferSource();
+        noise.buffer = noiseBuf;
+
+        var filter = audioCtx.createBiquadFilter();
+        filter.type = "bandpass";
+        filter.Q.setValueAtTime(2.6, now);
+        filter.frequency.setValueAtTime(140, now);
+        filter.frequency.exponentialRampToValueAtTime(2200, now + 0.19);
+        filter.frequency.exponentialRampToValueAtTime(340, now + 0.46);
+        filter.frequency.exponentialRampToValueAtTime(3600, now + 0.64);
+        filter.frequency.exponentialRampToValueAtTime(900, now + 1.55);
+
+        var nGain = audioCtx.createGain();
+        nGain.gain.setValueAtTime(0.001, now);
+        nGain.gain.exponentialRampToValueAtTime(0.42, now + 0.14);
+        nGain.gain.exponentialRampToValueAtTime(0.08, now + 0.44);
+        /* Extended bright white flash burst (0.56s -> 1.60s) */
+        nGain.gain.exponentialRampToValueAtTime(0.38, now + 0.60);
+        nGain.gain.exponentialRampToValueAtTime(0.24, now + 1.10);
+        nGain.gain.exponentialRampToValueAtTime(0.001, now + 1.60);
+
+        noise.connect(filter);
+        filter.connect(nGain);
+        nGain.connect(audioCtx.destination);
+        noise.start(now);
+        noise.stop(now + dur);
+
+        /* 2. Sub-Bass Dramatic Pop Impact when Spider Emblem appears (0.04s -> 0.40s) */
+        var sub = audioCtx.createOscillator();
+        var subGain = audioCtx.createGain();
+        sub.type = "sine";
+        sub.frequency.setValueAtTime(145, now + 0.03);
+        sub.frequency.exponentialRampToValueAtTime(34, now + 0.36);
+        subGain.gain.setValueAtTime(0.001, now);
+        subGain.gain.linearRampToValueAtTime(0.48, now + 0.05);
+        subGain.gain.exponentialRampToValueAtTime(0.001, now + 0.40);
+        sub.connect(subGain);
+        subGain.connect(audioCtx.destination);
+        sub.start(now + 0.02);
+        sub.stop(now + 0.42);
+
+        /* 3. Extended Bright White Flash Cinematic Ring / Shimmer (0.55s -> 1.60s) */
+        var flashOsc = audioCtx.createOscillator();
+        var flashGain = audioCtx.createGain();
+        flashOsc.type = "triangle";
+        flashOsc.frequency.setValueAtTime(520, now + 0.54);
+        flashOsc.frequency.exponentialRampToValueAtTime(1560, now + 0.68);
+        flashOsc.frequency.exponentialRampToValueAtTime(880, now + 1.15);
+        flashOsc.frequency.exponentialRampToValueAtTime(420, now + 1.58);
+        flashGain.gain.setValueAtTime(0.001, now + 0.54);
+        flashGain.gain.linearRampToValueAtTime(0.24, now + 0.62);
+        flashGain.gain.exponentialRampToValueAtTime(0.14, now + 1.12);
+        flashGain.gain.exponentialRampToValueAtTime(0.001, now + 1.60);
+        flashOsc.connect(flashGain);
+        flashGain.connect(audioCtx.destination);
+        flashOsc.start(now + 0.54);
+        flashOsc.stop(now + 1.62);
+      } catch (e) {}
+    }
+
+    function updateToggleUi(theme) {
       toggle.setAttribute("aria-pressed", String(theme !== "light"));
       var iconEl = toggle.querySelector(".theme-toggle-icon");
       var labelEl = toggle.querySelector(".theme-toggle-label");
@@ -1888,38 +2286,65 @@
         labelEl.textContent = "Light mode";
         toggle.setAttribute("aria-label", "Switch to light mode");
       }
-      if (remember) { try { localStorage.setItem("rudra-theme-choice", theme); } catch (e) {} }
     }
 
-    applyTheme(initial, false);
+    function assignStaggerIndices() {
+      var socials = document.querySelectorAll(".socials a");
+      for (var s = 0; s < socials.length; s++) socials[s].style.setProperty("--sp-i", s);
+      var secs = document.querySelectorAll(".sec-title");
+      for (var c = 0; c < secs.length; c++) secs[c].style.setProperty("--sp-i", c);
+      var rows = document.querySelectorAll(".row");
+      for (var r = 0; r < rows.length; r++) rows[r].style.setProperty("--sp-i", r);
+    }
+
+    function applyTheme(theme, remember, animateTransition) {
+      if (remember) {
+        try { localStorage.setItem("rudra-theme-choice", theme); } catch (e) {}
+      }
+      var overlay = document.getElementById("spTransitionOverlay");
+      if (theme === "spiderman" && animateTransition && overlay) {
+        clearTimeout(spTimer1);
+        clearTimeout(spTimer2);
+        clearTimeout(spTimer3);
+        assignStaggerIndices();
+        root.classList.remove("sp-assembling");
+        overlay.classList.remove("is-active");
+        void overlay.offsetWidth;
+        overlay.classList.add("is-active");
+        playSpiderManTransitionSound();
+
+        /* Switch theme during the extended bright white flash & assemble menu as flash dissolves */
+        spTimer1 = setTimeout(function () {
+          root.setAttribute("data-theme", "spiderman");
+          updateToggleUi("spiderman");
+          root.classList.add("sp-assembling");
+        }, 1050);
+
+        spTimer2 = setTimeout(function () {
+          overlay.classList.remove("is-active");
+        }, 1880);
+
+        spTimer3 = setTimeout(function () {
+          root.classList.remove("sp-assembling");
+        }, 2350);
+        return;
+      }
+
+      root.setAttribute("data-theme", theme);
+      updateToggleUi(theme);
+    }
+
+    window._setSiteTheme = applyTheme;
+    applyTheme(initial, false, false);
     toggle.addEventListener("click", function () {
       var cur = root.getAttribute("data-theme") || "light";
       var next = THEMES[(THEMES.indexOf(cur) + 1) % THEMES.length];
-      applyTheme(next, true);
+      applyTheme(next, true, true);
     });
   })();
 
 </script>
 
-
-<div class="upi-overlay" id="upiDialog" role="dialog" aria-modal="true" aria-labelledby="upiTitle">
-  <div class="upi-dialog">
-    <div class="upi-dialog-head">
-      <h3 id="upiTitle">Pay using UPI</h3>
-      <button class="upi-close" type="button" id="upiClose" aria-label="Close">×</button>
-    </div>
-    <p class="upi-note">Choose your preferred payment app.</p>
-    <div class="upi-apps">
-      <a class="upi-app" data-upi-app="gpay" href="gpay://upi/pay?pa=rudraasarkarr%40ptyes&amp;pn=Rudra%20Sarkar&amp;cu=INR"><span class="upi-app-mark">G</span><span>Google Pay</span></a>
-      <a class="upi-app" data-upi-app="phonepe" href="phonepe://pay?pa=rudraasarkarr%40ptyes&amp;pn=Rudra%20Sarkar&amp;cu=INR"><span class="upi-app-mark">P</span><span>PhonePe</span></a>
-      <a class="upi-app" data-upi-app="paytm" href="paytmmp://pay?pa=rudraasarkarr%40ptyes&amp;pn=Rudra%20Sarkar&amp;cu=INR"><span class="upi-app-mark">Pay</span><span>Paytm</span></a>
-      <a class="upi-app" data-upi-app="bhim" href="bhim://pay?pa=rudraasarkarr%40ptyes&amp;pn=Rudra%20Sarkar&amp;cu=INR"><span class="upi-app-mark">B</span><span>BHIM</span></a>
-      <a class="upi-app" data-upi-app="other" href="upi://pay?pa=rudraasarkarr%40ptyes&amp;pn=Rudra%20Sarkar&amp;cu=INR" style="grid-column:1/-1"><span class="upi-app-mark"><svg viewBox="0 0 24 24"><path d="M4 12h16M13 5l7 7-7 7"/></svg></span><span>Other UPI apps</span></a>
-    </div>
-    <div class="upi-idline"><span>rudraasarkarr@ptyes</span><button class="upi-copy" type="button" id="upiCopy">Copy ID</button></div>
-    <p class="upi-foot">Payment apps available on your device may vary. If an app does not open, choose “Other UPI apps” to show compatible apps, or copy the UPI ID.</p>
-  </div>
-</div>
 
 <svg width="0" height="0" style="position:absolute" aria-hidden="true" focusable="false">
   <defs>
@@ -3197,9 +3622,8 @@
     if (spBtn && thBtn) {
       spBtn.addEventListener("click", function () {
         var cur = document.documentElement.getAttribute("data-theme") || "light";
-        if (cur !== "spiderman") {
-          document.documentElement.setAttribute("data-theme", "spiderman");
-          try { localStorage.setItem("rudra-theme", "spiderman"); } catch (e) {}
+        if (cur !== "spiderman" && window._setSiteTheme) {
+          window._setSiteTheme("spiderman", true, true);
         } else {
           thBtn.click();
         }
